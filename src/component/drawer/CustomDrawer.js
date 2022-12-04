@@ -37,8 +37,8 @@ export const CustomDrawer = ({ modalVisible, callback, navigation }) => {
                                         source={require("../../assets/user.png")} resizeMode="contain"
                                         style={{ width: 100, height: 100, borderRadius: 100 }}
                                     />}
-                                <Text style={{ ...commonStyles.fs17_600, marginTop: 15, color: "#fff" }}>User Name</Text>
-                                <Text style={{ ...commonStyles.fs14_300, marginTop: 2, color: "#fff" }}>useremail@email.com</Text>
+                                <Text style={{ ...commonStyles.fs17_600, marginTop: 15, color: "#fff" }}>{userData?.fullname}</Text>
+                                <Text style={{ ...commonStyles.fs14_300, marginTop: 2, color: "#fff" }}>{userData?.email}</Text>
                             </View>
                         </View>
 

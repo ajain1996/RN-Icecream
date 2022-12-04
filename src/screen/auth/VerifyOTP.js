@@ -25,7 +25,9 @@ const RESEND_OTP_TIME_LIMIT = 90;
 export const VerifyOTP: React.FC<OPTInputProps> = ({
     navigation, route
 }) => {
+    const dispatch = useDispatch();
     const { userData } = route?.params;
+    const { userType } = useSelector(state => state.UserType);
 
     let resendOtpTimerInterval: any;
 
@@ -93,7 +95,13 @@ export const VerifyOTP: React.FC<OPTInputProps> = ({
             matchOTPPostRequest(userData?.phone, OTPvalue, async response => {
                 setLoading(false);
                 console.log('\n\n \n\n matchOTPPostRequest response: ', response);
-                navigation.navigate("UpdateUserScreen", { userData: userData })
+                if (userType === "member") {
+                    navigation.navigate("UpdateUserScreen", { userData: userData })
+                } else if (userType === "guest") {
+                    await Auth.setAccount(userData);
+                    dispatch(setUser(userData))
+                    navigation.navigate("Root")
+                }
             });
         }
     };

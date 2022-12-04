@@ -4,17 +4,14 @@ import Navigation from '../../service/Navigation'
 import { commonStyles } from '../../utils/Styles'
 import { COLORS } from '../Constant/Color'
 import { FONTS } from '../Constant/Font'
+import { image_tap } from '../image_tap'
 
 const CustomHeader = ({ title }) => {
     return (
-        <TouchableOpacity style={styles.main} onPress={() => Navigation.back()}>
-            <Image
-                source={require("../../assets/left-arrow.png")}
-                resizeMode="contain"
-                style={{ width: 25, height: 25 }}
-            />
+        <View style={styles.main}>
+            {image_tap(require("../../assets/left-arrow.png"), 22, () => { Navigation.back() })}
             <Text style={styles.logo}>{title}</Text>
-        </TouchableOpacity>
+        </View>
     )
 }
 
@@ -22,7 +19,7 @@ export default CustomHeader;
 
 const styles = StyleSheet.create({
     main: {
-        paddingHorizontal: 15,
+        paddingHorizontal: 8,
         backgroundColor: COLORS.white,
         elevation: 9, shadowColor: "#999",
         ...commonStyles.containerStyle,
@@ -32,8 +29,8 @@ const styles = StyleSheet.create({
     logo: {
         fontFamily: FONTS.Bold,
         color: "#000",
-        fontSize: 20,
+        fontSize: 16,
         marginLeft: 16,
-        fontWeight: "700"
+        fontWeight: "600"
     },
 })

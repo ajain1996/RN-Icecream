@@ -5,7 +5,7 @@ import { windowWidth } from '../utils/utils';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import { Platform } from 'react-native';
 
-const ApplyFormInput = ({ heading, iconName, long, labelValue, placeholderText, darkPlaceholder, noOfLines, isNumeric, ...rest }) => {
+const ApplyFormInput = ({ heading, iconName, long, labelValue, placeholderText, darkPlaceholder, noOfLines, isNumeric, capatalize, ...rest }) => {
     return (
         long
             ? <View>
@@ -19,6 +19,7 @@ const ApplyFormInput = ({ heading, iconName, long, labelValue, placeholderText, 
                         width={"100%"}
                         maxLength={250}
                         value={labelValue}
+                        autoCapitalize={capatalize ? 'characters' : 'none'}
                         multiline={true}
                         placeholder={placeholderText}
                         placeholderTextColor={'#8e9aa0'}
@@ -36,6 +37,7 @@ const ApplyFormInput = ({ heading, iconName, long, labelValue, placeholderText, 
                             style={styles.input}
                             numberOfLines={1}
                             placeholder={placeholderText}
+                            autoCapitalize={capatalize ? 'characters' : 'none'}
                             keyboardType={'numeric'}
                             color={'#000'}
                             placeholderTextColor={darkPlaceholder ? '#000' : "#8e9aa0"}
@@ -46,6 +48,7 @@ const ApplyFormInput = ({ heading, iconName, long, labelValue, placeholderText, 
                             numberOfLines={1}
                             placeholder={placeholderText}
                             color={'#000'}
+                            autoCapitalize={capatalize ? 'characters' : 'none'}
                             placeholderTextColor="#8e9aa0"
                             {...rest}
                         />}

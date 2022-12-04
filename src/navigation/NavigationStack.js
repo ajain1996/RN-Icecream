@@ -16,6 +16,8 @@ import UpdateUserScreen from '../screen/auth/UpdateUserScreen';
 import CreateProductScreen from '../screen/products/CreateProductScreen';
 import MembersScreen from '../screen/members/MembersScreen';
 import MyProfileScreen from '../screen/auth/MyProfileScreen';
+import UpdateUserScreenIn from '../screen/auth/UpdateUserScreenIn';
+import MemberDetailScreen from '../screen/members/MemberDetailScreen';
 const Stack = createStackNavigator();
 
 export default function NavigationStack() {
@@ -42,9 +44,10 @@ export default function NavigationStack() {
             <Stack.Screen name="ProductDetailScreen" component={ProductDetailScreen} />
             <Stack.Screen name="ProductSubCategoryScreen" component={ProductSubCategoryScreen} />
             <Stack.Screen name="SingleChatScreen" component={SingleChatScreen} />
-            <Stack.Screen name="UpdateUserScreen" component={UpdateUserScreen} />
+            <Stack.Screen name="UpdateUserScreenIn" component={UpdateUserScreenIn} />
             <Stack.Screen name="CreateProductScreen" component={CreateProductScreen} />
             <Stack.Screen name="MembersScreen" component={MembersScreen} />
+            <Stack.Screen name="MemberDetailScreen" component={MemberDetailScreen} />
             <Stack.Screen name="MyProfileScreen" component={MyProfileScreen} />
         </Stack.Navigator>
     );

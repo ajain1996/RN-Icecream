@@ -14,12 +14,14 @@ import { COLORS } from '../../component/Constant/Color';
 import { FONTS } from '../../component/Constant/Font';
 import Toast from 'react-native-simple-toast';
 import { commonStyles } from '../../utils/Styles';
-import { mobileLoginPostRequest, mobileRegisterPostRequest } from '../../utils/API';
+import {
+  mobileLoginPostRequest,
+  mobileRegisterPostRequest,
+} from '../../utils/API';
 
 const { width, height } = Dimensions.get('window');
 
 function Register({ navigation }) {
-
   const [firstname, setfirstname] = useState('');
   const [lastname, setlastname] = useState('');
   const [phone, setphone] = useState('');
@@ -31,11 +33,14 @@ function Register({ navigation }) {
       Toast.show('please fill in all the fields');
       return false;
     }
-    const userData = {
-      fullname: firstname + lastname,
+    var userData = {
+      fullname: firstname + " " + lastname,
       phone: phone,
       email: email,
       password: '',
+      userProfile: '',
+      companyName: '',
+      address: '',
     };
     setLoading(true);
     mobileRegisterPostRequest(email, phone, async response => {

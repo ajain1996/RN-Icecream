@@ -6,6 +6,7 @@ import { membersHeader } from './membersHeader'
 import { COLORS } from '../../component/Constant/Color'
 import { Image } from 'react-native'
 import { ScrollView } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 
 export default function MembersScreen({ navigation }) {
     return (
@@ -15,7 +16,9 @@ export default function MembersScreen({ navigation }) {
             <ScrollView>
                 {[1, 2, 3, 4, 5, 6].map((item, index) => {
                     return (
-                        <View style={styles.itemWrapper} key={index}>
+                        <TouchableOpacity style={styles.itemWrapper} key={index} activeOpacity={0.9}
+                            onPress={() => { navigation.navigate("MemberDetailScreen") }}
+                        >
                             <View style={{ width: "100%", padding: 14 }}>
                                 <Text style={styles.memberName}>
                                     Member Name
@@ -30,7 +33,7 @@ export default function MembersScreen({ navigation }) {
                                     style={styles.itemImg}
                                 />
                                 <View style={styles.memberNameBlock}>
-                                    <Text style={styles.memberName}>
+                                    <Text style={[styles.memberName, { color: COLORS.theme }]}>
                                         Member Name
                                     </Text>
                                     <Text style={styles.conpanyName}>
@@ -45,7 +48,7 @@ export default function MembersScreen({ navigation }) {
                                     </Text>
                                 </View>
                             </View>
-                        </View>
+                        </TouchableOpacity>
                     );
                 })}
 
@@ -77,7 +80,7 @@ const styles = StyleSheet.create({
         width: "100%", padding: 16, width: "80%"
     },
     memberName: {
-        ...commonStyles.fs18_500, color: COLORS.theme
+        ...commonStyles.fs18_500, color: "#fff"
     },
     conpanyName: {
         ...commonStyles.fs12_400, color: COLORS.theme

@@ -23,7 +23,7 @@ import CustomLoader, { CustomPanel } from '../../component/CustomLoader';
 
 export default function UpdateUserScreenIn({ navigation, route }) {
     const dispatch = useDispatch();
-    const { userData } = route?.params;
+    const { userData } = useSelector(state => state.User);
 
     const companyTypeList = [
         { name: 'Public Ltd', value: 'Public Ltd' },
@@ -110,13 +110,19 @@ export default function UpdateUserScreenIn({ navigation, route }) {
         },
     };
 
-    const getImage = () => {
+    const getImage = (text) => {
         launchImageLibrary(options, response => {
             if (response?.didCancel) {
             } else if (response?.error) {
             } else if (response?.customButton) {
             } else {
-                setUser_Profile(response?.assets[0].uri);
+                if (text === "profile") {
+                    setUser_Profile(response?.assets[0].uri);
+                } else if (text === "logo") {
+                    setCompany_Logo(response?.assets[0].uri);
+                } else if (text === "brochure") {
+                    setCompany_Brochure(response?.assets[0].uri);
+                }
             }
         });
     };
@@ -150,6 +156,11 @@ export default function UpdateUserScreenIn({ navigation, route }) {
     };
 
     React.useEffect(() => {
+        if (userData?.userProfile?.length !== 0) {
+            setUser_Profile(userData?.userProfile)
+        } else {
+            setUser_Profile("");
+        }
         fetchCountries();
     }, []);
 
@@ -248,9 +259,9 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                 style={{ width: '100%', height: '100%', backgroundColor: '#fff' }}>
                 <TouchableHighlight
                     style={{ alignItems: 'center', marginVertical: '8%' }}
-                    onPress={getImage}
+                    onPress={() => { getImage("profile") }}
                     underlayColor="transparent">
-                    {userData?.userProfile?.length === 0 ? (
+                    {user_profile?.length === 0 ? (
                         <View
                             style={{
                                 width: 120,
@@ -266,7 +277,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                         </View>
                     ) : (
                         <Image
-                            source={{ uri: userData?.userProfile }}
+                            source={{ uri: user_profile }}
                             style={{ width: 120, height: 120, borderRadius: 100 }}
                         />
                     )}
@@ -314,6 +325,66 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                     }}
                     data={companyTypeList}
                 />
+
+                <>
+                    <Text style={styles.heading}>Company Logo</Text>
+                    <TouchableHighlight
+                        style={{ alignItems: 'center', marginBottom: 16, marginTop: 6 }}
+                        onPress={() => { getImage("logo") }}
+                        underlayColor="transparent">
+                        {company_logo?.length === 0 ? (
+                            <View
+                                style={{
+                                    width: 120,
+                                    height: 120,
+                                    borderRadius: 8,
+                                    backgroundColor: '#f7f8f9',
+                                    ...commonStyles.centerStyles,
+                                }}>
+                                <Image
+                                    source={require('../../assets/camera.png')}
+                                    style={{ width: '75%', height: '75%', tintColor: '#999' }}
+                                />
+                            </View>
+                        ) : (
+                            <Image
+                                source={{ uri: company_logo }}
+                                style={{ width: 120, height: 120, borderRadius: 8 }}
+                            />
+                        )}
+                    </TouchableHighlight>
+                </>
+
+                <>
+                    <Text style={styles.heading}>Company Brochure</Text>
+                    <TouchableHighlight
+                        style={{ alignItems: 'center', marginBottom: 16, marginTop: 6 }}
+                        onPress={() => { getImage("brochure") }}
+                        underlayColor="transparent">
+                        {company_brochure?.length === 0 ? (
+                            <View
+                                style={{
+                                    width: "90%",
+                                    height: 210,
+                                    borderRadius: 8,
+                                    backgroundColor: '#f7f8f9',
+                                    ...commonStyles.centerStyles,
+                                }}>
+                                <Image
+                                    source={require('../../assets/camera.png')}
+                                    resizeMode="contain"
+                                    style={{ width: '60%', height: '60%', tintColor: '#999' }}
+                                />
+                            </View>
+                        ) : (
+                            <Image
+                                source={{ uri: company_brochure }}
+                                resizeMode="contain"
+                                style={{ width: "90%", height: 210, borderRadius: 8 }}
+                            />
+                        )}
+                    </TouchableHighlight>
+                </>
 
                 <ApplyFormPicker
                     heading="Business Type"

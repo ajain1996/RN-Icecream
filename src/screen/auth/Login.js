@@ -16,13 +16,14 @@ import Toast from 'react-native-simple-toast';
 import { commonStyles } from '../../utils/Styles';
 import { mobileLoginPostRequest } from '../../utils/API';
 import Auth from '../../service/Auth';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../../redux/reducer/user';
 
 const { width, height } = Dimensions.get('window');
 
 function Login({ navigation }) {
   const dispatch = useDispatch();
+  const { userData } = useSelector(state => state.User);
 
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
@@ -32,18 +33,22 @@ function Login({ navigation }) {
       Toast.show('Please fill in the phone number');
       return false;
     }
-    const userData = {
-      name: "",
+    var userData2 = {
+      fullname: userData?.fullname === undefined ? "" : userData?.fullname,
       phone: phone,
-      password: "",
-    }
+      email: userData?.email === undefined ? "" : userData?.email,
+      password: userData?.password === undefined ? "" : userData?.password,
+      userProfile: userData?.userProfile === undefined ? "" : userData?.userProfile,
+      companyName: userData?.companyName === undefined ? "" : userData?.companyName,
+      address: userData?.address === undefined ? "" : userData?.address,
+    };
     setLoading(true)
     mobileLoginPostRequest(phone, async response2 => {
       setLoading(false);
       console.log('mobileLoginPostRequest response: ', response2);
       Toast.show("Login Successfully!");
-      await Auth.setAccount(userData);
-      dispatch(setUser(userData));
+      await Auth.setAccount(userData2);
+      dispatch(setUser(userData2));
       navigation.navigate("Root")
     });
   }

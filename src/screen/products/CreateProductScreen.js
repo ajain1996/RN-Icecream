@@ -8,9 +8,21 @@ import { StyleSheet } from 'react-native';
 import { commonStyles } from '../../utils/Styles';
 import CustomHeader from '../../component/Header/CustomHeader';
 import { RenderUpload } from '../../component/RenderImageUpload';
+import { addProductPostRequest } from '../../utils/API';
+import Toast from 'react-native-simple-toast';
+import { Alert } from 'react-native';
+import { ActivityIndicator } from 'react-native';
+import CustomLoader, { CustomPanel } from '../../component/CustomLoader';
 
-export default function CreateProductScreen() {
-    const [organizationName, setOrganizationName] = React.useState("");
+export default function CreateProductScreen({ navigation }) {
+    const [nameOfProduct, setNameOfProduct] = React.useState("");
+    const [description, setdescription] = React.useState("");
+    const [category0, setcategory0] = React.useState("");
+    const [category1, setcategory1] = React.useState("");
+    const [category2, setcategory2] = React.useState("");
+    const [subcategory0, setsubcategory0] = React.useState("");
+    const [subcategory1, setsubcategory1] = React.useState("");
+
     const [imageError, setImageError] = React.useState(false);
 
     const [loading, setLoading] = React.useState(false);
@@ -18,7 +30,37 @@ export default function CreateProductScreen() {
     const [currentStatus, setCurrentStatus] = React.useState("");
     const [imageData, setImageData] = React.useState("");
 
-    const handleSubmit = async () => { }
+    const handleSubmit = async () => {
+        if (nameOfProduct.length === 0) {
+            Alert.alert("Alert", "Name of product is required")
+        } else if (description.length === 0) {
+            Alert.alert("Alert", "Description is required")
+        } else if (imageData.length === 0) {
+            Alert.alert("Alert", "Please select Image")
+        } else if (category0.length === 0) {
+            Alert.alert("Alert", "Category is required")
+        } else if (subcategory0.length === 0) {
+            Alert.alert("Alert", "Sub category is required")
+        } else {
+            setLoading(true);
+            addProductPostRequest(
+                nameOfProduct,
+                description,
+                imageData,
+                category0,
+                category1,
+                category2,
+                subcategory0,
+                subcategory1,
+                (response) => {
+                    setLoading(false);
+                    Toast.show('Product created Successfully!');
+                    navigation.goBack()
+                    if (response !== null) { }
+                },
+            )
+        }
+    }
 
     return (
         <>
@@ -28,27 +70,27 @@ export default function CreateProductScreen() {
                 <ApplyFormInput
                     heading="Name of the product"
                     placeholderText="Name of the product"
-                    labelValue={organizationName}
+                    labelValue={nameOfProduct}
                     onChangeText={(val) => {
-                        setOrganizationName(val);
+                        setNameOfProduct(val);
                     }}
                 />
 
                 <ApplyFormInput
                     heading="Code Number of the product"
                     placeholderText="Code Number of the product"
-                    labelValue={organizationName}
+                    labelValue={nameOfProduct}
                     onChangeText={(val) => {
-                        setOrganizationName(val);
+                        setNameOfProduct(val);
                     }}
                 />
 
                 <ApplyFormInput
                     heading="Item Description / Specification"
                     placeholderText="Item Description / Specification"
-                    labelValue={organizationName}
+                    labelValue={nameOfProduct}
                     onChangeText={(val) => {
-                        setOrganizationName(val);
+                        setdescription(val);
                     }}
                 />
 
@@ -63,10 +105,18 @@ export default function CreateProductScreen() {
                 {/* Reorder / Low Stock Warning */}
 
                 <ApplyFormInput
-                    heading="Category and Sub Category of the product"
-                    placeholderText="Category and Sub Category of the product"
+                    heading="Category of the product"
+                    placeholderText="Category of the product"
                     onChangeText={(val) => {
-                        // setComments(val);
+                        setcategory0(val);
+                    }}
+                />
+
+                <ApplyFormInput
+                    heading="Sub Category of the product"
+                    placeholderText="Sub Category of the product"
+                    onChangeText={(val) => {
+                        setsubcategory0(val);
                     }}
                 />
 
@@ -178,6 +228,9 @@ export default function CreateProductScreen() {
                     </TouchableHighlight>
                 </View>
             </ScrollView>
+
+            <CustomLoader loading={loading} />
+            <CustomPanel loading={loading} />
         </>
     )
 }

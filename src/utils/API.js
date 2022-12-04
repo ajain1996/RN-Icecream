@@ -73,10 +73,11 @@ export const matchOTPPostRequest = async (phone, otpVal, successCallBack) => {
     let formData = new FormData();
 
     formData.append('user_cred', phone);
+    formData.append('otp', otpVal);
 
     try {
         let response = await fetch(
-            BASE_URL + 'api/login',
+            BASE_URL + 'api/otpValidate',
             {
                 method: 'POST',
                 headers: {
@@ -240,8 +241,8 @@ export const updateUserPostRequest = async (
             {
                 method: 'POST',
                 headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
+                    // Accept: 'application/json',
+                    // 'Content-Type': 'application/json',
                 },
                 body: formData,
             },
@@ -251,6 +252,52 @@ export const updateUserPostRequest = async (
         successCallBack(json);
     } catch (error) {
         console.log('\n\n updateUserPostRequest Failed');
+        console.error('error', error);
+        successCallBack(null);
+    }
+};
+
+export const addProductPostRequest = async (
+    name,
+    description,
+    image,
+    category0,
+    category1,
+    category2,
+    subcategory0,
+    subcategory1,
+    successCallBack,
+) => {
+    console.log('\n\n addProductPostRequest Called : ', name);
+
+    let formData = new FormData();
+
+    formData.append('name', name);
+    formData.append('description', description);
+    formData.append('image', image);
+    formData.append('category[0]', category0);
+    formData.append('category[1]', category1);
+    formData.append('category[2]', category2);
+    formData.append('subcategory[0]', subcategory0);
+    formData.append('subcategory[1]', subcategory1);
+
+    try {
+        let response = await fetch(
+            BASE_URL + 'api/addProduct',
+            {
+                method: 'POST',
+                headers: {
+                    // Accept: 'application/json',
+                    // 'Content-Type': 'application/json',
+                },
+                body: formData,
+            },
+        );
+        let json = await response.json();
+        console.log('\n\n addProductPostRequest success: ', json);
+        successCallBack(json);
+    } catch (error) {
+        console.log('\n\n addProductPostRequest Failed');
         console.error('error', error);
         successCallBack(null);
     }
