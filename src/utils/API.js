@@ -7,6 +7,7 @@ export const mobileLoginPostRequest = async (
     console.log('\n\n mobileLoginPostRequest Called : ', phone);
 
     let formData = new FormData();
+    phone = "+91" + phone;
 
     formData.append('user_cred', phone);
 
@@ -22,7 +23,7 @@ export const mobileLoginPostRequest = async (
                 body: formData,
             },
         );
-        let json = await response.json();
+        let json = await response.text();
         console.log('\n\n mobileLoginPostRequest success: ', json);
         successCallBack(json);
     } catch (error) {
@@ -42,22 +43,22 @@ export const mobileRegisterPostRequest = async (
     let formData = new FormData();
     phone = "+91" + phone;
 
-    formData.append('email', "ankitjain.aj1996@gmail.com");
-    formData.append('mobile', "8770389198");
+    formData.append('email', email);
+    formData.append('mobile', phone);
 
     try {
         let response = await fetch(
             "https://Icecream.drazs.com/api/public/api/register",
             {
                 method: 'POST',
-                headers: {
-                    // "Accept": 'application/json',
-                    // 'Content-Type': 'application/json',
-                },
+                // headers: {
+                //     // "Accept": 'application/json',
+                //     // 'Content-Type': 'application/json',
+                // },
                 body: formData,
             },
         );
-        let json = await response.json();
+        let json = await response.text();
         console.log('\n\n mobileRegisterPostRequest success: ', json);
         successCallBack(json);
     } catch (error) {
@@ -199,12 +200,14 @@ export const updateUserPostRequest = async (
     company_brochure,
     comapny_ad,
     pan_number,
+    token,
     successCallBack,
 ) => {
     console.log('\n\n updateUserPostRequest Called : ', phone);
 
     let formData = new FormData();
 
+    formData.append('token', token);
     formData.append('email', email);
     formData.append('mobile', phone);
     formData.append('name', name);
@@ -237,7 +240,7 @@ export const updateUserPostRequest = async (
 
     try {
         let response = await fetch(
-            BASE_URL + 'api/register',
+            BASE_URL + 'api/updateUser',
             {
                 method: 'POST',
                 headers: {

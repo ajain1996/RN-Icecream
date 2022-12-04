@@ -20,10 +20,14 @@ import { setUser } from '../../redux/reducer/user';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Alert } from 'react-native';
 import CustomLoader, { CustomPanel } from '../../component/CustomLoader';
+import { response3 } from './VerifyOTP';
 
 export default function UpdateUserScreenIn({ navigation, route }) {
     const dispatch = useDispatch();
-    const { userData } = route?.params;
+    // const { userData } = route?.params;
+    const userData = response3?.data;
+
+    console.log("\n\n userData: ", userData?.user_profile)
 
     const companyTypeList = [
         { name: 'Public Ltd', value: 'Public Ltd' },
@@ -57,6 +61,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
     const [businessType, setBusinessType] = React.useState('');
     const [businessTypeCategory, setBusinessTypeCategory] = React.useState('');
     const [country, setCountry] = React.useState('');
+    const [packageCode, setPackageCode] = React.useState('');
     const [city, setCity] = React.useState('');
     const [state, setState] = React.useState('');
 
@@ -73,7 +78,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
     const [currentStatus, setCurrentStatus] = React.useState('');
     const [paymentStatus, setPaymentStatus] = React.useState('');
 
-    const [user_profile, setUser_Profile] = React.useState('');
+    const [user_profile, setUser_Profile] = React.useState(userData?.userProfile);
     const [address_1, setAddress_1] = React.useState('');
     const [address_2, setAddress_2] = React.useState('');
     const [address_3, setAddress_3] = React.useState('');
@@ -110,13 +115,19 @@ export default function UpdateUserScreenIn({ navigation, route }) {
         },
     };
 
-    const getImage = () => {
+    const getImage = (text) => {
         launchImageLibrary(options, response => {
             if (response?.didCancel) {
             } else if (response?.error) {
             } else if (response?.customButton) {
             } else {
-                setUser_Profile(response?.assets[0].uri);
+                if (text === "profile") {
+                    setUser_Profile(response?.assets[0].uri);
+                } else if (text === "logo") {
+                    setCompany_Logo(response?.assets[0].uri);
+                } else if (text === "brochure") {
+                    setCompany_Brochure(response?.assets[0].uri);
+                }
             }
         });
     };
@@ -149,10 +160,6 @@ export default function UpdateUserScreenIn({ navigation, route }) {
         }
     };
 
-    React.useEffect(() => {
-        fetchCountries();
-    }, []);
-
     const handleSubmit = async () => {
         if (typeOfCompany.length === 0) {
             Alert.alert("Alert", "Company type is mandatory")
@@ -184,62 +191,156 @@ export default function UpdateUserScreenIn({ navigation, route }) {
             Alert.alert("Alert", "Turnover is mandatory")
         } else {
             setLoading(true);
-            updateUserPostRequest(
-                userData?.email,
-                userData?.phone,
-                userData?.fullname,
-                user_profile,
-                organizationName,
-                shortName,
-                alternateMobNo,
-                address_1,
-                address_2,
-                address_3,
-                country,
-                state,
-                city,
-                landmark,
-                longitude,
-                gst_number,
-                est_year,
-                employee_number,
-                turnover,
-                businessType,
-                // business_category0,
-                'business_category1',
-                'business_category2',
-                company_logo,
-                comapany_profile,
-                gstCertificate,
-                panFile,
-                company_brochure,
-                comapny_ad,
-                pan_number,
-                async response => {
-                    setLoading(false);
-                    console.log('\n\n updateUserPostRequest response: ', response?.status);
-                    console.log("\n\n userData: ", userData)
-                    const userData2 = {
-                        fullname: userData?.fullname,
-                        phone: userData?.phone,
-                        email: userData?.email,
-                        password: userData?.password,
-                        userProfile: user_profile.length === 0 ? userData?.userProfile : user_profile,
-                        companyName: organizationName.length === 0 ? userData?.companyName : organizationName,
-                        address: address_1.length === 0 ? userData?.address : address_1,
-                    }
-                    if (response !== null) {
-                        await Auth.setAccount(userData2);
-                        dispatch(setUser(userData2))
-                        Toast.show('Updated Successfully!');
-                        navigation.goBack();
-                        // if (response?.status?.toString()?.toLocaleLowerCase() === "done") {
-                        // }
-                    }
-                },
-            );
+            Auth.getLocalStorageData('usertoken').then((token) => {
+                updateUserPostRequest(
+                    userData?.email,
+                    userData?.phone,
+                    userData?.fullname,
+                    user_profile,
+                    organizationName,
+                    shortName,
+                    alternateMobNo,
+                    address_1,
+                    address_2,
+                    address_3,
+                    country,
+                    state,
+                    city,
+                    landmark,
+                    longitude,
+                    gst_number,
+                    est_year,
+                    employee_number,
+                    turnover,
+                    businessType,
+                    // business_category0,
+                    'business_category1',
+                    'business_category2',
+                    company_logo,
+                    comapany_profile,
+                    gstCertificate,
+                    panFile,
+                    company_brochure,
+                    comapny_ad,
+                    pan_number,
+                    token,
+                    async response => {
+                        setLoading(false);
+                        console.log('\n\n updateUserPostRequest response: ', response?.status);
+                        console.log("\n\n userData: ", userData)
+                        const userData2 = {
+                            fullname: userData?.fullname,
+                            phone: userData?.phone,
+                            email: userData?.email,
+                            password: userData?.password,
+                            userProfile: user_profile.length === 0 ? userData?.userProfile : user_profile,
+                            companyName: organizationName.length === 0 ? userData?.companyName : organizationName,
+                            address: address_1.length === 0 ? userData?.address : address_1,
+                        }
+                        if (response !== null) {
+                            await Auth.setAccount(userData2);
+                            dispatch(setUser(userData2))
+                            if (response?.message) {
+                                Toast.show(response?.message);
+                                return;
+                            }
+                            Toast.show('Updated Successfully!');
+                            navigation.goBack();
+                            // if (response?.status?.toString()?.toLocaleLowerCase() === "done") {
+                            // }
+                        }
+                    },
+                );
+            });
         }
     };
+
+    React.useEffect(() => {
+        if (userData?.organization_name !== undefined) {
+            setOrganizationName(userData?.organization_name)
+        }
+        if (userData?.short_name !== undefined) {
+            setShortName(userData?.short_name)
+        }
+        if (userData?.mobile !== undefined) {
+            setAlternateMobNo(userData?.mobile)
+        }
+        if (userData?.address_1 !== undefined) {
+            setAddress_1(userData?.address_1)
+        }
+        if (userData?.address_2 !== undefined) {
+            setAddress_2(userData?.address_2)
+        }
+        if (userData?.address_3 !== undefined) {
+            setAddress_3(userData?.address_3)
+        }
+        if (userData?.country !== undefined) {
+            setCountry(userData?.country)
+        }
+        if (userData?.state !== undefined) {
+            setState(userData?.state)
+        }
+        if (userData?.city !== undefined) {
+            setCity(userData?.city)
+        }
+        if (userData?.landmark !== undefined) {
+            setLandmark(userData?.landmark)
+        }
+        if (userData?.latitude !== undefined) { }
+        if (userData?.longitude !== undefined) {
+            setLongitude(userData?.latitude)
+        }
+        if (userData?.company_logo !== undefined) {
+            setCompany_Logo(userData?.company_logo)
+        }
+        if (userData?.comapany_profile !== undefined) {
+            setComapany_Profile(userData?.comapany_profile)
+        }
+        if (userData?.gst_number !== undefined) {
+            setGst_Number(userData?.gst_number)
+        }
+        if (userData?.gst_image !== undefined) {
+            setGSTCertificate(userData?.gst_image)
+        }
+        if (userData?.pan_number !== undefined) {
+            setPANFile(userData?.pan_number)
+        }
+        if (userData?.pan_image !== undefined) {
+            setPANFile(userData?.pan_image)
+        }
+        if (userData?.company_brochure !== undefined) {
+            setCompany_Brochure(userData?.company_brochure)
+        }
+        if (userData?.comapny_ad !== undefined) {
+            setComapny_AD(userData?.comapny_ad)
+        }
+        if (userData?.est_year !== undefined) {
+            setEst_Year(userData?.est_year)
+        }
+        if (userData?.employee_number !== undefined) {
+            setEmployee_Number(userData?.employee_number)
+        }
+        if (userData?.turnover !== undefined) {
+            setTurnover(userData?.turnover)
+        }
+        if (userData?.package_code !== undefined) {
+            setPackageCode(userData?.package_code)
+        }
+        if (userData?.is_subscribed !== undefined) { }
+        if (userData?.payment_status !== undefined) {
+            setPaymentStatus(userData?.payment_status)
+        }
+        if (userData?.current_status !== undefined) {
+            setCurrentStatus(userData?.current_status)
+        }
+        if (userData?.validity_date !== undefined) { }
+        if (userData?.certificate_issue !== undefined) {
+            // set
+        }
+    }, [])
+
+
+    console.log("\n\n user Profile", user_profile)
 
     return (
         <>
@@ -248,13 +349,12 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                 style={{ width: '100%', height: '100%', backgroundColor: '#fff' }}>
                 <TouchableHighlight
                     style={{ alignItems: 'center', marginVertical: '8%' }}
-                    onPress={getImage}
+                    onPress={() => { getImage("profile") }}
                     underlayColor="transparent">
-                    {userData?.userProfile?.length === 0 ? (
+                    {user_profile?.length === 0 || user_profile === undefined ? (
                         <View
                             style={{
-                                width: 120,
-                                height: 120,
+                                width: 120, height: 120,
                                 borderRadius: 100,
                                 backgroundColor: '#f7f8f9',
                                 ...commonStyles.centerStyles,
@@ -266,7 +366,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                         </View>
                     ) : (
                         <Image
-                            source={{ uri: userData?.userProfile }}
+                            source={{ uri: user_profile }}
                             style={{ width: 120, height: 120, borderRadius: 100 }}
                         />
                     )}
@@ -315,6 +415,66 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                     data={companyTypeList}
                 />
 
+                <>
+                    <Text style={styles.heading}>Company Logo</Text>
+                    <TouchableHighlight
+                        style={{ alignItems: 'center', marginBottom: 16, marginTop: 6 }}
+                        onPress={() => { getImage("logo") }}
+                        underlayColor="transparent">
+                        {company_logo?.length === 0 || company_logo === null ? (
+                            <View
+                                style={{
+                                    width: 120,
+                                    height: 120,
+                                    borderRadius: 8,
+                                    backgroundColor: '#f7f8f9',
+                                    ...commonStyles.centerStyles,
+                                }}>
+                                <Image
+                                    source={require('../../assets/camera.png')}
+                                    style={{ width: '75%', height: '75%', tintColor: '#999' }}
+                                />
+                            </View>
+                        ) : (
+                            <Image
+                                source={{ uri: company_logo }}
+                                style={{ width: 120, height: 120, borderRadius: 8 }}
+                            />
+                        )}
+                    </TouchableHighlight>
+                </>
+
+                <>
+                    <Text style={styles.heading}>Company Brochure</Text>
+                    <TouchableHighlight
+                        style={{ alignItems: 'center', marginBottom: 16, marginTop: 6 }}
+                        onPress={() => { getImage("brochure") }}
+                        underlayColor="transparent">
+                        {company_brochure?.length === 0 || company_brochure === null ? (
+                            <View
+                                style={{
+                                    width: "90%",
+                                    height: 210,
+                                    borderRadius: 8,
+                                    backgroundColor: '#f7f8f9',
+                                    ...commonStyles.centerStyles,
+                                }}>
+                                <Image
+                                    source={require('../../assets/camera.png')}
+                                    resizeMode="contain"
+                                    style={{ width: '60%', height: '60%', tintColor: '#999' }}
+                                />
+                            </View>
+                        ) : (
+                            <Image
+                                source={{ uri: company_brochure }}
+                                resizeMode="contain"
+                                style={{ width: "90%", height: 210, borderRadius: 8 }}
+                            />
+                        )}
+                    </TouchableHighlight>
+                </>
+
                 <ApplyFormPicker
                     heading="Business Type"
                     placeholderText="Business Type"
@@ -344,6 +504,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                 <ApplyFormInput
                     heading="Business Owner's Name"
                     placeholderText="Business Owner's Name"
+                    labelValue={businessOwnerName}
                     onChangeText={val => {
                         setBusinessOwnerName(val);
                     }}
@@ -352,6 +513,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                 <ApplyFormInput
                     heading="Business Owner's Email ID"
                     placeholderText="Business Owner's Email ID"
+                    labelValue={businessOwnerEmail}
                     onChangeText={val => {
                         setBusinessOwnerEmail(val);
                     }}
@@ -361,6 +523,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                     heading="Business Owner's Mobile"
                     placeholderText="Business Owner's Mobile"
                     isNumeric={true}
+                    labelValue={businessOwnerPhone}
                     maxLength={10}
                     onChangeText={val => {
                         setBusinessOwnerPhone(val);
@@ -370,6 +533,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                 <ApplyFormInput
                     heading="Address-1"
                     placeholderText="Address-1"
+                    labelValue={address_1}
                     onChangeText={val => {
                         setAddress_1(val);
                     }}
@@ -378,6 +542,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                 <ApplyFormInput
                     heading="Address-2"
                     placeholderText="Address-2"
+                    labelValue={address_2}
                     onChangeText={val => {
                         setAddress_2(val);
                     }}
@@ -386,6 +551,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                 <ApplyFormInput
                     heading="Address-3"
                     placeholderText="Address-3"
+                    labelValue={address_3}
                     onChangeText={val => {
                         setAddress_3(val);
                     }}
@@ -394,6 +560,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                 <ApplyFormInput
                     heading="Country"
                     placeholderText="Country"
+                    labelValue={country}
                     onChangeText={val => {
                         setCountry(val);
                     }}
@@ -416,6 +583,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                 <ApplyFormInput
                     heading="State"
                     placeholderText="State"
+                    labelValue={state}
                     onChangeText={val => {
                         setState(val);
                     }}
@@ -463,6 +631,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                 <ApplyFormInput
                     heading="Cities"
                     placeholderText="Cities"
+                    labelValue={city}
                     onChangeText={val => {
                         setCity(val);
                     }}
@@ -484,6 +653,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                 <ApplyFormInput
                     heading="Landmark Location on Google"
                     placeholderText="Landmark Location on Google"
+                    labelValue={landmark}
                     onChangeText={val => {
                         setLandmark(val);
                     }}
@@ -492,6 +662,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                 <ApplyFormInput
                     heading="Google LAT / LONG Position  Cordinates"
                     placeholderText="Google LAT / LONG Position  Cordinates"
+                    labelValue={""}
                     onChangeText={val => {
                         setLongitude(val);
                     }}
@@ -500,6 +671,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                 <ApplyFormInput
                     heading="Are you a member of any other association"
                     placeholderText="Are you a member of any other association"
+                    labelValue={""}
                     onChangeText={val => {
                         // setComments(val);
                     }}
@@ -508,7 +680,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                 <ApplyFormInput
                     heading="GST Number"
                     placeholderText="GST Number"
-                    labelValue={shortName}
+                    labelValue={gst_number}
                     onChangeText={val => {
                         setGst_Number(val);
                     }}
@@ -526,6 +698,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                 <ApplyFormInput
                     heading="PAN Number"
                     placeholderText="PAN Number"
+                    labelValue={pan_number}
                     onChangeText={val => {
                         setPAN_Number(val);
                     }}
@@ -543,6 +716,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                 <ApplyFormInput
                     heading="Establishment Year"
                     placeholderText="Establishment Year"
+                    labelValue={est_year}
                     onChangeText={val => {
                         setEst_Year(val);
                     }}
@@ -564,6 +738,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                 <ApplyFormInput
                     heading="Approx Turnover in Lacs"
                     placeholderText="Approx Turnover in Lacs"
+                    labelValue={turnover}
                     onChangeText={val => {
                         setTurnover(val);
                     }}
@@ -572,14 +747,16 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                 <ApplyFormInput
                     heading="Manufacturing Setup Address/ es"
                     placeholderText="Manufacturing Setup Address/ es"
+                    labelValue={""}
                     onChangeText={val => {
                         // setComments(val);
                     }}
                 />
 
                 <ApplyFormInput
-                    heading="Pacakge Code Offered under this Subscription"
-                    placeholderText="Pacakge Code Offered under this Subscription"
+                    heading="Package Code Offered under this Subscription"
+                    placeholderText="Package Code Offered under this Subscription"
+                    labelValue={packageCode}
                     onChangeText={val => {
                         // setComments(val);
                     }}
@@ -683,7 +860,7 @@ const RenderCustomFilePicker = ({
     return (
         <View style={{ alignItems: 'center' }}>
             <Text style={styles.heading}>{title}</Text>
-            {file.length === 0 ? (
+            {file?.length === 0 || file === null ? (
                 <TouchableHighlight
                     style={[styles.gstCertificate]}
                     onPress={() => {
@@ -698,7 +875,7 @@ const RenderCustomFilePicker = ({
                 </TouchableHighlight>
             ) : (
                 <View style={[styles.gstCertificate, commonStyles.rowBetween]}>
-                    <Text style={{ ...commonStyles.fs14_500 }}>{file.name}</Text>
+                    <Text style={{ ...commonStyles.fs14_500 }}>{file?.name}</Text>
                     <TouchableHighlight
                         onPress={() => setFile('')}
                         underlayColor="#f7f8f9">

@@ -20,6 +20,22 @@ import {
 } from '../../utils/API';
 
 const { width, height } = Dimensions.get('window');
+export function getRawJSON(str) {
+  return str.split(' ').map((el, index) => { return index > 0 ? el : '' }).join('');
+}
+
+export function formatingValidJSON(str) {
+  // From https://stackoverflow.com/questions/9637517/parsing-relaxed-json-without-eval
+  return str
+    .replace(/:\s*"([^"]*)"/g, function (match, p1) {
+      return ': "' + p1.replace(/:/g, '@colon@') + '"';
+    })
+    .replace(/:\s*'([^']*)'/g, function (match, p1) {
+      return ': "' + p1.replace(/:/g, '@colon@') + '"';
+    })
+    .replace(/(['"])?([a-z0-9A-Z_]+)(['"])?\s*:/g, '"$2": ')
+    .replace(/@colon@/g, ':')
+}
 
 function Register({ navigation }) {
   const [firstname, setfirstname] = useState('');
@@ -45,10 +61,16 @@ function Register({ navigation }) {
     setLoading(true);
     mobileRegisterPostRequest(email, phone, async response => {
       setLoading(false);
-      console.log('mobileLoginPostRequest response: ', response);
+      console.log('mobileLoginPostRequest response: ', formatingValidJSON(getRawJSON(response)));
       if (response !== null) {
-        Toast.show('OTP sent Successfully!');
-        navigation.navigate('VerifyOTP', { userData: userData });
+        if (getRawJSON(response).toString().includes("Duplicateentry")) {
+          Toast.show('User is already registered! Please Login');
+        } else {
+          Toast.show('OTP sent Successfully!');
+          navigation.navigate('VerifyOTP', { userData: userData });
+        }
+      } else {
+        Toast.show('Oops! Something went wrogn');
       }
       // await Auth.setLocalStorageData(
       //   'bearerToken',
@@ -60,6 +82,15 @@ function Register({ navigation }) {
       // );
     });
   };
+
+  // {
+  //   "Status":"Success",
+  //   "Details":"77463b7a82d331d0-BOM"
+  // }
+  // {
+  //   "status":"Done",
+  //   "message":"SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'ankitjain.aj1996@gmail.com' for key 'users_email_unique' (SQL: insert into `users` (`email`, `company_id`, `mobile`, `otp`, `updated_at`, `created_at`) values (ankitjain.aj1996@gmail.com, 8fKrj, 8770389198, 723199, 2022-12-04 17:23:53, 2022-12-04 17:23:53))"
+  // }
 
   return loading ? (
     <View style={{ width: '100%', height: '100%', ...commonStyles.centerStyles }}>

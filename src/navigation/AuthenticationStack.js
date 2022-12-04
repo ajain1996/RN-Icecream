@@ -23,7 +23,7 @@ export default function AuthenticationStack() {
                 headerShown: false,
                 ...TransitionPresets.SlideFromRightIOS,
             }}
-            initialRouteName="SplashUserScreen"
+            initialRouteName="UpdateUserScreen"
         >
             <Stack.Screen name="SplashUserScreen" component={SplashUserScreen} />
             <Stack.Screen name="Login" component={Login} />

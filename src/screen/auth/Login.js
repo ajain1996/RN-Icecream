@@ -18,6 +18,7 @@ import { mobileLoginPostRequest } from '../../utils/API';
 import Auth from '../../service/Auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../../redux/reducer/user';
+import { getRawJSON } from './Register';
 
 const { width, height } = Dimensions.get('window');
 
@@ -43,13 +44,22 @@ function Login({ navigation }) {
       address: userData?.address === undefined ? "" : userData?.address,
     };
     setLoading(true)
-    mobileLoginPostRequest(phone, async response2 => {
+    mobileLoginPostRequest(phone, async response => {
       setLoading(false);
-      console.log('mobileLoginPostRequest response: ', response2);
-      Toast.show("Login Successfully!");
-      await Auth.setAccount(userData2);
-      dispatch(setUser(userData2));
-      navigation.navigate("Root")
+      console.log('mobileLoginPostRequest response: ', getRawJSON(response));
+      if (response !== null) {
+        if (getRawJSON(response).toString().includes("SenttoUser")) {
+          Toast.show("Login Successfully!");
+          await Auth.setAccount(userData2);
+          dispatch(setUser(userData2));
+          navigation.navigate("Root")
+        } else {
+          Toast.show('Number not registered');
+        }
+      } else {
+        Toast.show('Oops! Something went wrogn');
+      }
+
     });
   }
 
