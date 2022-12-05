@@ -98,9 +98,15 @@ export default function UpdateUserScreenIn({navigation, route}) {
   const [comapny_ad, setComapny_AD] = React.useState('');
   const [pan_number, setPAN_Number] = React.useState('');
 
-  const [businessOwnerName, setBusinessOwnerName] = React.useState('');
-  const [businessOwnerEmail, setBusinessOwnerEmail] = React.useState('');
-  const [businessOwnerPhone, setBusinessOwnerPhone] = React.useState('');
+  const [businessOwnerName, setBusinessOwnerName] = React.useState(
+    userData.name,
+  );
+  const [businessOwnerEmail, setBusinessOwnerEmail] = React.useState(
+    userData.email,
+  );
+  const [businessOwnerPhone, setBusinessOwnerPhone] = React.useState(
+    userData.mobile,
+  );
 
   const fetchCountries = async () => {
     const response = await fetch(
@@ -458,7 +464,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
       setGSTCertificate(userData?.gst_image);
     }
     if (userData?.pan_number !== undefined) {
-      setPANFile(userData?.pan_number);
+      setPAN_Number(userData?.pan_number);
     }
     if (userData?.pan_image !== undefined) {
       setPANFile(userData?.pan_image);
