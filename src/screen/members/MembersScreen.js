@@ -7,8 +7,18 @@ import { COLORS } from '../../component/Constant/Color'
 import { Image } from 'react-native'
 import { ScrollView } from 'react-native'
 import { TouchableOpacity } from 'react-native'
+import { getAllCategoriesAPI } from '../../utils/API'
 
 export default function MembersScreen({ navigation }) {
+
+    React.useEffect(() => {
+        getAllCategoriesAPI((response) => {
+            if (response !== null) {
+                console.log("\n\n getAllCategoriesAPI response: ", response)
+            }
+        })
+    }, [])
+
     return (
         <View style={{ width: "100%", height: "100%", backgroundColor: "#fff" }}>
             {membersHeader(navigation)}
