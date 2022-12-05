@@ -1,4 +1,4 @@
-const BASE_URL = "https://Icecream.drazs.com/api/public/";
+const BASE_URL = 'https://Icecream.drazs.com/api/public/';
 
 export const getAllUsersAPI = async (successCallBack) => {
     try {
@@ -54,14 +54,14 @@ export const mobileRegisterPostRequest = async (
     console.log('\n\n mobileRegisterPostRequest Called : ', phone, email);
 
     let formData = new FormData();
-    phone = "+91" + phone;
+    phone = '+91' + phone;
 
     formData.append('email', email);
     formData.append('mobile', phone);
 
     try {
         let response = await fetch(
-            "https://Icecream.drazs.com/api/public/api/register",
+            'https://Icecream.drazs.com/api/public/api/register',
             {
                 method: 'POST',
                 // headers: {
@@ -90,17 +90,14 @@ export const matchOTPPostRequest = async (phone, otpVal, successCallBack) => {
     formData.append('otp', otpVal);
 
     try {
-        let response = await fetch(
-            BASE_URL + 'api/otpValidate',
-            {
-                method: 'POST',
-                headers: {
-                    // "Accept": 'application/json',
-                    // 'Content-Type': 'application/json',
-                },
-                body: formData,
+        let response = await fetch(BASE_URL + 'api/otpValidate', {
+            method: 'POST',
+            headers: {
+                // "Accept": 'application/json',
+                // 'Content-Type': 'application/json',
             },
-        );
+            body: formData,
+        });
         let json = await response.json();
         console.log('\n\n matchOTPPostRequest success: ', json);
         successCallBack(json);
@@ -111,12 +108,12 @@ export const matchOTPPostRequest = async (phone, otpVal, successCallBack) => {
     }
 };
 
-export const getAllNewsAPI = async (successCallBack) => {
+export const getAllNewsAPI = async successCallBack => {
     console.log('\n\n getAllNewsAPI Called : ');
 
     try {
         let response = await fetch(BASE_URL + 'api/getNews', {
-            method: "GET",
+            method: 'GET',
             // headers: { "Authorization": `Bearer ${bearerToken}` }
         });
         let json = await response.json();
@@ -129,12 +126,12 @@ export const getAllNewsAPI = async (successCallBack) => {
     }
 };
 
-export const getNewsCategoriesAPI = async (successCallBack) => {
+export const getNewsCategoriesAPI = async successCallBack => {
     console.log('\n\n getNewsCategoriesAPI Called : ');
 
     try {
         let response = await fetch(BASE_URL + 'api/getNewsCategory', {
-            method: "GET",
+            method: 'GET',
             // headers: { "Authorization": `Bearer ${bearerToken}` }
         });
         let json = await response.json();
@@ -147,12 +144,12 @@ export const getNewsCategoriesAPI = async (successCallBack) => {
     }
 };
 
-export const getAllBlogsAPI = async (successCallBack) => {
+export const getAllBlogsAPI = async successCallBack => {
     console.log('\n\n getAllBlogsAPI Called : ');
 
     try {
         let response = await fetch(BASE_URL + 'api/getBlog', {
-            method: "GET",
+            method: 'GET',
             // headers: { "Authorization": `Bearer ${bearerToken}` }
         });
         let json = await response.json();
@@ -165,12 +162,12 @@ export const getAllBlogsAPI = async (successCallBack) => {
     }
 };
 
-export const getAllProductsAPI = async (successCallBack) => {
+export const getAllProductsAPI = async successCallBack => {
     console.log('\n\n getAllProductsAPI Called : ');
 
     try {
         let response = await fetch(BASE_URL + 'api/getProduct', {
-            method: "GET",
+            method: 'GET',
             // headers: { "Authorization": `Bearer ${bearerToken}` }
         });
         let json = await response.json();
@@ -184,6 +181,133 @@ export const getAllProductsAPI = async (successCallBack) => {
 };
 
 export const updateUserPostRequest = async (
+    email,
+    phone,
+    name,
+    user_profile,
+    organization_name,
+    short_name,
+    mobile_2,
+    address_1,
+    address_2,
+    address_3,
+    country,
+    state,
+    city,
+    landmark,
+    longitude,
+    gst_number,
+    est_year,
+    employee_number,
+    turnover,
+    business_category0,
+    business_category1,
+    business_category2,
+    company_logo,
+    comapany_profile,
+    gst_image,
+    pan_image,
+    company_brochure,
+    comapny_ad,
+    pan_number,
+    token,
+    successCallBack,
+) => {
+    console.log('\n\n updateUserPostRequest Called : ', phone);
+    var formdata = new FormData();
+    formdata.append('token', token);
+    // formdata.append('email', email);
+    // formdata.append('name', name);
+    // formdata.append('mobile', phone);
+    formdata.append('email', 'lakheraakshay@gmail.com');
+    formdata.append('name', 'Aaadarsh Gupta');
+    formdata.append('mobile', '8989802546');
+    // 0-------
+    // formdata.append('user_profile', user_profile, user_profile.uri);
+    formdata.append('organization_name', organization_name);
+    formdata.append('short_name', short_name);
+    formdata.append('mobile_2', mobile_2);
+    formdata.append('address_1', address_1);
+    formdata.append('address_2', address_2);
+    formdata.append('address_3', address_3);
+    formdata.append('country', country);
+    formdata.append('state', state);
+    formdata.append('city', city);
+    formdata.append('landmark', landmark);
+    // formdata.append('latitude', '67.89');
+    // formdata.append('longitude', '89.8');
+    // formdata.append('gst_number', gst_number);
+    // formdata.append('est_year', est_year);
+    // formdata.append('employee_number', employee_number);
+    // formdata.append('turnover', turnover);
+    // formdata.append('business_category[0]', business_category0);
+    // formdata.append('business_category[1]', business_category1);
+    // formdata.append('business_category[2]', business_category2);
+
+    // 0000000000000000000000000
+    formdata.append('organization_name', 'Strix DIgital');
+    formdata.append('short_name', 'SD');
+    formdata.append('mobile_2', '8989510738');
+    formdata.append('address_1', 'New Durga');
+    formdata.append('address_2', 'Market');
+    formdata.append('address_3', 'Salichouka');
+    formdata.append('country', 'India');
+    formdata.append('state', 'MP');
+    formdata.append('city', 'Gadarwara');
+    formdata.append('landmark', 'Near Mandir');
+    formdata.append('latitude', '67.89');
+    formdata.append('longitude', '89.87');
+    formdata.append('gst_number', 'GS567GRt89IOI');
+    formdata.append('est_year', '2020');
+    formdata.append('employee_number', '14');
+    formdata.append('turnover', '24 L');
+    formdata.append('business_category[0]', '1');
+    formdata.append('business_category[1]', '2');
+    formdata.append('business_category[2]', '3');
+    formdata.append('business_sub_category[0]', '1');
+    formdata.append('business_sub_category[1]', '2');
+
+    // 0000000000000
+
+    // formdata.append('business_sub_category[0]', busis);
+    // formdata.append('business_sub_category[1]', '2');
+    // formdata.append('company_logo', company_logo, company_logo.uri);
+    // formdata.append(
+    //   'comapany_profile',
+    //   fileInput.files[0],
+    //   '/C:/Users/hp/Downloads/Saly-13 (1).png',
+    // );
+    // ---------------------------
+
+    // formdata.append('gst_image', gst_image, gst_image.uri);
+    // formdata.append('pan_image', pan_image, pan_image.uri);
+    // formdata.append('company_brochure', company_brochure, company_brochure.uri);
+    // formdata.append('comapny_ad', comapny_ad, comapny_ad.uri);
+
+    // 0-------------------------------------
+
+    // formdata.append('pan_number', pan_number);
+    // formdata.append('certificate_issue', '1');
+
+    formdata.append('pan_number', 'CREKG6733Y');
+    formdata.append('certificate_issue', '1');
+
+    var requestOptions = {
+        method: 'POST',
+        body: formdata,
+        redirect: 'follow',
+    };
+
+    fetch('https://Icecream.drazs.com/api/public/api/updateUser', requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            console.log('\n\n\n', result, ' \n\n\n<<<<<< result at update user'),
+                console.log('\n\n updateUserPostRequest success: ', result);
+            successCallBack(JSON.parse(result));
+        })
+        .catch(error => console.log('error', error));
+};
+export const updateUserPostRequest1 = async (
     email,
     phone,
     name,
@@ -252,17 +376,14 @@ export const updateUserPostRequest = async (
     formData.append('pan_number', pan_number);
 
     try {
-        let response = await fetch(
-            BASE_URL + 'api/updateUser',
-            {
-                method: 'POST',
-                headers: {
-                    // Accept: 'application/json',
-                    // 'Content-Type': 'application/json',
-                },
-                body: formData,
+        let response = await fetch(BASE_URL + 'api/updateUser', {
+            method: 'POST',
+            headers: {
+                // Accept: 'application/json',
+                // 'Content-Type': 'application/json',
             },
-        );
+            body: formData,
+        });
         let json = await response.json();
         console.log('\n\n updateUserPostRequest success: ', json);
         successCallBack(json);
@@ -271,6 +392,38 @@ export const updateUserPostRequest = async (
         console.error('error', error);
         successCallBack(null);
     }
+};
+
+export const getUserById = (id, callBack) => {
+    var requestOptions = {
+        method: 'GET',
+        redirect: 'follow',
+    };
+
+    fetch(
+        'https://Icecream.drazs.com/api/public/api/getUserId?user_id=' + id,
+        requestOptions,
+    )
+        .then(response => response.text())
+        .then(result => callBack(JSON.parse(result)))
+        .catch(error => console.log('error', error));
+};
+
+export const getCategories = callBack => {
+    var requestOptions = {
+        method: 'GET',
+        redirect: 'follow',
+    };
+
+    fetch(
+        'https://Icecream.drazs.com/api/public/api/getBusinessCategory',
+        requestOptions,
+    )
+        .then(response => response.text())
+        .then(result => {
+            callBack(JSON.parse(result));
+        })
+        .catch(error => console.log('error', error));
 };
 
 export const addProductPostRequest = async (
@@ -298,17 +451,14 @@ export const addProductPostRequest = async (
     formData.append('subcategory[1]', subcategory1);
 
     try {
-        let response = await fetch(
-            BASE_URL + 'api/addProduct',
-            {
-                method: 'POST',
-                headers: {
-                    // Accept: 'application/json',
-                    // 'Content-Type': 'application/json',
-                },
-                body: formData,
+        let response = await fetch(BASE_URL + 'api/addProduct', {
+            method: 'POST',
+            headers: {
+                // Accept: 'application/json',
+                // 'Content-Type': 'application/json',
             },
-        );
+            body: formData,
+        });
         let json = await response.json();
         console.log('\n\n addProductPostRequest success: ', json);
         successCallBack(json);
