@@ -1,8 +1,8 @@
 const BASE_URL = "https://Icecream.drazs.com/api/public/";
 
-export const getAllCategoriesAPI = async (successCallBack) => {
+export const getAllUsersAPI = async (successCallBack) => {
     try {
-        let response = await fetch(BASE_URL + 'getAllUser', {
+        let response = await fetch(BASE_URL + 'api/getAllUser', {
             method: 'GET',
         });
         let json = await response.json();

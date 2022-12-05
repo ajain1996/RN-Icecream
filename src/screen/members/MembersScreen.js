@@ -7,14 +7,19 @@ import { COLORS } from '../../component/Constant/Color'
 import { Image } from 'react-native'
 import { ScrollView } from 'react-native'
 import { TouchableOpacity } from 'react-native'
-import { getAllCategoriesAPI } from '../../utils/API'
+import { getAllUsersAPI } from '../../utils/API'
 
 export default function MembersScreen({ navigation }) {
 
+    const [members, setMembers] = React.useState([])
+
     React.useEffect(() => {
-        getAllCategoriesAPI((response) => {
+        getAllUsersAPI((response) => {
             if (response !== null) {
-                console.log("\n\n getAllCategoriesAPI response: ", response)
+                if (response?.status?.toLocaleLowerCase() === "sucess") {
+                    console.log("\n\n getAllUsersAPI response: ", response?.data?.length)
+                    setMembers(response?.data);
+                }
             }
         })
     }, [])
@@ -24,37 +29,47 @@ export default function MembersScreen({ navigation }) {
             {membersHeader(navigation)}
 
             <ScrollView>
-                {[1, 2, 3, 4, 5, 6].map((item, index) => {
+                {members?.map((item, index) => {
                     return (
                         <TouchableOpacity style={styles.itemWrapper} key={index} activeOpacity={0.9}
-                            onPress={() => { navigation.navigate("MemberDetailScreen") }}
+                            onPress={() => {
+                                navigation.navigate("MemberDetailScreen", {
+                                    item: item
+                                })
+                            }}
                         >
                             <View style={{ width: "100%", padding: 14 }}>
                                 <Text style={styles.memberName}>
-                                    Member Name
+                                    {item?.name === null ? "Member name" : item?.name}
                                 </Text>
                                 <Text style={{ ...commonStyles.fs12_400, color: "#fff" }}>
-                                    (Company name)
+                                    ({item?.email === null ? "company@gmail.com" : item?.email})
                                 </Text>
                             </View>
                             <View style={styles.itemContent}>
-                                <Image
-                                    source={{ uri: "https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1331&q=80" }}
-                                    style={styles.itemImg}
-                                />
+                                {item?.user_profile?.includes("http")
+                                    ? <Image
+                                        source={{ uri: item?.user_profile }}
+                                        style={styles.itemImg}
+                                    />
+                                    : <Image
+                                        source={{ uri: "https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1331&q=80" }}
+                                        style={styles.itemImg}
+                                    />}
                                 <View style={styles.memberNameBlock}>
                                     <Text style={[styles.memberName, { color: COLORS.theme }]}>
-                                        Member Name
+                                        {item?.short_name === null ? "Full name" : item?.short_name}
                                     </Text>
                                     <Text style={styles.conpanyName}>
-                                        (Company name)
+                                        ({item?.organization_name === null ? "Organization Name" : item?.organization_name})
                                     </Text>
 
                                     <Text style={styles.memberAddress}>
-                                        Address: 180 Local street, Member Address, Member address 2
+                                        Address: {item?.address_1}
+                                        {/* 180 Local street, Member Address, Member address 2 */}
                                     </Text>
                                     <Text style={styles.companywebsite}>
-                                        Website: (Company website)
+                                        Website: (www.companywebsite.com)
                                     </Text>
                                 </View>
                             </View>
