@@ -146,14 +146,16 @@ export const VerifyOTP: React.FC<OPTInputProps> = ({navigation, route}) => {
       matchOTPPostRequest(userData?.phone, OTPvalue, async response => {
         setLoading(false);
         const userData2 = response?.data;
-        console.log('\n\n \n\n matchOTPPostRequest response: ', response);
+
+        console.log('\n\n \n\n matchOTPPostRequest response: ', userData2);
         if (userType === 'member') {
           await Auth.setLocalStorageData(
             'usertoken',
             response?.data?.user_token,
           );
+          dispatch(setUser(userData2));
           // navigation.navigate('UpdateUserScreen', {userData: userData2});
-          navigation.navigate('Root', {userData: userData2});
+          // navigation.navigate('Root');
         } else if (userType === 'guest') {
           await Auth.setAccount(userData2);
           dispatch(setUser(userData2));
