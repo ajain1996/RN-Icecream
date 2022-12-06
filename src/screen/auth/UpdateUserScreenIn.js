@@ -15,7 +15,11 @@ import DocumentPicker from 'react-native-document-picker';
 import CustomHeader from '../../component/Header/CustomHeader';
 import {useDispatch, useSelector} from 'react-redux';
 import Auth from '../../service/Auth';
-import {getCategories, updateUserPostRequest} from '../../utils/API';
+import {
+  categoryIdValue,
+  getCategories,
+  updateUserPostRequest,
+} from '../../utils/API';
 import {setUser} from '../../redux/reducer/user';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {Alert} from 'react-native';
@@ -98,9 +102,15 @@ export default function UpdateUserScreenIn({navigation, route}) {
   const [comapny_ad, setComapny_AD] = React.useState('');
   const [pan_number, setPAN_Number] = React.useState('');
 
-  const [businessOwnerName, setBusinessOwnerName] = React.useState('');
-  const [businessOwnerEmail, setBusinessOwnerEmail] = React.useState('');
-  const [businessOwnerPhone, setBusinessOwnerPhone] = React.useState('');
+  const [businessOwnerName, setBusinessOwnerName] = React.useState(
+    userData.name,
+  );
+  const [businessOwnerEmail, setBusinessOwnerEmail] = React.useState(
+    userData.email,
+  );
+  const [businessOwnerPhone, setBusinessOwnerPhone] = React.useState(
+    userData.mobile,
+  );
 
   const fetchCountries = async () => {
     const response = await fetch(
@@ -232,92 +242,92 @@ export default function UpdateUserScreenIn({navigation, route}) {
       Alert.alert('Alert', 'Turnover is mandatory');
     } else {
       Alert.alert('Ready to submit');
-      console.log(
-        userData?.email,
-        '\n',
-        userData?.mobile,
-        '\n',
-        userData?.name,
-        '\n',
-        user_profile,
-        '\n',
+      // console.log(
+      //   userData?.email,
+      //   '\n',
+      //   userData?.mobile,
+      //   '\n',
+      //   userData?.name,
+      //   '\n',
+      //   user_profile,
+      //   '\n',
 
-        organizationName,
-        '\n',
+      //   organizationName,
+      //   '\n',
 
-        shortName,
-        '\n',
+      //   shortName,
+      //   '\n',
 
-        alternateMobNo,
-        '\n',
+      //   alternateMobNo,
+      //   '\n',
 
-        address_1,
-        '\n',
+      //   address_1,
+      //   '\n',
 
-        address_2,
-        '\n',
+      //   address_2,
+      //   '\n',
 
-        address_3,
-        '\n',
+      //   address_3,
+      //   '\n',
 
-        country,
-        '\n',
+      //   country,
+      //   '\n',
 
-        state,
-        '\n',
+      //   state,
+      //   '\n',
 
-        city,
-        '\n',
+      //   city,
+      //   '\n',
 
-        landmark,
-        '\n',
+      //   landmark,
+      //   '\n',
 
-        longitude,
-        '\n',
+      //   longitude,
+      //   '\n',
 
-        gst_number,
-        '\n',
+      //   gst_number,
+      //   '\n',
 
-        est_year,
-        '\n',
+      //   est_year,
+      //   '\n',
 
-        employee_number,
-        '\n',
+      //   employee_number,
+      //   '\n',
 
-        turnover,
-        '\n',
+      //   turnover,
+      //   '\n',
 
-        businessType,
-        '\n',
+      //   businessType,
+      //   '\n',
 
-        // business_category0,
-        'business_category1',
-        '\n',
+      //   // business_category0,
+      //   'business_category1',
+      //   '\n',
 
-        'business_category2',
-        '\n',
+      //   'business_category2',
+      //   '\n',
 
-        company_logo,
-        '\n',
+      //   company_logo,
+      //   '\n',
 
-        comapany_profile,
-        '\n',
+      //   comapany_profile,
+      //   '\n',
 
-        gstCertificate,
-        '\n',
+      //   gstCertificate,
+      //   '\n',
 
-        panFile,
-        '\n',
+      //   panFile,
+      //   '\n',
 
-        company_brochure,
-        '\n',
+      //   company_brochure,
+      //   '\n',
 
-        comapny_ad,
-        '\n',
+      //   comapny_ad,
+      //   '\n',
 
-        pan_number,
-        '\n',
-      );
+      //   pan_number,
+      //   '\n',
+      // );
       //   return null;
       // setLoading(true);
       Auth.getLocalStorageData('usertoken').then(token => {
@@ -458,7 +468,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
       setGSTCertificate(userData?.gst_image);
     }
     if (userData?.pan_number !== undefined) {
-      setPANFile(userData?.pan_number);
+      setPAN_Number(userData?.pan_number);
     }
     if (userData?.pan_image !== undefined) {
       setPANFile(userData?.pan_image);
@@ -489,7 +499,8 @@ export default function UpdateUserScreenIn({navigation, route}) {
     if (userData?.current_status !== undefined) {
       setCurrentStatus(userData?.current_status);
     }
-    if (userData?.validity_date !== undefined) {
+    if (userData?.setBusinessTypeCategory !== undefined) {
+      // setBusinessTypeCategory(categoryIdValue['1']);
     }
     if (userData?.certificate_issue !== undefined) {
       // set

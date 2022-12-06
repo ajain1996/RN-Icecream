@@ -27,9 +27,9 @@ export const response3 = {
   message: 'Login Successfully',
   data: {
     id: 24,
-    name: null,
-    email: 'ajain.aj1996@gmail.com',
-    mobile: '9074504500',
+    name: 'Guest',
+    email: 'guestdefault@gmail.com',
+    mobile: '7459685741',
     user_profile: null,
     user_type: 'user',
     user_token: 'LG505VUdzP2fxQ9f0ff0AMnEtWD4PzzwcKG8P6MHyvidJ3eiv6fuBd7WTvs2',

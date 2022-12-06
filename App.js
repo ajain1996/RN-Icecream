@@ -35,7 +35,7 @@ export default function App() {
     if (data !== null) {
       getUserById(data.id, res => {
         console.log('\n\n\n\n new user data', res.data, '<<< thsi iiser user');
-        dispatch(setUser(res.data));
+        dispatch(setUser({...res.data, ...res.business_category}));
         setLoginChk(false);
       });
     } else {
