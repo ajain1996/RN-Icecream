@@ -223,7 +223,7 @@ export const updateUserPostRequest = async (
     formdata.append('email', email);
     formdata.append('name', name);
     formdata.append('business_type', typeOfCompany);
-    formdata.append('mobile', mobile);
+    formdata.append('mobile', phone);
     // 0-------
     // formdata.append('user_profile', user_profile, user_profile.uri);
     formdata.append('organization_name', organization_name);
