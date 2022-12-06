@@ -31,8 +31,7 @@ export default function HomeScreen({ navigation }) {
           data={productsData}
           numColumns={3}
           style={{ marginBottom: 10, backgroundColor: "#fff" }}
-          columnWrapperStyle={{ justifyContent: 'space-between', paddingHorizontal: 12 }}
-          // style={{  }}
+          columnWrapperStyle={{ justifyContent: 'flex-start', paddingHorizontal: 12, marginLeft: 8 }}
           renderItem={({ item }) => {
             return (
               renderCategoryItem(item, navigation)

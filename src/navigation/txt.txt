@@ -1,0 +1,129 @@
+import React, { useEffect, useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
+import { COLORS } from './src/component/Constant/Color';
+import { useDispatch, useSelector } from 'react-redux';
+import Auth from './src/service/Auth';
+import { setUser } from './src/redux/reducer/user';
+import NavigationStack from './src/navigation/NavigationStack';
+import AuthenticationStack from './src/navigation/AuthenticationStack';
+import Navigation from './src/service/Navigation';
+import { Alert } from 'react-native';
+import { getUserById } from './src/utils/API';
+import BottomTabs from './src/bottom_tabs/bottom_tabs';
+import SplashUserScreen from './src/screen/auth/SplashUserScreen';
+import Login from './src/screen/auth/Login';
+import Register from './src/screen/auth/Register';
+import { VerifyOTP } from './src/screen/auth/VerifyOTP';
+import UpdateUserScreenIn from './src/screen/auth/UpdateUserScreen';
+import NewsScreen from './src/screen/news/NewsScreen';
+import BlogsScreen from './src/screen/blogs/BlogsScreen';
+import BlogsDetailScreen from './src/screen/blogs/BlogsDetailScreen';
+import HomeScreen from './src/screen/home/HomeScreen';
+import SingleChat from './src/screen/chat/SingleChat';
+import ChatScreen from './src/screen/ChatScreen';
+import AllProductsScreen from './src/screen/products/AllProductsScreen';
+import ProductDetailScreen from './src/screen/products/ProductDetailScreen';
+import ProductSubCategoryScreen from './src/screen/products/ProductSubCategoryScreen';
+import SingleChatScreen from './src/screen/chat/SingleChatScreen';
+import CreateProductScreen from './src/screen/products/CreateProductScreen';
+import MembersScreen from './src/screen/members/MembersScreen';
+import MemberDetailScreen from './src/screen/members/MemberDetailScreen';
+import MyProfileScreen from './src/screen/auth/MyProfileScreen';
+
+const Stack = createStackNavigator();
+
+export default function App() {
+  const dispatch = useDispatch();
+
+  const { userData, login } = useSelector(state => state.User);
+  // const [login, setLogin] = useState(false);
+
+  const [loginChk, setLoginChk] = useState(true);
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
+  const getUser = async () => {
+    let data = await Auth.getAccount();
+    console.log('data fetched: ', data);
+    console.log('User fetched: ', data);
+
+    // console.log('\n\n\n\n\n\n\n\n', data, '<<<<\n\n\n\n\n\n this is data');
+    // return null;
+    if (data !== null) {
+      getUserById(data.id, res => {
+        console.log('\n\n\n\n new user data', res.data, '<<< thsi iiser user');
+        dispatch(setUser(res.data));
+        setLoginChk(false);
+      });
+    } else {
+      setLoginChk(false);
+    }
+  };
+
+  if (loginChk) {
+    return null;
+  }
+
+  return (
+    <NavigationContainer ref={r => Navigation.setTopLevelNavigator(r)}>
+      <Stack.Navigator
+        detachInactiveScreens={false}
+        initialRouteName="Root"
+        screenOptions={{
+          cardStyle: { backgroundColor: COLORS.white },
+          gestureEnabled: true,
+          backgroundColor: COLORS.button,
+          gestureDirection: 'horizontal',
+          headerShown: false,
+          ...TransitionPresets.SlideFromRightIOS,
+        }}>
+        <Stack.Screen name="Root" component={BottomTabs} />
+        {/* <Stack.Screen name="SplashUserScreen" component={SplashUserScreen} /> */}
+        {/* <Stack.Screen name="Login" component={Login} /> */}
+        {/* <Stack.Screen name="Register" component={Register} /> */}
+        <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
+        <Stack.Screen name="NewsScreen" component={NewsScreen} />
+        <Stack.Screen name="BlogsScreen" component={BlogsScreen} />
+        <Stack.Screen name="BlogsDetailScreen" component={BlogsDetailScreen} />
+        <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        <Stack.Screen name="ChatScreen" component={ChatScreen} />
+        <Stack.Screen name="AllProductsScreen" component={AllProductsScreen} />
+        <Stack.Screen name="ProductDetailScreen" component={ProductDetailScreen} />
+        <Stack.Screen name="ProductSubCategoryScreen" component={ProductSubCategoryScreen} />
+        <Stack.Screen name="SingleChatScreen" component={SingleChatScreen} />
+        <Stack.Screen name="UpdateUserScreenIn" component={UpdateUserScreenIn} />
+        <Stack.Screen name="CreateProductScreen" component={CreateProductScreen} />
+        <Stack.Screen name="MembersScreen" component={MembersScreen} />
+        <Stack.Screen name="MemberDetailScreen" component={MemberDetailScreen} />
+        <Stack.Screen name="MyProfileScreen" component={MyProfileScreen} />
+
+        {!login ? (
+          <Stack.Screen name="SplashUserScreen" component={SplashUserScreen} />
+        ) : <></>}
+
+        {!login ? (
+          <Stack.Screen name="Login" component={Login} />
+        ) : <></>}
+
+        {!login ? (
+          <Stack.Screen name="Register" component={Register} />
+        ) : <></>}
+
+{!login ? (
+          <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
+        ) : <></>}
+
+        {!login ? (
+          <Stack.Screen name="Login" component={Login} />
+        ) : <></>}
+
+        {!login ? (
+          <Stack.Screen name="Register" component={Register} />
+        ) : <></>}
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}

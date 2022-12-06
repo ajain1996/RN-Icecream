@@ -21,7 +21,7 @@ export default function MyProfileScreen({ navigation }) {
         });
     };
 
-    console.log("\n\n userData: ", userData)
+    console.log('\n\n userData: ', userData);
 
     return (
         <View style={{ width: '100%', height: '100%', backgroundColor: '#fff' }}>
@@ -29,16 +29,29 @@ export default function MyProfileScreen({ navigation }) {
 
             <View style={styles.itemContent}>
                 <View style={{ ...commonStyles.rowStart }}>
-                    {userData?.userProfile?.length === 0
-                        ? <Image
-                            source={{
-                                uri: 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1331&q=80',
-                            }}
-                            style={styles.itemImg} />
-                        : <Image source={{ uri: userData?.userProfile }} style={styles.itemImg} />}
+                    {userData?.userProfile === null ||
+                        userData?.userProfile === undefined ? (
+                        <Image
+                            source={require("../../assets/user.png")}
+                            style={styles.itemImg}
+                        />
+                    ) : (
+                        <Image
+                            source={{ uri: userData?.userProfile }}
+                            style={styles.itemImg}
+                        />
+                    )}
                     <View style={styles.memberNameBlock}>
-                        <Text style={styles.memberName}>{userData?.fullname}</Text>
-                        <Text style={styles.conpanyName}>({userData?.companyName})</Text>
+                        <Text style={styles.memberName}>
+                            {userData?.name === null || userData?.name === undefined
+                                ? `User Name`
+                                : userData?.name}
+                        </Text>
+                        <Text style={styles.conpanyName}>
+                            {userData?.companyName === null || userData?.companyName === undefined
+                                ? `www.company_name.com`
+                                : userData?.companyName}
+                        </Text>
                     </View>
                 </View>
                 {image_tap(require('../../assets/edit.png'), 25, () => {

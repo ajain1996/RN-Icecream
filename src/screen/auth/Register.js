@@ -67,7 +67,7 @@ function Register({ navigation }) {
           Toast.show('User is already registered! Please Login');
         } else {
           Toast.show('OTP sent Successfully!');
-          navigation.navigate('VerifyOTP', { userData: userData });
+          navigation.navigate('VerifyOTP', { userData: userData, screen: "Register" });
         }
       } else {
         Toast.show('Oops! Something went wrogn');

@@ -6,6 +6,14 @@ import { SIZES } from '../../component/Constant/Color';
 import moment from 'moment';
 
 export const renderNewsItem = ({ item }) => {
+
+    var img = ""
+    if (!item?.image?.startsWith("http")) {
+        img = "http://icecream.drazs.com/api/storage/app/" + item?.image;
+    } else {
+        img = ""
+    }
+
     return (
         <View style={{ marginBottom: 14, marginVertical: 2 }}>
             <ListItem
@@ -24,15 +32,10 @@ export const renderNewsItem = ({ item }) => {
                     </Text>
                 </ListItem.Content>
 
-                {item?.image?.startsWith("https")
-                    ? <Image
-                        source={{ uri: item?.image }}
-                        style={{ width: 84, height: 84, borderRadius: 8 }}
-                    />
-                    : <Image
-                        source={require("../../assets/news/n5.jpg")}
-                        style={{ width: 84, height: 84, borderRadius: 8 }}
-                    />}
+                <Image
+                    source={{ uri: img }}
+                    style={{ width: 84, height: 84, borderRadius: 8 }}
+                />
             </ListItem>
 
             <View style={{ ...commonStyles.rowStart, position: "absolute", bottom: 10, left: 15 }}>

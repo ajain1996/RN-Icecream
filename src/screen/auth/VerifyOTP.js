@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   View,
@@ -10,15 +10,15 @@ import {
   TextInput,
 } from 'react-native';
 import Toast from 'react-native-simple-toast';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {commonStyles} from '../../utils/Styles';
-import {COLORS, SIZES} from '../../component/Constant/Color';
-import {matchOTPPostRequest} from '../../utils/API';
+import { commonStyles } from '../../utils/Styles';
+import { COLORS, SIZES } from '../../component/Constant/Color';
+import { matchOTPPostRequest } from '../../utils/API';
 import Auth from '../../service/Auth';
-import {setUser} from '../../redux/reducer/user';
+import { setUser } from '../../redux/reducer/user';
 
-interface OPTInputProps {}
+interface OPTInputProps { }
 const CELL_COUNT = 4;
 const RESEND_OTP_TIME_LIMIT = 90;
 
@@ -75,10 +75,10 @@ export const response3 = {
   token: '9|fEMecPMzYQfy4ZDRr6bKeKkICPWKFzvVdDGYQU4E',
 };
 
-export const VerifyOTP: React.FC<OPTInputProps> = ({navigation, route}) => {
+export const VerifyOTP: React.FC<OPTInputProps> = ({ navigation, route }) => {
   const dispatch = useDispatch();
-  const {userData} = route?.params;
-  const {userType} = useSelector(state => state.UserType);
+  const { userData, screen } = route?.params;
+  const { userType } = useSelector(state => state.UserType);
 
   let resendOtpTimerInterval: any;
 
@@ -153,7 +153,13 @@ export const VerifyOTP: React.FC<OPTInputProps> = ({navigation, route}) => {
             response?.data?.user_token,
           );
           // navigation.navigate('UpdateUserScreen', {userData: userData2});
-          navigation.navigate('Root', {userData: userData2});
+          if (screen === "Login") {
+            await Auth.setAccount(userData2);
+            dispatch(setUser(userData2));
+            navigation.navigate('Root');
+          } else {
+            navigation.navigate('UpdateUserScreen', { userData: userData2 });
+          }
         } else if (userType === 'guest') {
           await Auth.setAccount(userData2);
           dispatch(setUser(userData2));
@@ -170,15 +176,15 @@ export const VerifyOTP: React.FC<OPTInputProps> = ({navigation, route}) => {
         barStyle="dark-content"
         hidden={false}
       />
-      <View style={{height: '17%'}} />
+      <View style={{ height: '17%' }} />
 
-      <View style={{alignItems: 'flex-start', width: '100%'}}>
+      <View style={{ alignItems: 'flex-start', width: '100%' }}>
         {renderLoginChangeText(navigation)}
-        <View style={{height: 8}} />
+        <View style={{ height: 8 }} />
 
         {renderEnterOTPText()}
       </View>
-      <View style={{height: '6%'}} />
+      <View style={{ height: '6%' }} />
 
       <TextInput
         placeholder="Enter OPT"
@@ -219,15 +225,15 @@ export const VerifyOTP: React.FC<OPTInputProps> = ({navigation, route}) => {
           }}>
           <View style={styles.resendCodeContainer}>
             <Text style={styles.resendCode}>Resend OTP </Text>
-            <Text style={[styles.resendCode, {color: '#999'}]}> in </Text>
-            <Text style={{color: COLORS.theme}}>
+            <Text style={[styles.resendCode, { color: '#999' }]}> in </Text>
+            <Text style={{ color: COLORS.theme }}>
               {' '}
               {resendButtonDisabledTime} sec
             </Text>
           </View>
         </TouchableOpacity>
       )}
-      <View style={{height: '13%'}} />
+      <View style={{ height: '13%' }} />
 
       {renderSubmitBtn(handleSubmit)}
     </ScrollView>
@@ -236,8 +242,8 @@ export const VerifyOTP: React.FC<OPTInputProps> = ({navigation, route}) => {
 
 const renderLoginChangeText = navigation => {
   return (
-    <View style={{...commonStyles.rowBetween, width: '100%'}}>
-      <Text style={{fontSize: 22, fontWeight: '500', color: '#000'}}>
+    <View style={{ ...commonStyles.rowBetween, width: '100%' }}>
+      <Text style={{ fontSize: 22, fontWeight: '500', color: '#000' }}>
         OTP Input
       </Text>
       <TouchableOpacity
@@ -245,7 +251,7 @@ const renderLoginChangeText = navigation => {
         onPress={() => {
           navigation.goBack();
         }}>
-        <Text style={{fontSize: 12, fontWeight: '500', color: COLORS.theme}}>
+        <Text style={{ fontSize: 12, fontWeight: '500', color: COLORS.theme }}>
           Change
         </Text>
       </TouchableOpacity>
@@ -255,8 +261,8 @@ const renderLoginChangeText = navigation => {
 
 const renderEnterOTPText = () => {
   return (
-    <View style={{...commonStyles.rowStart, width: '100%'}}>
-      <Text style={{fontSize: 14, fontWeight: '400', color: '#333'}}>
+    <View style={{ ...commonStyles.rowStart, width: '100%' }}>
+      <Text style={{ fontSize: 14, fontWeight: '400', color: '#333' }}>
         Please enter the OTP sent to
       </Text>
       <Text
@@ -275,9 +281,9 @@ const renderEnterOTPText = () => {
 export const renderSubmitBtn = onPress => {
   return (
     <TouchableOpacity
-      style={{...commonStyles.commonBtnStyle, ...commonStyles.centerStyles}}
+      style={{ ...commonStyles.commonBtnStyle, ...commonStyles.centerStyles }}
       onPress={onPress}>
-      <Text style={{fontSize: 16, fontWeight: '500', color: '#fff'}}>
+      <Text style={{ fontSize: 16, fontWeight: '500', color: '#fff' }}>
         Confirm
       </Text>
     </TouchableOpacity>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StatusBar,
   Text,
@@ -8,23 +8,23 @@ import {
   StyleSheet,
   TextInput,
 } from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {COLORS} from '../../component/Constant/Color';
-import {FONTS} from '../../component/Constant/Font';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { COLORS } from '../../component/Constant/Color';
+import { FONTS } from '../../component/Constant/Font';
 import Navigation from '../../service/Navigation';
 import Toast from 'react-native-simple-toast';
-import {commonStyles} from '../../utils/Styles';
-import {mobileLoginPostRequest} from '../../utils/API';
+import { commonStyles } from '../../utils/Styles';
+import { mobileLoginPostRequest } from '../../utils/API';
 import Auth from '../../service/Auth';
-import {useDispatch, useSelector} from 'react-redux';
-import {setUser} from '../../redux/reducer/user';
-import {getRawJSON} from './Register';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser } from '../../redux/reducer/user';
+import { getRawJSON } from './Register';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
-function Login({navigation}) {
+function Login({ navigation }) {
   const dispatch = useDispatch();
-  const {userData} = useSelector(state => state.User);
+  const { userData } = useSelector(state => state.User);
 
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
@@ -53,11 +53,11 @@ function Login({navigation}) {
       console.log('mobileLoginPostRequest response: ', getRawJSON(response));
       if (response !== null) {
         if (getRawJSON(response).toString().includes('SenttoUser')) {
-          Toast.show('Login Successfully!!!!');
+          Toast.show('OTP sent Successfully!!!!');
           // await Auth.setAccount(userData2);
           // dispatch(setUser(userData2));
           // navigation.navigate("Root")
-          navigation.navigate('VerifyOTP', {userData: {phone}});
+          navigation.navigate('VerifyOTP', { userData: { phone }, screen: "Login" });
         } else {
           Toast.show('Number not registered');
         }
@@ -74,13 +74,13 @@ function Login({navigation}) {
         barStyle="light-content"
         hidden={false}
       />
-      <View style={{justifyContent: 'space-between', height: '95%'}}>
+      <View style={{ justifyContent: 'space-between', height: '95%' }}>
         <View style={styles.uppercard}>
-          <Text style={{color: '#fff', fontFamily: FONTS.Bold, fontSize: 25}}>
+          <Text style={{ color: '#fff', fontFamily: FONTS.Bold, fontSize: 25 }}>
             Welcome
           </Text>
         </View>
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
           <View
             style={{
               backgroundColor: '#fff',
@@ -96,7 +96,7 @@ function Login({navigation}) {
               <KeyboardAwareScrollView
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}>
-                <View style={[commonStyles.inputContainer, {marginTop: 10}]}>
+                <View style={[commonStyles.inputContainer, { marginTop: 10 }]}>
                   <TextInput
                     style={styles.inputs}
                     placeholder="Enter Mobile Number"
@@ -112,7 +112,7 @@ function Login({navigation}) {
                   />
                 </View>
               </KeyboardAwareScrollView>
-              <View style={{height: 4}} />
+              <View style={{ height: 4 }} />
 
               <TouchableOpacity style={styles.btn} onPress={loginUser}>
                 <Text style={styles.btnText}>Login Now</Text>
@@ -124,7 +124,7 @@ function Login({navigation}) {
         <View style={styles.contactView}>
           <Text style={styles.smallTxt}>New user?</Text>
           <TouchableOpacity
-            style={{marginLeft: 4}}
+            style={{ marginLeft: 4 }}
             onPress={() => Navigation.navigate('Register')}>
             <Text style={styles.register}>Register Now</Text>
           </TouchableOpacity>
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: FONTS.Regular,
   },
-  buttonSec: {marginTop: 20, justifyContent: 'center', alignItems: 'center'},
+  buttonSec: { marginTop: 20, justifyContent: 'center', alignItems: 'center' },
   logo: {
     height: height / 2 - 50,
     width: '95%',
