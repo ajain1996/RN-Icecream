@@ -789,18 +789,18 @@ export default function UpdateUserScreenIn({navigation, route}) {
         />
 
         {/* <CountryFormPicker
-                    heading="Country"
-                    placeholderText="Country"
-                    dropDownValue={country}
-                    width={SIZES.width / 1.05}
-                    height={SIZES.height / 1.14}
-                    onDateSelected={function (val, states) {
-                        console.log('\n\n Selected states :::: ', states);
-                        setCountry(val);
-                        setAllStates(states);
-                    }}
-                    data={allCountries}
-                /> */}
+              heading="Country"
+              placeholderText="Country"
+              dropDownValue={country}
+              width={SIZES.width / 1.05}
+              height={SIZES.height / 1.14}
+              onDateSelected={function (val, states) {
+                  console.log('\n\n Selected states :::: ', states);
+                  setCountry(val);
+                  setAllStates(states);
+              }}
+              data={allCountries}
+          /> */}
 
         <ApplyFormInput
           heading="State"
@@ -813,43 +813,43 @@ export default function UpdateUserScreenIn({navigation, route}) {
         />
 
         {/* <CountryFormPicker
-                    heading="State"
-                    placeholderText="State"
-                    dropDownValue={state}
-                    width={SIZES.width / 1.05}
-                    height={SIZES.height / 1.14}
-                    onDateSelected={async function (val) {
-                        console.log('\n\n Selected val :::: ', val);
-                        setState(val);
+            heading="State"
+            placeholderText="State"
+            dropDownValue={state}
+            width={SIZES.width / 1.05}
+            height={SIZES.height / 1.14}
+            onDateSelected={async function (val) {
+                console.log('\n\n Selected val :::: ', val);
+                setState(val);
 
-                        const body = {
-                            country: 'India',
-                            state: 'Madhya Pradesh',
-                        };
+                const body = {
+                    country: 'India',
+                    state: 'Madhya Pradesh',
+                };
 
-                        const citiesData = await fetch(
-                            'https://countriesnow.space/api/v0.1/countries/state/cities',
-                            {
-                                method: 'POST',
-                                headers: {
-                                    'X-Powered-By': 'Express',
-                                    'Access-Control-Allow-Origin': '*',
-                                    'Access-Control-Allow-Headers': '*',
-                                    'Content-Type': 'application/json',
-                                    'Content-Length': '1036708',
-                                    ETag: 'W/"fd1a4-+y1qCVg9E600sahDr1s3nW1FTHQ"',
-                                    Date: 'Sun, 02 Aug 2020 10:37:45 GMT',
-                                    Connection: 'keep-alive',
-                                },
-                                body: JSON.stringify(body),
-                            },
-                        );
+                const citiesData = await fetch(
+                    'https://countriesnow.space/api/v0.1/countries/state/cities',
+                    {
+                        method: 'POST',
+                        headers: {
+                            'X-Powered-By': 'Express',
+                            'Access-Control-Allow-Origin': '*',
+                            'Access-Control-Allow-Headers': '*',
+                            'Content-Type': 'application/json',
+                            'Content-Length': '1036708',
+                            ETag: 'W/"fd1a4-+y1qCVg9E600sahDr1s3nW1FTHQ"',
+                            Date: 'Sun, 02 Aug 2020 10:37:45 GMT',
+                            Connection: 'keep-alive',
+                        },
+                        body: JSON.stringify(body),
+                    },
+                );
 
-                        const json = await citiesData.json();
-                        setAllCities(json?.data);
-                    }}
-                    data={allStates}
-                /> */}
+                const json = await citiesData.json();
+                setAllCities(json?.data);
+            }}
+            data={allStates}
+        /> */}
 
         <ApplyFormInput
           heading="Cities"
