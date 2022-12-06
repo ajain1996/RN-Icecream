@@ -191,6 +191,7 @@ export const updateUserPostRequest = async (
   company_brochure,
   comapny_ad,
   pan_number,
+  typeOfCompany,
   token,
   successCallBack,
 ) => {
@@ -200,9 +201,10 @@ export const updateUserPostRequest = async (
   // formdata.append('email', email);
   // formdata.append('name', name);
   // formdata.append('mobile', phone);
-  formdata.append('email', 'lakheraakshay@gmail.com');
-  formdata.append('name', 'Aaadarsh Gupta');
-  formdata.append('mobile', '8989802546');
+  formdata.append('email', email);
+  formdata.append('name', name);
+  formdata.append('business_type', typeOfCompany);
+  formdata.append('mobile', mobile);
   // 0-------
   // formdata.append('user_profile', user_profile, user_profile.uri);
   formdata.append('organization_name', organization_name);
@@ -217,36 +219,39 @@ export const updateUserPostRequest = async (
   formdata.append('landmark', landmark);
   // formdata.append('latitude', '67.89');
   // formdata.append('longitude', '89.8');
-  // formdata.append('gst_number', gst_number);
-  // formdata.append('est_year', est_year);
-  // formdata.append('employee_number', employee_number);
-  // formdata.append('turnover', turnover);
+  formdata.append('gst_number', gst_number);
+  formdata.append('est_year', est_year);
+  formdata.append('employee_number', employee_number);
+  formdata.append('turnover', turnover);
+  formdata.append('business_category', business_category0);
+
   // formdata.append('business_category[0]', business_category0);
   // formdata.append('business_category[1]', business_category1);
   // formdata.append('business_category[2]', business_category2);
 
   // 0000000000000000000000000
-  formdata.append('organization_name', 'Strix DIgital');
-  formdata.append('short_name', 'SD');
-  formdata.append('mobile_2', '8989510738');
-  formdata.append('address_1', 'New Durga');
-  formdata.append('address_2', 'Market');
-  formdata.append('address_3', 'Salichouka');
-  formdata.append('country', 'India');
-  formdata.append('state', 'MP');
-  formdata.append('city', 'Gadarwara');
-  formdata.append('landmark', 'Near Mandir');
-  formdata.append('latitude', '67.89');
-  formdata.append('longitude', '89.87');
-  formdata.append('gst_number', 'GS567GRt89IOI');
-  formdata.append('est_year', '2020');
-  formdata.append('employee_number', '14');
-  formdata.append('turnover', '24 L');
-  formdata.append('business_category[0]', '1');
-  formdata.append('business_category[1]', '2');
-  formdata.append('business_category[2]', '3');
-  formdata.append('business_sub_category[0]', '1');
-  formdata.append('business_sub_category[1]', '2');
+  // formdata.append('organization_name', 'Strix DIgital');
+  // formdata.append('short_name', 'SD');
+
+  // formdata.append('mobile_2', '8989510738');
+  // formdata.append('address_1', 'New Durga');
+  // formdata.append('address_2', 'Market');
+  // formdata.append('address_3', 'Salichouka');
+  // formdata.append('country', 'India');
+  // formdata.append('state', 'MP');
+  // formdata.append('city', 'Gadarwara');
+  // formdata.append('landmark', 'Near Mandir');
+  // formdata.append('latitude', '67.89');
+  // formdata.append('longitude', '89.87');
+  // formdata.append('gst_number', 'GS567GRt89IOI');
+  // formdata.append('est_year', '2020');
+  // formdata.append('employee_number', '14');
+  // formdata.append('turnover', '24 L');
+  // formdata.append('business_category[0]', '1');
+  // formdata.append('business_category[1]', '2');
+  // formdata.append('business_category[2]', '3');
+  // formdata.append('business_sub_category[0]', '1');
+  // formdata.append('business_sub_category[1]', '2');
 
   // 0000000000000
 
@@ -449,3 +454,25 @@ export const addProductPostRequest = async (
     successCallBack(null);
   }
 };
+
+// -----------
+
+//  This is for business category id
+//  business_category[0] -- > business category
+//  -//- [1] --> business type
+//  -//- [2] -->
+
+export const businessCategorybySeq = {
+  '': 0,
+  Manufacturer: 1,
+  'Super Stokist': 2,
+  Distributor: 3,
+  'New Category': 4,
+};
+export const seqToBusinessCategory = [
+  '',
+  'Manufacturer',
+  'Super Stokist',
+  'Distributor',
+  'New Category',
+];

@@ -13,6 +13,7 @@ import Auth from '../../service/Auth';
 import {useDispatch} from 'react-redux';
 import {setUser} from '../../redux/reducer/user';
 import {setUserType} from '../../redux/reducer/userType';
+import {response3} from './VerifyOTP';
 
 export default function SplashUserScreen({navigation}) {
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ export default function SplashUserScreen({navigation}) {
   useEffect(() => {
     Auth.getAccount().then(data => {
       console.log('User fetched: ', data);
-      Alert.alert('splash');
+      // Alert.alert('splash');
       console.log('\n\n\n\n\n\n\n\n', data, '<<<<\n\n\n\n\n\n this is data');
       //   return null;
       if (data !== null) {
@@ -54,7 +55,9 @@ export default function SplashUserScreen({navigation}) {
 
       {renderButton('As a Guest', async () => {
         dispatch(setUserType('guest'));
-        navigation.navigate('Login');
+        dispatch(setUser(response3.data));
+
+        // navigation.navigate('Login');
       })}
     </View>
   );
