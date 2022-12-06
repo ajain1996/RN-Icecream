@@ -186,11 +186,13 @@ export const CustomDrawer = ({modalVisible, callback, navigation}) => {
                 onPress={() => {}}
               />
 
-              <DrawerButton
-                title="Logout"
-                image={require('../../assets/logout.png')}
-                onPress={handleLogout}
-              />
+              {login ? (
+                <DrawerButton
+                  title="Logout"
+                  image={require('../../assets/logout.png')}
+                  onPress={handleLogout}
+                />
+              ) : null}
             </ScrollView>
           </View>
         </TouchableHighlight>
