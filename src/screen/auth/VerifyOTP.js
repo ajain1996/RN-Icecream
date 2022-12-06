@@ -153,7 +153,18 @@ export const VerifyOTP: React.FC<OPTInputProps> = ({navigation, route}) => {
             'usertoken',
             response?.data?.user_token,
           );
-          dispatch(setUser(userData2));
+          await Auth.setAccount({
+            ...response.data,
+            business_category: response.business_category,
+          });
+
+          // await Auth.setAccount();
+          dispatch(
+            setUser({
+              ...response.data,
+              business_category: response.business_category,
+            }),
+          );
           // navigation.navigate('UpdateUserScreen', {userData: userData2});
           // navigation.navigate('Root');
         } else if (userType === 'guest') {

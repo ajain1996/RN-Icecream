@@ -16,8 +16,10 @@ import CustomHeader from '../../component/Header/CustomHeader';
 import {useDispatch, useSelector} from 'react-redux';
 import Auth from '../../service/Auth';
 import {
+  businessCategorybySeq,
   categoryIdValue,
   getCategories,
+  seqToBusinessCategory,
   updateUserPostRequest,
 } from '../../utils/API';
 import {setUser} from '../../redux/reducer/user';
@@ -86,6 +88,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
   const [user_profile, setUser_Profile] = React.useState({
     uri: userData?.userProfile,
   });
+  const [businessCategorySeq, setBusinessCategorySeq] = useState(1);
   const [address_1, setAddress_1] = React.useState('');
   const [address_2, setAddress_2] = React.useState('');
   const [address_3, setAddress_3] = React.useState('');
@@ -128,6 +131,12 @@ export default function UpdateUserScreenIn({navigation, route}) {
     },
   };
 
+  console.log(
+    '\n\n\n\n this is business category',
+    userData.business_category,
+    ' \n\n\n\n <<<<',
+  );
+
   const getImage = text => {
     launchImageLibrary(options, response => {
       if (response?.didCancel) {
@@ -158,15 +167,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
       }
     });
   };
-  console.log(
-    '\n\n\n',
-    user_profile?.uri,
-    '<<< this is user profile',
-    ' \n\n company logo',
-    company_logo?.uri,
-    '\n\n company bro',
-    company_brochure?.uri,
-  );
+
   const selectPdfFile = async text => {
     try {
       const res = await DocumentPicker.pick({
@@ -208,8 +209,6 @@ export default function UpdateUserScreenIn({navigation, route}) {
       Alert.alert('Alert', 'Company type is mandatory');
     } else if (!company_logo || company_logo?.length === 0) {
       Alert.alert('Alert', 'Company logo is mandatory');
-    } else if (businessType?.length === 0) {
-      Alert.alert('Alert', 'Business type is mandatory');
     } else if (businessTypeCategory?.length === 0) {
       Alert.alert('Alert', 'Business Category is mandatory');
     } else if (businessOwnerName?.length === 0) {
@@ -330,8 +329,14 @@ export default function UpdateUserScreenIn({navigation, route}) {
       // );
       //   return null;
       // setLoading(true);
+      // console.log(
+      //   businessTypeCategory,
+      //   '--',
+      //   businessCategorybySeq[businessTypeCategory],
+      // );
+
       Auth.getLocalStorageData('usertoken').then(token => {
-        console.log('\n\n\n\n this is token \n\n ---> ', token);
+        console.log('\n\n\n\n this is token \n\n ---> ', user_profile);
         updateUserPostRequest(
           userData?.email,
           userData?.mobile,
@@ -352,8 +357,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
           est_year,
           employee_number,
           turnover,
-          businessType,
-          // business_category0,
+          businessCategorybySeq[businessTypeCategory],
           'business_category1',
           'business_category2',
           company_logo,
@@ -363,13 +367,14 @@ export default function UpdateUserScreenIn({navigation, route}) {
           company_brochure,
           comapny_ad,
           pan_number,
+          typeOfCompany,
           token,
           async response => {
             setLoading(false);
-            console.log(
-              '\n\n updateUserPostRequest response: ',
-              response?.status,
-            );
+            // console.log(
+            //   '\n\n updateUserPostRequest response: ',
+            //   response?.status,
+            // );
             console.log('\n\n userData: ', response['updated-User']);
             // return null;
             const userData2 = response['updated-User'];
@@ -499,11 +504,24 @@ export default function UpdateUserScreenIn({navigation, route}) {
     if (userData?.current_status !== undefined) {
       setCurrentStatus(userData?.current_status);
     }
-    if (userData?.setBusinessTypeCategory !== undefined) {
-      // setBusinessTypeCategory(categoryIdValue['1']);
+    if (userData?.business_type !== undefined) {
+      setTypeOfCompany(userData.business_type);
     }
-    if (userData?.certificate_issue !== undefined) {
+    if (userData?.business_category?.length != 0) {
       // set
+      console.log(
+        '\n\n\n\n\n\n\n>>>>>>>>>>>>>>>>>',
+        userData.business_category,
+        '--',
+        userData.business_category[userData.business_category.length - 1]
+          .business_category_id,
+      );
+      setBusinessTypeCategory(
+        seqToBusinessCategory[
+          userData.business_category[userData.business_category.length - 1]
+            .business_category_id
+        ],
+      );
     }
   }, []);
 
@@ -660,7 +678,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
           </TouchableHighlight>
         </>
 
-        <ApplyFormPicker
+        {/* <ApplyFormPicker
           heading="Business Type"
           placeholderText="Business Type"
           dropDownValue={businessType}
@@ -672,7 +690,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
             setBusinessType(val);
           }}
           data={categoryDropDown}
-        />
+        /> */}
 
         <ApplyFormPicker
           heading="Business Category"
@@ -684,6 +702,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
           onDateSelected={function (val) {
             console.log('\n\n Selected val :::: ', val);
             setBusinessTypeCategory(val);
+            // setBusinessCategorySeq()
           }}
           data={categoryDropDown}
         />

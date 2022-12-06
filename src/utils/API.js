@@ -191,6 +191,7 @@ export const updateUserPostRequest = async (
   company_brochure,
   comapny_ad,
   pan_number,
+  typeOfCompany,
   token,
   successCallBack,
 ) => {
@@ -200,9 +201,10 @@ export const updateUserPostRequest = async (
   // formdata.append('email', email);
   // formdata.append('name', name);
   // formdata.append('mobile', phone);
-  formdata.append('email', 'lakheraakshay@gmail.com');
-  formdata.append('name', 'Aaadarsh Gupta');
-  formdata.append('mobile', '8989802546');
+  formdata.append('email', email);
+  formdata.append('name', name);
+  formdata.append('business_type', typeOfCompany);
+  formdata.append('mobile', mobile);
   // 0-------
   // formdata.append('user_profile', user_profile, user_profile.uri);
   formdata.append('organization_name', organization_name);
@@ -215,19 +217,22 @@ export const updateUserPostRequest = async (
   formdata.append('state', state);
   formdata.append('city', city);
   formdata.append('landmark', landmark);
-  formdata.append('latitude', '67.89');
-  formdata.append('longitude', '89.8');
+  // formdata.append('latitude', '67.89');
+  // formdata.append('longitude', '89.8');
   formdata.append('gst_number', gst_number);
   formdata.append('est_year', est_year);
   formdata.append('employee_number', employee_number);
   formdata.append('turnover', turnover);
-  formdata.append('business_category[0]', business_category0);
-  formdata.append('business_category[1]', business_category1);
-  formdata.append('business_category[2]', business_category2);
+  formdata.append('business_category', business_category0);
+
+  // formdata.append('business_category[0]', business_category0);
+  // formdata.append('business_category[1]', business_category1);
+  // formdata.append('business_category[2]', business_category2);
 
   // 0000000000000000000000000
   // formdata.append('organization_name', 'Strix DIgital');
   // formdata.append('short_name', 'SD');
+
   // formdata.append('mobile_2', '8989510738');
   // formdata.append('address_1', 'New Durga');
   // formdata.append('address_2', 'Market');
@@ -236,7 +241,6 @@ export const updateUserPostRequest = async (
   // formdata.append('state', 'MP');
   // formdata.append('city', 'Gadarwara');
   // formdata.append('landmark', 'Near Mandir');
-
   // formdata.append('latitude', '67.89');
   // formdata.append('longitude', '89.87');
   // formdata.append('gst_number', 'GS567GRt89IOI');
@@ -246,8 +250,8 @@ export const updateUserPostRequest = async (
   // formdata.append('business_category[0]', '1');
   // formdata.append('business_category[1]', '2');
   // formdata.append('business_category[2]', '3');
-  formdata.append('business_sub_category[0]', '1');
-  formdata.append('business_sub_category[1]', '2');
+  // formdata.append('business_sub_category[0]', '1');
+  // formdata.append('business_sub_category[1]', '2');
 
   // 0000000000000
 
@@ -268,11 +272,11 @@ export const updateUserPostRequest = async (
 
   // 0-------------------------------------
 
-  formdata.append('pan_number', pan_number);
-  formdata.append('certificate_issue', '1');
-
-  // formdata.append('pan_number', 'CREKG6733Y');
+  // formdata.append('pan_number', pan_number);
   // formdata.append('certificate_issue', '1');
+
+  formdata.append('pan_number', 'CREKG6733Y');
+  formdata.append('certificate_issue', '1');
 
   var requestOptions = {
     method: 'POST',
@@ -451,8 +455,24 @@ export const addProductPostRequest = async (
   }
 };
 
-export const categoryIdValue = {
-  1: 'Manufacturer',
-  2: 'Super Stokist',
-  3: 'Distributor',
+// -----------
+
+//  This is for business category id
+//  business_category[0] -- > business category
+//  -//- [1] --> business type
+//  -//- [2] -->
+
+export const businessCategorybySeq = {
+  '': 0,
+  Manufacturer: 1,
+  'Super Stokist': 2,
+  Distributor: 3,
+  'New Category': 4,
 };
+export const seqToBusinessCategory = [
+  '',
+  'Manufacturer',
+  'Super Stokist',
+  'Distributor',
+  'New Category',
+];
