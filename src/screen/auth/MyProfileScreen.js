@@ -38,7 +38,7 @@ export default function MyProfileScreen({navigation}) {
             />
           ) : (
             <Image
-              source={{uri: imageBase + userData?.userProfile}}
+              source={{uri: imageBase + userData?.user_profile}}
               style={styles.itemImg}
             />
           )}

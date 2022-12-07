@@ -38,7 +38,7 @@ export function home_header(navigation) {
       }
     } else {
       if (userType !== 'guest') {
-        return image_tap2(imageBase + userData?.userProfile, 30, () => {
+        return image_tap2(imageBase + userData?.user_profile, 30, () => {
           navigation.navigate('MyProfileScreen');
         });
       }
