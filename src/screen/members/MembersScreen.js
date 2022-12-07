@@ -9,6 +9,8 @@ import {ScrollView} from 'react-native';
 import {TouchableOpacity} from 'react-native';
 import {getAllUsersAPI} from '../../utils/API';
 import {useEffect} from 'react';
+import {TextInput, TouchableHighlight} from 'react-native-gesture-handler';
+import {Settings} from 'react-native';
 
 export default function MembersScreen({navigation}) {
   const [members, setMembers] = React.useState([]);
@@ -27,6 +29,7 @@ export default function MembersScreen({navigation}) {
     });
   }, []);
   useEffect(() => {
+    console.log(searchInput, '<<<sear');
     if (searchInput == '') {
       setTempMember(members);
     } else {
@@ -35,16 +38,44 @@ export default function MembersScreen({navigation}) {
   }, [searchInput]);
 
   const filterIt = text => {
+    console.log(text, '<<<this is text');
+    // return null;
+
     const matchIt = members.filter(item => {
-      if (item.name.match(text)) return true;
-      if (item.short_name.match(text)) return true;
+      if (item.name != null) {
+        if (item.name.match(text)) return true;
+      }
+      if (item.short_name != null) {
+        if (item.short_name.match(text)) return true;
+      }
     });
+    setTempMember(matchIt);
   };
 
   return (
     <View style={{width: '100%', height: '100%', backgroundColor: '#fff'}}>
-      {membersHeader(navigation, setSearchInput, searchInput)}
+      {/* {membersHeader(navigation, setSearchInput, searchInput)} */}
+      <View style={styles.headerContainer}>
+        <TouchableHighlight
+          onPress={() => navigation.goBack()}
+          underlayColor="#eee">
+          <Image
+            source={require('../../assets/left-arrow.png')}
+            resizeMode="contain"
+            style={{width: 25, height: 25}}
+          />
+        </TouchableHighlight>
 
+        <TextInput
+          placeholder="Search Members"
+          placeholderTextColor="#999"
+          onChangeText={text => {
+            console.log(text);
+            setSearchInput(text);
+          }}
+          style={styles.searchInput}
+        />
+      </View>
       <ScrollView>
         {tempMember?.map((item, index) => {
           return (
@@ -156,5 +187,21 @@ const styles = StyleSheet.create({
     ...commonStyles.fs12_400,
     color: COLORS.theme,
     marginTop: 5,
+  },
+  headerContainer: {
+    ...commonStyles.rowStart,
+    width: '100%',
+    height: 62,
+    ...commonStyles.elevation9,
+    paddingHorizontal: 20,
+  },
+  searchInput: {
+    borderWidth: 1,
+    borderColor: '#999',
+    width: '88%',
+    marginLeft: 20,
+    height: 45,
+    borderRadius: 6,
+    paddingHorizontal: 14,
   },
 });
