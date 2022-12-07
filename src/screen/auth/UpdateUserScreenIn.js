@@ -15,15 +15,6 @@ import DocumentPicker from 'react-native-document-picker';
 import CustomHeader from '../../component/Header/CustomHeader';
 import { useDispatch, useSelector } from 'react-redux';
 import Auth from '../../service/Auth';
-<<<<<<< HEAD
-import { updateUserPostRequest } from '../../utils/API';
-import { setUser } from '../../redux/reducer/user';
-import { launchImageLibrary } from 'react-native-image-picker';
-import { Alert } from 'react-native';
-import CustomLoader, { CustomPanel } from '../../component/CustomLoader';
-
-export default function UpdateUserScreenIn({ navigation, route }) {
-=======
 import {
   businessCategorybySeq,
   categoryIdValue,
@@ -31,16 +22,15 @@ import {
   seqToBusinessCategory,
   updateUserPostRequest,
 } from '../../utils/API';
-import {setUser} from '../../redux/reducer/user';
-import {launchImageLibrary} from 'react-native-image-picker';
-import {Alert} from 'react-native';
-import CustomLoader, {CustomPanel} from '../../component/CustomLoader';
-import {response3} from './VerifyOTP';
-import {useIsFocused} from '@react-navigation/native';
+import { setUser } from '../../redux/reducer/user';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { Alert } from 'react-native';
+import CustomLoader, { CustomPanel } from '../../component/CustomLoader';
+import { response3 } from './VerifyOTP';
+import { useIsFocused } from '@react-navigation/native';
 
 const imageBase = 'https://icecream.drazs.com/api/storage/app/';
-export default function UpdateUserScreenIn({navigation, route}) {
->>>>>>> bc09eaf17a71c2efc6f22bf531d33ea03280657e
+export default function UpdateUserScreenIn({ navigation, route }) {
   const dispatch = useDispatch();
   const { userData } = useSelector(state => state.User);
 
@@ -134,11 +124,8 @@ export default function UpdateUserScreenIn({navigation, route}) {
     },
   };
 
-<<<<<<< HEAD
-=======
   console.log('\n\n\n\n this is business category', userData, ' \n\n\n\n <<<<');
 
->>>>>>> bc09eaf17a71c2efc6f22bf531d33ea03280657e
   const getImage = text => {
     launchImageLibrary(options, response => {
       if (response?.didCancel) {
@@ -199,13 +186,8 @@ export default function UpdateUserScreenIn({navigation, route}) {
         realPath = res?.uri;
       }
       if (text.includes('Upload GST Certificate')) {
-<<<<<<< HEAD
-        console.log(text, '<<<gst certificate', res);
-        setGSTCertificate({ ...res[0], filename: res[0].fileCopyUri });
-=======
         // console.log(text, '<<<gst certificate', res);
-        setGSTCertificate({...res[0], filename: res[0].fileCopyUri});
->>>>>>> bc09eaf17a71c2efc6f22bf531d33ea03280657e
+        setGSTCertificate({ ...res[0], filename: res[0].fileCopyUri });
       } else if (text.includes('Upload Pan Number')) {
         // setPANFile(res[0]);
         setPANFile({ ...res[0], filename: res[0].fileCopyUri });
@@ -384,13 +366,6 @@ export default function UpdateUserScreenIn({navigation, route}) {
           async response => {
             const userData2 = response.data;
             setLoading(false);
-<<<<<<< HEAD
-            console.log(
-              '\n\n updateUserPostRequest response: ',
-              response?.status,
-            );
-            console.log('\n\n userData: ', response['updated-User']);
-=======
             // console.log(
             //   '\n\n updateUserPostRequest response: ',
             //   response?.status,
@@ -399,7 +374,6 @@ export default function UpdateUserScreenIn({navigation, route}) {
               ...userData2,
               business_category: response.business_category,
             });
->>>>>>> bc09eaf17a71c2efc6f22bf531d33ea03280657e
             // return null;
             // const userData2 = {
             //   fullname: userData?.fullname,
@@ -440,8 +414,6 @@ export default function UpdateUserScreenIn({navigation, route}) {
   const isfocused = useIsFocused();
 
   React.useEffect(() => {
-<<<<<<< HEAD
-=======
     Alert.alert('Focused');
     getCategories(res => {
       let values = [];
@@ -456,7 +428,6 @@ export default function UpdateUserScreenIn({navigation, route}) {
       );
     });
 
->>>>>>> bc09eaf17a71c2efc6f22bf531d33ea03280657e
     if (userData?.organization_name !== undefined) {
       setOrganizationName(userData?.organization_name);
     }
@@ -492,24 +463,19 @@ export default function UpdateUserScreenIn({navigation, route}) {
     if (userData?.longitude !== undefined) {
       setLongitude(userData?.latitude);
     }
-<<<<<<< HEAD
-    if (userData?.company_logo !== undefined) {
-      setCompany_Logo({ uri: userData?.company_logo });
-=======
     if (userData?.company_logo != null) {
       console.log(
         '\n\n\n\n\n\n this is company logog \\n\n\n\n ',
         imageBase + userData.company_logo,
       );
-      setCompany_Logo({uri: imageBase + userData?.company_logo});
->>>>>>> bc09eaf17a71c2efc6f22bf531d33ea03280657e
+      setCompany_Logo({ uri: imageBase + userData?.company_logo });
     }
     if (userData?.comapany_profile !== undefined) {
       setComapany_Profile(imageBase + userData?.comapany_profile);
     }
     if (userData?.user_profile != null) {
       Alert.alert('setting company profile', imageBase + userData.user_profile);
-      setUser_Profile({uri: imageBase + userData?.user_profile});
+      setUser_Profile({ uri: imageBase + userData?.user_profile });
     }
     if (userData?.gst_number !== undefined) {
       setGst_Number(userData?.gst_number);
@@ -553,8 +519,6 @@ export default function UpdateUserScreenIn({navigation, route}) {
     }
     if (userData?.certificate_issue !== undefined) {
       // set
-<<<<<<< HEAD
-=======
 
       if (userData.business_category?.length == 0) {
         setBusinessTypeCategory(
@@ -568,12 +532,11 @@ export default function UpdateUserScreenIn({navigation, route}) {
         );
         setBusinessTypeCategory(
           seqToBusinessCategory[
-            userData.business_category[userData.business_category?.length - 1]
-              .business_category_id
+          userData.business_category[userData.business_category?.length - 1]
+            .business_category_id
           ],
         );
       }
->>>>>>> bc09eaf17a71c2efc6f22bf531d33ea03280657e
     }
   }, [isfocused]);
 
@@ -688,16 +651,11 @@ export default function UpdateUserScreenIn({navigation, route}) {
               </View>
             ) : (
               <Image
-<<<<<<< HEAD
-                source={{ uri: company_logo?.uri }}
-                style={{ width: 120, height: 120, borderRadius: 8 }}
-=======
                 source={{
                   uri: company_logo?.uri,
                   // uri: 'https://icecream.drazs.com/api/storage/app/public/img/user_profile/HkbQZZ7nAFiLRjEuAqEdYbDK230bHkD3PAUrCd9T.jpg',
                 }}
-                style={{width: 120, height: 120, borderRadius: 8}}
->>>>>>> bc09eaf17a71c2efc6f22bf531d33ea03280657e
+                style={{ width: 120, height: 120, borderRadius: 8 }}
               />
             )}
           </TouchableHighlight>
