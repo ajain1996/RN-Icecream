@@ -206,9 +206,10 @@ export const updateUserPostRequest = async (
   pan_number,
   typeOfCompany,
   token,
+  isImageChanged,
   successCallBack,
 ) => {
-  console.log('\n\n updateUserPostRequest Called : ', company_logo);
+  console.log('\n\n updateUserPostRequest Called : ', company_brochure);
   var formdata = new FormData();
   formdata.append('token', token);
   // formdata.append('email', email);
@@ -219,8 +220,19 @@ export const updateUserPostRequest = async (
   formdata.append('business_type', typeOfCompany);
   formdata.append('mobile', phone);
   // 0-------
-  formdata.append('user_profile', user_profile, user_profile.name);
-  formdata.append('company_logo', company_logo, company_logo.name);
+  if (isImageChanged.user_profile) {
+    formdata.append('user_profile', user_profile, user_profile.name);
+  }
+  if (isImageChanged.company_logo) {
+    formdata.append('company_logo', company_logo, company_logo.name);
+  }
+  if (isImageChanged.company_brochure) {
+    formdata.append(
+      'company_brochure',
+      company_brochure,
+      company_brochure.name,
+    );
+  }
 
   formdata.append('organization_name', organization_name);
   formdata.append('short_name', short_name);
@@ -282,7 +294,6 @@ export const updateUserPostRequest = async (
 
   // formdata.append('gst_image', gst_image, gst_image.uri);
   // formdata.append('pan_image', pan_image, pan_image.uri);
-  // formdata.append('company_brochure', company_brochure, company_brochure.uri);
   // formdata.append('comapny_ad', comapny_ad, comapny_ad.uri);
 
   // 0-------------------------------------
@@ -303,7 +314,8 @@ export const updateUserPostRequest = async (
     .then(response => response.text())
     .then(result => {
       console.log('\n\n\n', result, ' \n\n\n<<<<<< result at update user'),
-        console.log('\n\n updateUserPostRequest success: ', result);
+        console.log('\n\n updateUserPostRequest success: ', JSON.parse(result));
+      // return null;
       successCallBack(JSON.parse(result));
     })
     .catch(error => console.log('error', error));
