@@ -22,58 +22,58 @@ interface OPTInputProps { }
 const CELL_COUNT = 4;
 const RESEND_OTP_TIME_LIMIT = 90;
 
-export const response3 = {
-  status: 'Sucess',
-  message: 'Login Successfully',
-  data: {
-    id: 24,
-    name: 'Guest',
-    email: 'guestdefault@gmail.com',
-    mobile: '7459685741',
-    user_profile: null,
-    user_type: 'user',
-    user_token: 'LG505VUdzP2fxQ9f0ff0AMnEtWD4PzzwcKG8P6MHyvidJ3eiv6fuBd7WTvs2',
-    otp: '',
-    email_verified_at: null,
-    company_id: 'DqfQN',
-    organization_name: null,
-    short_name: null,
-    mobile_2: null,
-    address_1: null,
-    address_2: null,
-    address_3: null,
-    country: null,
-    state: null,
-    city: null,
-    landmark: null,
-    latitude: null,
-    longitude: null,
-    company_logo: null,
-    comapany_profile: null,
-    gst_number: null,
-    gst_image: null,
-    pan_number: null,
-    pan_image: null,
-    company_brochure: null,
-    comapny_ad: null,
-    est_year: null,
-    employee_number: null,
-    turnover: null,
-    package_code: null,
-    is_subscribed: 0,
-    payment_status: null,
-    current_status: 0,
-    validity_date: null,
-    certificate_issue: 0,
-    created_at: '2022-12-04T17:13:08.000000Z',
-    updated_at: '2022-12-04T17:13:22.000000Z',
-  },
-  follower: 0,
-  following: 0,
-  business_category: [],
-  business_sub_category: [],
-  token: '9|fEMecPMzYQfy4ZDRr6bKeKkICPWKFzvVdDGYQU4E',
-};
+// export const response3 = {
+//   status: 'Sucess',
+//   message: 'Login Successfully',
+//   data: {
+//     id: 24,
+//     name: 'Guest',
+//     email: 'guestdefault@gmail.com',
+//     mobile: '7459685741',
+//     user_profile: null,
+//     user_type: 'user',
+//     user_token: 'LG505VUdzP2fxQ9f0ff0AMnEtWD4PzzwcKG8P6MHyvidJ3eiv6fuBd7WTvs2',
+//     otp: '',
+//     email_verified_at: null,
+//     company_id: 'DqfQN',
+//     organization_name: null,
+//     short_name: null,
+//     mobile_2: null,
+//     address_1: null,
+//     address_2: null,
+//     address_3: null,
+//     country: null,
+//     state: null,
+//     city: null,
+//     landmark: null,
+//     latitude: null,
+//     longitude: null,
+//     company_logo: null,
+//     comapany_profile: null,
+//     gst_number: null,
+//     gst_image: null,
+//     pan_number: null,
+//     pan_image: null,
+//     company_brochure: null,
+//     comapny_ad: null,
+//     est_year: null,
+//     employee_number: null,
+//     turnover: null,
+//     package_code: null,
+//     is_subscribed: 0,
+//     payment_status: null,
+//     current_status: 0,
+//     validity_date: null,
+//     certificate_issue: 0,
+//     created_at: '2022-12-04T17:13:08.000000Z',
+//     updated_at: '2022-12-04T17:13:22.000000Z',
+//   },
+//   follower: 0,
+//   following: 0,
+//   business_category: [],
+//   business_sub_category: [],
+//   token: '9|fEMecPMzYQfy4ZDRr6bKeKkICPWKFzvVdDGYQU4E',
+// };
 
 export const VerifyOTP: React.FC<OPTInputProps> = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -157,32 +157,22 @@ export const VerifyOTP: React.FC<OPTInputProps> = ({ navigation, route }) => {
             ...response.data,
             business_category: response.business_category,
           });
-
-          // await Auth.setAccount();
-          // navigation.navigate('UpdateUserScreen', {userData: userData2});
-          if (screen === "Login") {
-            await Auth.setAccount(userData2);
-            dispatch(
-              setUser({
-                ...response.data,
-                business_category: response.business_category,
-              }),
-            );
-            // dispatch(setUser(userData2));
-            navigation.navigate('Root');
-          } else {
-            navigation.navigate('UpdateUserScreen', { userData: userData2 });
-          }
-          // navigation.navigate('Root');
-        } else if (userType === 'guest') {
-          await Auth.setAccount(userData2);
           dispatch(
             setUser({
               ...response.data,
               business_category: response.business_category,
             }),
           );
-          // dispatch(setUser(userData2));
+          if (screen === "Login") {
+            await Auth.setAccount(userData2);
+            Toast.show('Successfully Login');
+            navigation.navigate('Root');
+          } else {
+            Toast.show('Successfully Registered');
+            navigation.navigate('UpdateUserScreen', { userData: userData2 });
+          }
+        } else if (userType === 'guest') {
+          await Auth.setAccount(userData2);
           navigation.navigate('Root');
         }
       });

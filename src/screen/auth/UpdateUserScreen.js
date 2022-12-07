@@ -20,12 +20,10 @@ import { setUser } from '../../redux/reducer/user';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Alert } from 'react-native';
 import CustomLoader, { CustomPanel } from '../../component/CustomLoader';
-import { response3 } from './VerifyOTP';
 
 export default function UpdateUserScreenIn({ navigation, route }) {
   const dispatch = useDispatch();
   const { userData } = route?.params;
-  // const userData = response3?.data;
 
   console.log('\n\n userData: ', userData);
 

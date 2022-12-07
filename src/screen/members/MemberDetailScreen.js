@@ -10,7 +10,6 @@ import { TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native';
 
 export default function MemberDetailScreen({ navigation, route }) {
-
     const { item } = route?.params;
 
     return (
@@ -26,10 +25,10 @@ export default function MemberDetailScreen({ navigation, route }) {
                     }}>
                     <View style={{ width: '100%', padding: 14 }}>
                         <Text style={styles.memberName}>
-                            {item?.name === null ? "Member name" : item?.name}
+                            {item?.name === null ? '' : item?.name}
                         </Text>
                         <Text style={{ ...commonStyles.fs12_400, color: '#fff' }}>
-                            ({item?.email === null ? "company@gmail.com" : item?.email})
+                            ({item?.email === null ? 'company@gmail.com' : item?.email})
                         </Text>
                     </View>
                     <View style={styles.itemContent}>
@@ -40,11 +39,19 @@ export default function MemberDetailScreen({ navigation, route }) {
                             style={styles.itemImg}
                         />
                         <View style={styles.memberNameBlock}>
-                            <Text style={[styles.memberName, { color: COLORS.theme, marginTop: 8 }]}>
-                                {item?.short_name === null ? "Full name" : item?.short_name}
+                            <Text
+                                style={[
+                                    styles.memberName,
+                                    { color: COLORS.theme, marginTop: 8 },
+                                ]}>
+                                {item?.short_name === null ? '' : item?.short_name}
                             </Text>
                             <Text style={styles.conpanyName}>
-                                ({item?.organization_name === null ? "Organization Name" : item?.organization_name})
+                                (
+                                {item?.organization_name === null
+                                    ? ''
+                                    : item?.organization_name}
+                                )
                             </Text>
                         </View>
                     </View>
@@ -54,7 +61,7 @@ export default function MemberDetailScreen({ navigation, route }) {
                             padding: 20,
                             backgroundColor: '#fff',
                             ...commonStyles.rowBetween,
-                            marginTop: -8
+                            marginTop: -8,
                         }}>
                         <TouchableOpacity style={styles.btn} onPress={() => { }}>
                             <Text style={styles.btnText}>Show Phone Number</Text>
@@ -80,13 +87,20 @@ export default function MemberDetailScreen({ navigation, route }) {
                     <View style={{ ...commonStyles.rowStart }}>
                         {image_tap(require('../../assets/home.png'), 20, () => { })}
                         <Text style={[styles.memberAddress, { marginTop: 0 }]}>
-                            {item?.address_1}, {item?.address_2}, {item?.address_3} ({item?.state}), {item?.city}, {item?.country}
+                            {item?.address_1 === null ? '' : item?.address_1},{' '}
+                            {item?.address_2 === null ? '' : item?.address_2},{' '}
+                            {item?.address_3 === null ? '' : item?.address_3},{' '}
+                            {item?.state === null ? '' : item?.state},{' '}
+                            {item?.city === null ? '' : item?.city},{' '}
+                            {item?.country === null ? '' : item?.country}
                         </Text>
                     </View>
 
                     <View style={{ ...commonStyles.rowStart }}>
                         {image_tap(require('../../assets/enquiry.png'), 20, () => { })}
-                        <Text style={styles.memberAddress}>{item?.mobile_2}</Text>
+                        <Text style={styles.memberAddress}>
+                            {item?.mobile_2 === null ? '' : item?.mobile_2}
+                        </Text>
                     </View>
 
                     <View style={{ ...commonStyles.rowStart, marginTop: -8 }}>
@@ -96,7 +110,9 @@ export default function MemberDetailScreen({ navigation, route }) {
 
                     <View style={{ ...commonStyles.rowStart, marginTop: -8 }}>
                         {image_tap(require('../../assets/card.png'), 20, () => { })}
-                        <Text style={styles.memberAddress}>PAN: {item?.pan_number}</Text>
+                        <Text style={styles.memberAddress}>
+                            PAN: {item?.pan_number === null ? '' : item?.pan_number}
+                        </Text>
                     </View>
 
                     {/* <View style={{ ...commonStyles.rowStart, marginTop: -8 }}>
@@ -105,12 +121,16 @@ export default function MemberDetailScreen({ navigation, route }) {
                     </View> */}
                     <View style={{ ...commonStyles.rowStart, marginTop: -8 }}>
                         {image_tap(require('../../assets/members.png'), 20, () => { })}
-                        <Text style={styles.memberAddress}>TURNOVER: {item?.turnover}</Text>
+                        <Text style={styles.memberAddress}>
+                            TURNOVER: {item?.turnover === null ? '' : item?.turnover}
+                        </Text>
                     </View>
 
                     <View style={{ ...commonStyles.rowStart, marginTop: -8 }}>
                         {image_tap(require('../../assets/tax.png'), 20, () => { })}
-                        <Text style={styles.memberAddress}>GST: {item?.gst_number}</Text>
+                        <Text style={styles.memberAddress}>
+                            GST: {item?.gst_number === null ? '' : item?.gst_number}
+                        </Text>
                     </View>
                 </View>
 
@@ -125,9 +145,18 @@ export default function MemberDetailScreen({ navigation, route }) {
                         }}>
                         <Text style={styles.memberName}>Business Profile</Text>
                     </View>
-                    <View style={{ ...commonStyles.rowStart, paddingHorizontal: 16, paddingBottom: 12 }}>
-                        <Text style={[styles.memberAddress, { marginTop: 12, width: "100%" }]}>
-                            180 Local street, Member Address, Member address 2 180 Local street, Member Address, Member address 2 180 Local street, Member Address, Member address 2 street, Member Address, Member address 2 street, Member Address, Member
+                    <View
+                        style={{
+                            ...commonStyles.rowStart,
+                            paddingHorizontal: 16,
+                            paddingBottom: 12,
+                        }}>
+                        <Text
+                            style={[styles.memberAddress, { marginTop: 12, width: '100%' }]}>
+                            180 Local street, Member Address, Member address 2 180 Local
+                            street, Member Address, Member address 2 180 Local street, Member
+                            Address, Member address 2 street, Member Address, Member address 2
+                            street, Member Address, Member
                         </Text>
                     </View>
                 </View>

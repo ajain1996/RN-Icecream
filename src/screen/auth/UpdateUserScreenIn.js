@@ -1,5 +1,5 @@
 import {View, Text, TouchableOpacity, FlatList} from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 import Toast from 'react-native-simple-toast';
 import ApplyFormInput from '../../component/ApplyFormInput';
 import ApplyFormPicker from '../../component/ApplyFormPicker';
@@ -34,7 +34,6 @@ const imageBase = 'https://icecream.drazs.com/api/storage/app/';
 export default function UpdateUserScreenIn({navigation, route}) {
   const dispatch = useDispatch();
   const {userData} = useSelector(state => state.User);
-  // const userData = response3?.data;
 
   console.log('\n\n userData: \n\n\n---->', userData);
 
@@ -68,13 +67,12 @@ export default function UpdateUserScreenIn({navigation, route}) {
   const [alternateMobNo, setAlternateMobNo] = React.useState('');
   const [typeOfCompany, setTypeOfCompany] = React.useState('');
   const [businessType, setBusinessType] = React.useState('');
-  const [isImageChanged, setIsImageChanged] = useState({
+  const [isImageChanged, setIsImageChanged] = React.useState({
     user_profile: false,
     company_logo: false,
     company_brochure: false,
   });
   const [businessTypeCategory, setBusinessTypeCategory] = React.useState('');
-  const [categoryDropDown, setCategoryDropDown] = useState([]);
   const [country, setCountry] = React.useState('');
   const [packageCode, setPackageCode] = React.useState('');
   const [city, setCity] = React.useState('');
@@ -96,7 +94,6 @@ export default function UpdateUserScreenIn({navigation, route}) {
   const [user_profile, setUser_Profile] = React.useState({
     uri: imageBase + userData?.userProfile,
   });
-  const [businessCategorySeq, setBusinessCategorySeq] = useState(1);
   const [address_1, setAddress_1] = React.useState('');
   const [address_2, setAddress_2] = React.useState('');
   const [address_3, setAddress_3] = React.useState('');
@@ -113,15 +110,9 @@ export default function UpdateUserScreenIn({navigation, route}) {
   const [comapny_ad, setComapny_AD] = React.useState('');
   const [pan_number, setPAN_Number] = React.useState('');
 
-  const [businessOwnerName, setBusinessOwnerName] = React.useState(
-    userData.name,
-  );
-  const [businessOwnerEmail, setBusinessOwnerEmail] = React.useState(
-    userData.email,
-  );
-  const [businessOwnerPhone, setBusinessOwnerPhone] = React.useState(
-    userData.mobile,
-  );
+  const [businessOwnerName, setBusinessOwnerName] = React.useState('');
+  const [businessOwnerEmail, setBusinessOwnerEmail] = React.useState('');
+  const [businessOwnerPhone, setBusinessOwnerPhone] = React.useState('');
 
   const fetchCountries = async () => {
     const response = await fetch(
@@ -176,7 +167,15 @@ export default function UpdateUserScreenIn({navigation, route}) {
       }
     });
   };
-
+  console.log(
+    '\n\n\n',
+    user_profile?.uri,
+    '<<< this is user profile',
+    ' \n\n company logo',
+    company_logo?.uri,
+    '\n\n company bro',
+    company_brochure?.uri,
+  );
   const selectPdfFile = async text => {
     try {
       const res = await DocumentPicker.pick({
@@ -218,6 +217,8 @@ export default function UpdateUserScreenIn({navigation, route}) {
       Alert.alert('Alert', 'Company type is mandatory');
     } else if (!company_logo || company_logo?.length === 0) {
       Alert.alert('Alert', 'Company logo is mandatory');
+    } else if (businessType?.length === 0) {
+      Alert.alert('Alert', 'Business type is mandatory');
     } else if (businessTypeCategory?.length === 0) {
       Alert.alert('Alert', 'Business Category is mandatory');
     } else if (businessOwnerName?.length === 0) {
@@ -249,107 +250,101 @@ export default function UpdateUserScreenIn({navigation, route}) {
     } else if (!turnover || turnover?.length === 0) {
       Alert.alert('Alert', 'Turnover is mandatory');
     } else {
-      Alert.alert('Ready to submit');
-      // console.log(
-      //   userData?.email,
-      //   '\n',
-      //   userData?.mobile,
-      //   '\n',
-      //   userData?.name,
-      //   '\n',
-      //   user_profile,
-      //   '\n',
+      // Alert.alert('Ready to submit');
+      console.log(
+        userData?.email,
+        '\n',
+        userData?.mobile,
+        '\n',
+        userData?.name,
+        '\n',
+        user_profile,
+        '\n',
 
-      //   organizationName,
-      //   '\n',
+        organizationName,
+        '\n',
 
-      //   shortName,
-      //   '\n',
+        shortName,
+        '\n',
 
-      //   alternateMobNo,
-      //   '\n',
+        alternateMobNo,
+        '\n',
 
-      //   address_1,
-      //   '\n',
+        address_1,
+        '\n',
 
-      //   address_2,
-      //   '\n',
+        address_2,
+        '\n',
 
-      //   address_3,
-      //   '\n',
+        address_3,
+        '\n',
 
-      //   country,
-      //   '\n',
+        country,
+        '\n',
 
-      //   state,
-      //   '\n',
+        state,
+        '\n',
 
-      //   city,
-      //   '\n',
+        city,
+        '\n',
 
-      //   landmark,
-      //   '\n',
+        landmark,
+        '\n',
 
-      //   longitude,
-      //   '\n',
+        longitude,
+        '\n',
 
-      //   gst_number,
-      //   '\n',
+        gst_number,
+        '\n',
 
-      //   est_year,
-      //   '\n',
+        est_year,
+        '\n',
 
-      //   employee_number,
-      //   '\n',
+        employee_number,
+        '\n',
 
-      //   turnover,
-      //   '\n',
+        turnover,
+        '\n',
 
-      //   businessType,
-      //   '\n',
+        businessType,
+        '\n',
 
-      //   // business_category0,
-      //   'business_category1',
-      //   '\n',
+        // business_category0,
+        'business_category1',
+        '\n',
 
-      //   'business_category2',
-      //   '\n',
+        'business_category2',
+        '\n',
 
-      //   company_logo,
-      //   '\n',
+        company_logo,
+        '\n',
 
-      //   comapany_profile,
-      //   '\n',
+        comapany_profile,
+        '\n',
 
-      //   gstCertificate,
-      //   '\n',
+        gstCertificate,
+        '\n',
 
-      //   panFile,
-      //   '\n',
+        panFile,
+        '\n',
 
-      //   company_brochure,
-      //   '\n',
+        company_brochure,
+        '\n',
 
-      //   comapny_ad,
-      //   '\n',
+        comapny_ad,
+        '\n',
 
-      //   pan_number,
-      //   '\n',
-      // );
+        pan_number,
+        '\n',
+      );
       //   return null;
       // setLoading(true);
-      // console.log(
-      //   businessTypeCategory,
-      //   '--',
-      //   businessCategorybySeq[businessTypeCategory],
-      // );
-
       Auth.getLocalStorageData('usertoken').then(token => {
-        console.log('\n\n\n\n this is token \n\n ---> ', user_profile);
+        console.log('\n\n\n\n this is token \n\n ---> ', token);
         updateUserPostRequest(
-          businessOwnerEmail,
+          userData?.email,
           userData?.mobile,
-          businessOwnerName,
+          userData?.name,
           user_profile,
           organizationName,
           shortName,
@@ -366,7 +361,8 @@ export default function UpdateUserScreenIn({navigation, route}) {
           est_year,
           employee_number,
           turnover,
-          businessCategorybySeq[businessTypeCategory],
+          businessType,
+          // business_category0,
           'business_category1',
           'business_category2',
           company_logo,
@@ -376,8 +372,6 @@ export default function UpdateUserScreenIn({navigation, route}) {
           company_brochure,
           comapny_ad,
           pan_number,
-          typeOfCompany,
-          isImageChanged,
           token,
           async response => {
             const userData2 = response.data;
@@ -505,13 +499,13 @@ export default function UpdateUserScreenIn({navigation, route}) {
       setGSTCertificate(userData?.gst_image);
     }
     if (userData?.pan_number !== undefined) {
-      setPAN_Number(userData?.pan_number);
+      setPANFile(userData?.pan_number);
     }
     if (userData?.pan_image !== undefined) {
       setPANFile(userData?.pan_image);
     }
     if (userData?.company_brochure !== undefined) {
-      setCompany_Brochure({uri: imageBase + userData?.company_brochure});
+      setCompany_Brochure({uri: userData?.company_brochure});
     }
     if (userData?.comapny_ad !== undefined) {
       setComapny_AD(userData?.comapny_ad);
@@ -536,15 +530,18 @@ export default function UpdateUserScreenIn({navigation, route}) {
     if (userData?.current_status !== undefined) {
       setCurrentStatus(userData?.current_status);
     }
-    if (userData?.business_type !== undefined) {
-      setTypeOfCompany(userData.business_type);
+    if (userData?.validity_date !== undefined) {
     }
-    if (userData?.business_category?.length != 0) {
+    if (userData?.certificate_issue !== undefined) {
       // set
+    }
 
+    if (userData.business_category?.length == 0) {
+      setBusinessTypeCategory(seqToBusinessCategory[1]);
+    } else {
       console.log(
         '\n\n\n ---->>>>>>>>>>> ',
-        userData,
+        userData.business_category,
         '<<< \n\n\n this is business category --',
       );
       setBusinessTypeCategory(
@@ -553,8 +550,6 @@ export default function UpdateUserScreenIn({navigation, route}) {
             .business_category_id
         ],
       );
-    } else {
-      setBusinessTypeCategory(seqToBusinessCategory[1]);
     }
   }, [isfocused]);
 
@@ -586,22 +581,13 @@ export default function UpdateUserScreenIn({navigation, route}) {
               />
             </View>
           ) : (
-            <>
-              <Image
-                source={{
-                  // uri: 'https://icecream.drazs.com/api/storage/app/public/img/user_profile/HkbQZZ7nAFiLRjEuAqEdYbDK230bHkD3PAUrCd9T.jpg',
-                  uri: user_profile.uri,
-                }}
-                style={{width: 120, height: 120, borderRadius: 100}}
-              />
-              <TouchableHighlight
-                style={{...styles.btn, width: 50, height: 30, marginTop: 10}}
-                onPress={() => {
-                  setUser_Profile({uri: null});
-                }}>
-                <Text style={{...styles.btnText, fontSize: 10}}>remove</Text>
-              </TouchableHighlight>
-            </>
+            <Image
+              source={{
+                // uri: 'https://icecream.drazs.com/api/storage/app/public/img/user_profile/HkbQZZ7nAFiLRjEuAqEdYbDK230bHkD3PAUrCd9T.jpg',
+                uri: user_profile.uri,
+              }}
+              style={{width: 120, height: 120, borderRadius: 100}}
+            />
           )}
         </TouchableHighlight>
         <Text />
@@ -724,25 +710,16 @@ export default function UpdateUserScreenIn({navigation, route}) {
                 />
               </View>
             ) : (
-              <>
-                <Image
-                  source={{uri: company_brochure?.uri}}
-                  resizeMode="contain"
-                  style={{width: '90%', height: 210, borderRadius: 8}}
-                />
-                <TouchableHighlight
-                  style={{...styles.btn, width: 50, height: 30, marginTop: 10}}
-                  onPress={() => {
-                    setCompany_Brochure({uri: null});
-                  }}>
-                  <Text style={{...styles.btnText, fontSize: 10}}>remove</Text>
-                </TouchableHighlight>
-              </>
+              <Image
+                source={{uri: company_brochure?.uri}}
+                resizeMode="contain"
+                style={{width: '90%', height: 210, borderRadius: 8}}
+              />
             )}
           </TouchableHighlight>
         </>
 
-        {/* <ApplyFormPicker
+        <ApplyFormPicker
           heading="Business Type"
           placeholderText="Business Type"
           dropDownValue={businessType}
@@ -753,8 +730,8 @@ export default function UpdateUserScreenIn({navigation, route}) {
             console.log('\n\n Selected val :::: ', val);
             setBusinessType(val);
           }}
-          data={categoryDropDown}
-        /> */}
+          data={businessTypeList}
+        />
 
         <ApplyFormPicker
           heading="Business Category"
@@ -762,13 +739,12 @@ export default function UpdateUserScreenIn({navigation, route}) {
           dropDownValue={businessTypeCategory}
           required={true}
           width={SIZES.width - 120}
-          //   height={300}
+          height={380}
           onDateSelected={function (val) {
             console.log('\n\n Selected val :::: ', val);
             setBusinessTypeCategory(val);
-            // setBusinessCategorySeq()
           }}
-          data={categoryDropDown}
+          data={businessTypeList}
         />
 
         <ApplyFormInput
@@ -841,18 +817,18 @@ export default function UpdateUserScreenIn({navigation, route}) {
         />
 
         {/* <CountryFormPicker
-              heading="Country"
-              placeholderText="Country"
-              dropDownValue={country}
-              width={SIZES.width / 1.05}
-              height={SIZES.height / 1.14}
-              onDateSelected={function (val, states) {
-                  console.log('\n\n Selected states :::: ', states);
-                  setCountry(val);
-                  setAllStates(states);
-              }}
-              data={allCountries}
-          /> */}
+                    heading="Country"
+                    placeholderText="Country"
+                    dropDownValue={country}
+                    width={SIZES.width / 1.05}
+                    height={SIZES.height / 1.14}
+                    onDateSelected={function (val, states) {
+                        console.log('\n\n Selected states :::: ', states);
+                        setCountry(val);
+                        setAllStates(states);
+                    }}
+                    data={allCountries}
+                /> */}
 
         <ApplyFormInput
           heading="State"
@@ -865,43 +841,43 @@ export default function UpdateUserScreenIn({navigation, route}) {
         />
 
         {/* <CountryFormPicker
-            heading="State"
-            placeholderText="State"
-            dropDownValue={state}
-            width={SIZES.width / 1.05}
-            height={SIZES.height / 1.14}
-            onDateSelected={async function (val) {
-                console.log('\n\n Selected val :::: ', val);
-                setState(val);
+                    heading="State"
+                    placeholderText="State"
+                    dropDownValue={state}
+                    width={SIZES.width / 1.05}
+                    height={SIZES.height / 1.14}
+                    onDateSelected={async function (val) {
+                        console.log('\n\n Selected val :::: ', val);
+                        setState(val);
 
-                const body = {
-                    country: 'India',
-                    state: 'Madhya Pradesh',
-                };
+                        const body = {
+                            country: 'India',
+                            state: 'Madhya Pradesh',
+                        };
 
-                const citiesData = await fetch(
-                    'https://countriesnow.space/api/v0.1/countries/state/cities',
-                    {
-                        method: 'POST',
-                        headers: {
-                            'X-Powered-By': 'Express',
-                            'Access-Control-Allow-Origin': '*',
-                            'Access-Control-Allow-Headers': '*',
-                            'Content-Type': 'application/json',
-                            'Content-Length': '1036708',
-                            ETag: 'W/"fd1a4-+y1qCVg9E600sahDr1s3nW1FTHQ"',
-                            Date: 'Sun, 02 Aug 2020 10:37:45 GMT',
-                            Connection: 'keep-alive',
-                        },
-                        body: JSON.stringify(body),
-                    },
-                );
+                        const citiesData = await fetch(
+                            'https://countriesnow.space/api/v0.1/countries/state/cities',
+                            {
+                                method: 'POST',
+                                headers: {
+                                    'X-Powered-By': 'Express',
+                                    'Access-Control-Allow-Origin': '*',
+                                    'Access-Control-Allow-Headers': '*',
+                                    'Content-Type': 'application/json',
+                                    'Content-Length': '1036708',
+                                    ETag: 'W/"fd1a4-+y1qCVg9E600sahDr1s3nW1FTHQ"',
+                                    Date: 'Sun, 02 Aug 2020 10:37:45 GMT',
+                                    Connection: 'keep-alive',
+                                },
+                                body: JSON.stringify(body),
+                            },
+                        );
 
-                const json = await citiesData.json();
-                setAllCities(json?.data);
-            }}
-            data={allStates}
-        /> */}
+                        const json = await citiesData.json();
+                        setAllCities(json?.data);
+                    }}
+                    data={allStates}
+                /> */}
 
         <ApplyFormInput
           heading="Cities"
