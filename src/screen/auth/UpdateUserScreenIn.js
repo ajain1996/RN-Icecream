@@ -1,19 +1,19 @@
-import { View, Text, TouchableOpacity, FlatList } from 'react-native';
+import {View, Text, TouchableOpacity, FlatList} from 'react-native';
 import React from 'react';
 import Toast from 'react-native-simple-toast';
 import ApplyFormInput from '../../component/ApplyFormInput';
 import ApplyFormPicker from '../../component/ApplyFormPicker';
-import { COLORS, SIZES } from '../../component/Constant/Color';
+import {COLORS, SIZES} from '../../component/Constant/Color';
 import CountryFormPicker from '../../component/CountryFormPicker';
 import CitiesFormPicker from '../../component/CitiesFormPicker';
-import { ScrollView } from 'react-native';
-import { TouchableHighlight } from 'react-native';
-import { StyleSheet } from 'react-native';
-import { commonStyles } from '../../utils/Styles';
-import { Image } from 'react-native';
+import {ScrollView} from 'react-native';
+import {TouchableHighlight} from 'react-native';
+import {StyleSheet} from 'react-native';
+import {commonStyles} from '../../utils/Styles';
+import {Image} from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
 import CustomHeader from '../../component/Header/CustomHeader';
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Auth from '../../service/Auth';
 import {
   businessCategorybySeq,
@@ -22,43 +22,44 @@ import {
   seqToBusinessCategory,
   updateUserPostRequest,
 } from '../../utils/API';
-import { setUser } from '../../redux/reducer/user';
-import { launchImageLibrary } from 'react-native-image-picker';
-import { Alert } from 'react-native';
-import CustomLoader, { CustomPanel } from '../../component/CustomLoader';
-import { response3 } from './VerifyOTP';
-import { useIsFocused } from '@react-navigation/native';
+import {setUser} from '../../redux/reducer/user';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {Alert} from 'react-native';
+import CustomLoader, {CustomPanel} from '../../component/CustomLoader';
+import {response3} from './VerifyOTP';
+import {useIsFocused} from '@react-navigation/native';
+import {Button} from 'react-native-elements';
 
 const imageBase = 'https://icecream.drazs.com/api/storage/app/';
-export default function UpdateUserScreenIn({ navigation, route }) {
+export default function UpdateUserScreenIn({navigation, route}) {
   const dispatch = useDispatch();
-  const { userData } = useSelector(state => state.User);
+  const {userData} = useSelector(state => state.User);
 
-  console.log('\n\n userData: ', userData);
+  console.log('\n\n userData: \n\n\n---->', userData);
 
   const companyTypeList = [
-    { name: 'Public Ltd', value: 'Public Ltd' },
-    { name: 'Pvt. Ltd.', value: 'Pvt. Ltd.' },
-    { name: 'Propritorship', value: 'Propritorship' },
-    { name: 'OPC', value: 'OPC' },
-    { name: 'LLP', value: 'LLP' },
-    { name: 'Individual', value: 'Individual' },
-    { name: 'Other', value: 'Other' },
+    {name: 'Public Ltd', value: 'Public Ltd'},
+    {name: 'Pvt. Ltd.', value: 'Pvt. Ltd.'},
+    {name: 'Propritorship', value: 'Propritorship'},
+    {name: 'OPC', value: 'OPC'},
+    {name: 'LLP', value: 'LLP'},
+    {name: 'Individual', value: 'Individual'},
+    {name: 'Other', value: 'Other'},
   ];
 
   const businessTypeList = [
-    { name: 'Manufacturer', value: 'Manufacturer' },
-    { name: 'Super Stokist', value: 'Super Stokist' },
-    { name: 'Distributor', value: 'Distributor' },
-    { name: 'Channel Partner', value: 'Channel Partner' },
-    { name: 'Franchise Outlet', value: 'Franchise Outlet' },
+    {name: 'Manufacturer', value: 'Manufacturer'},
+    {name: 'Super Stokist', value: 'Super Stokist'},
+    {name: 'Distributor', value: 'Distributor'},
+    {name: 'Channel Partner', value: 'Channel Partner'},
+    {name: 'Franchise Outlet', value: 'Franchise Outlet'},
   ];
 
   const numberOfEmployeesList = [
-    { name: '< 10', value: '< 10' },
-    { name: '11 - 50', value: '11 - 50' },
-    { name: '51 - 100', value: '51 - 100' },
-    { name: '> 100', value: '> 100' },
+    {name: '< 10', value: '< 10'},
+    {name: '11 - 50', value: '11 - 50'},
+    {name: '51 - 100', value: '51 - 100'},
+    {name: '> 100', value: '> 100'},
   ];
 
   const [organizationName, setOrganizationName] = React.useState('');
@@ -66,6 +67,11 @@ export default function UpdateUserScreenIn({ navigation, route }) {
   const [alternateMobNo, setAlternateMobNo] = React.useState('');
   const [typeOfCompany, setTypeOfCompany] = React.useState('');
   const [businessType, setBusinessType] = React.useState('');
+  const [isImageChanged, setIsImageChanged] = React.useState({
+    user_profile: false,
+    company_logo: false,
+    company_brochure: false,
+  });
   const [businessTypeCategory, setBusinessTypeCategory] = React.useState('');
   const [country, setCountry] = React.useState('');
   const [packageCode, setPackageCode] = React.useState('');
@@ -98,9 +104,9 @@ export default function UpdateUserScreenIn({ navigation, route }) {
   const [employee_number, setEmployee_Number] = React.useState('');
   const [turnover, setTurnover] = React.useState('');
   const [business_category0, setBusiness_Category0] = React.useState('');
-  const [company_logo, setCompany_Logo] = React.useState({ uri: null });
+  const [company_logo, setCompany_Logo] = React.useState({uri: null});
   const [comapany_profile, setComapany_Profile] = React.useState('');
-  const [company_brochure, setCompany_Brochure] = React.useState({ uri: null });
+  const [company_brochure, setCompany_Brochure] = React.useState({uri: null});
   const [comapny_ad, setComapny_AD] = React.useState('');
   const [pan_number, setPAN_Number] = React.useState('');
 
@@ -137,6 +143,8 @@ export default function UpdateUserScreenIn({ navigation, route }) {
             ...response.assets[0],
             shortName: response.assets[0].fileName,
           });
+          setIsImageChanged({...isImageChanged, user_profile: true});
+
           setUser_Profile({
             ...response.assets[0],
             name: response.assets[0].fileName,
@@ -144,11 +152,13 @@ export default function UpdateUserScreenIn({ navigation, route }) {
         } else if (text === 'logo') {
           console.log('logo', response.assets);
           // console.log()
+          setIsImageChanged({...isImageChanged, company_logo: true});
           setCompany_Logo({
             ...response.assets[0],
             name: response.assets[0].fileName,
           });
         } else if (text === 'brochure') {
+          setIsImageChanged({...isImageChanged, company_brochure: true});
           setCompany_Brochure({
             ...response.assets[0],
             name: response.assets[0].fileName,
@@ -187,10 +197,10 @@ export default function UpdateUserScreenIn({ navigation, route }) {
       }
       if (text.includes('Upload GST Certificate')) {
         // console.log(text, '<<<gst certificate', res);
-        setGSTCertificate({ ...res[0], filename: res[0].fileCopyUri });
+        setGSTCertificate({...res[0], filename: res[0].fileCopyUri});
       } else if (text.includes('Upload Pan Number')) {
         // setPANFile(res[0]);
-        setPANFile({ ...res[0], filename: res[0].fileCopyUri });
+        setPANFile({...res[0], filename: res[0].fileCopyUri});
       }
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -396,7 +406,12 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                 ...userData2,
                 business_category: response.business_category,
               });
-              dispatch(setUser(userData2));
+              dispatch(
+                setUser({
+                  ...userData2,
+                  business_category: response.business_category,
+                }),
+              );
               if (response?.message) {
                 Toast.show(response?.message);
                 return;
@@ -468,14 +483,14 @@ export default function UpdateUserScreenIn({ navigation, route }) {
         '\n\n\n\n\n\n this is company logog \\n\n\n\n ',
         imageBase + userData.company_logo,
       );
-      setCompany_Logo({ uri: imageBase + userData?.company_logo });
+      setCompany_Logo({uri: imageBase + userData?.company_logo});
     }
     if (userData?.comapany_profile !== undefined) {
       setComapany_Profile(imageBase + userData?.comapany_profile);
     }
     if (userData?.user_profile != null) {
       Alert.alert('setting company profile', imageBase + userData.user_profile);
-      setUser_Profile({ uri: imageBase + userData?.user_profile });
+      setUser_Profile({uri: imageBase + userData?.user_profile});
     }
     if (userData?.gst_number !== undefined) {
       setGst_Number(userData?.gst_number);
@@ -490,7 +505,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
       setPANFile(userData?.pan_image);
     }
     if (userData?.company_brochure !== undefined) {
-      setCompany_Brochure({ uri: userData?.company_brochure });
+      setCompany_Brochure({uri: userData?.company_brochure});
     }
     if (userData?.comapny_ad !== undefined) {
       setComapny_AD(userData?.comapny_ad);
@@ -519,24 +534,22 @@ export default function UpdateUserScreenIn({ navigation, route }) {
     }
     if (userData?.certificate_issue !== undefined) {
       // set
+    }
 
-      if (userData.business_category?.length == 0) {
-        setBusinessTypeCategory(
-          seqToBusinessCategory[userData.business_category],
-        );
-      } else {
-        console.log(
-          '\n\n\n ---->>>>>>>>>>> ',
-          userData.business_category,
-          '<<< \n\n\n this is business category --',
-        );
-        setBusinessTypeCategory(
-          seqToBusinessCategory[
+    if (userData.business_category?.length == 0) {
+      setBusinessTypeCategory(seqToBusinessCategory[1]);
+    } else {
+      console.log(
+        '\n\n\n ---->>>>>>>>>>> ',
+        userData.business_category,
+        '<<< \n\n\n this is business category --',
+      );
+      setBusinessTypeCategory(
+        seqToBusinessCategory[
           userData.business_category[userData.business_category?.length - 1]
             .business_category_id
-          ],
-        );
-      }
+        ],
+      );
     }
   }, [isfocused]);
 
@@ -546,9 +559,9 @@ export default function UpdateUserScreenIn({ navigation, route }) {
     <>
       <CustomHeader title="Update Profile " />
       <ScrollView
-        style={{ width: '100%', height: '100%', backgroundColor: '#fff' }}>
+        style={{width: '100%', height: '100%', backgroundColor: '#fff'}}>
         <TouchableHighlight
-          style={{ alignItems: 'center', marginVertical: '8%' }}
+          style={{alignItems: 'center', marginVertical: '8%'}}
           onPress={() => {
             getImage('profile');
           }}
@@ -564,7 +577,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
               }}>
               <Image
                 source={require('../../assets/camera.png')}
-                style={{ width: '75%', height: '75%', tintColor: '#999' }}
+                style={{width: '75%', height: '75%', tintColor: '#999'}}
               />
             </View>
           ) : (
@@ -573,7 +586,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                 // uri: 'https://icecream.drazs.com/api/storage/app/public/img/user_profile/HkbQZZ7nAFiLRjEuAqEdYbDK230bHkD3PAUrCd9T.jpg',
                 uri: user_profile.uri,
               }}
-              style={{ width: 120, height: 120, borderRadius: 100 }}
+              style={{width: 120, height: 120, borderRadius: 100}}
             />
           )}
         </TouchableHighlight>
@@ -627,10 +640,10 @@ export default function UpdateUserScreenIn({ navigation, route }) {
         <>
           <Text style={styles.heading}>
             Company Logo
-            <Text style={{ ...styles.heading, color: '#FF0000' }}>{'  '}*</Text>
+            <Text style={{...styles.heading, color: '#FF0000'}}>{'  '}*</Text>
           </Text>
           <TouchableHighlight
-            style={{ alignItems: 'center', marginBottom: 16, marginTop: 6 }}
+            style={{alignItems: 'center', marginBottom: 16, marginTop: 6}}
             onPress={() => {
               getImage('logo');
             }}
@@ -646,17 +659,26 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                 }}>
                 <Image
                   source={require('../../assets/camera.png')}
-                  style={{ width: '75%', height: '75%', tintColor: '#999' }}
+                  style={{width: '75%', height: '75%', tintColor: '#999'}}
                 />
               </View>
             ) : (
-              <Image
-                source={{
-                  uri: company_logo?.uri,
-                  // uri: 'https://icecream.drazs.com/api/storage/app/public/img/user_profile/HkbQZZ7nAFiLRjEuAqEdYbDK230bHkD3PAUrCd9T.jpg',
-                }}
-                style={{ width: 120, height: 120, borderRadius: 8 }}
-              />
+              <>
+                <Image
+                  source={{
+                    uri: company_logo?.uri,
+                    // uri: 'https://icecream.drazs.com/api/storage/app/public/img/user_profile/HkbQZZ7nAFiLRjEuAqEdYbDK230bHkD3PAUrCd9T.jpg',
+                  }}
+                  style={{width: 120, height: 120, borderRadius: 8}}
+                />
+                <TouchableHighlight
+                  style={{...styles.btn, width: 50, height: 30, marginTop: 10}}
+                  onPress={() => {
+                    setCompany_Logo({uri: null});
+                  }}>
+                  <Text style={{...styles.btnText, fontSize: 10}}>remove</Text>
+                </TouchableHighlight>
+              </>
             )}
           </TouchableHighlight>
         </>
@@ -667,7 +689,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
             {/* <Text style={{...styles.heading, color: '#FF0000'}}>{'  '}*</Text> */}
           </Text>
           <TouchableHighlight
-            style={{ alignItems: 'center', marginBottom: 16, marginTop: 6 }}
+            style={{alignItems: 'center', marginBottom: 16, marginTop: 6}}
             onPress={() => {
               getImage('brochure');
             }}
@@ -684,14 +706,14 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                 <Image
                   source={require('../../assets/camera.png')}
                   resizeMode="contain"
-                  style={{ width: '60%', height: '60%', tintColor: '#999' }}
+                  style={{width: '60%', height: '60%', tintColor: '#999'}}
                 />
               </View>
             ) : (
               <Image
-                source={{ uri: company_brochure?.uri }}
+                source={{uri: company_brochure?.uri}}
                 resizeMode="contain"
-                style={{ width: '90%', height: 210, borderRadius: 8 }}
+                style={{width: '90%', height: 210, borderRadius: 8}}
               />
             )}
           </TouchableHighlight>
@@ -1014,10 +1036,10 @@ export default function UpdateUserScreenIn({ navigation, route }) {
             backgroundColor: COLORS.theme,
             padding: 8,
           }}>
-          <Text style={{ ...commonStyles.fs12_400, color: '#fff' }}>
+          <Text style={{...commonStyles.fs12_400, color: '#fff'}}>
             {'Your Service Account Manager Desk ID'}
           </Text>
-          <Text style={{ ...commonStyles.fs12_500, color: '#fff' }}>
+          <Text style={{...commonStyles.fs12_500, color: '#fff'}}>
             {'desk-id'}
           </Text>
         </View>
@@ -1036,10 +1058,10 @@ export default function UpdateUserScreenIn({ navigation, route }) {
             backgroundColor: COLORS.theme,
             padding: 8,
           }}>
-          <Text style={{ ...commonStyles.fs12_400, color: '#fff' }}>
+          <Text style={{...commonStyles.fs12_400, color: '#fff'}}>
             {'Your Service Account Manager Name with Photo'}
           </Text>
-          <Text style={{ ...commonStyles.fs12_500, color: '#fff' }}>
+          <Text style={{...commonStyles.fs12_500, color: '#fff'}}>
             {'manager-name'}
           </Text>
         </View>
@@ -1058,10 +1080,10 @@ export default function UpdateUserScreenIn({ navigation, route }) {
             backgroundColor: COLORS.theme,
             padding: 8,
           }}>
-          <Text style={{ ...commonStyles.fs12_400, color: '#fff' }}>
+          <Text style={{...commonStyles.fs12_400, color: '#fff'}}>
             {'Your Service Account Manager Mob'}
           </Text>
-          <Text style={{ ...commonStyles.fs12_500, color: '#fff' }}>
+          <Text style={{...commonStyles.fs12_500, color: '#fff'}}>
             {'manager-phone'}
           </Text>
         </View>
@@ -1072,10 +1094,10 @@ export default function UpdateUserScreenIn({ navigation, route }) {
             backgroundColor: COLORS.theme,
             padding: 8,
           }}>
-          <Text style={{ ...commonStyles.fs12_400, color: '#fff' }}>
+          <Text style={{...commonStyles.fs12_400, color: '#fff'}}>
             {'Current Status'}
           </Text>
-          <Text style={{ ...commonStyles.fs12_500, color: '#fff' }}>
+          <Text style={{...commonStyles.fs12_500, color: '#fff'}}>
             {'Activated'}
           </Text>
         </View>
@@ -1088,7 +1110,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                         setCurrentStatus(item.toLocaleLowerCase());
                     }}
                 /> */}
-        <View style={{ height: 10 }} />
+        <View style={{height: 10}} />
 
         <View
           style={{
@@ -1096,10 +1118,10 @@ export default function UpdateUserScreenIn({ navigation, route }) {
             backgroundColor: COLORS.theme,
             padding: 8,
           }}>
-          <Text style={{ ...commonStyles.fs12_400, color: '#fff' }}>
+          <Text style={{...commonStyles.fs12_400, color: '#fff'}}>
             {'Payment Status'}
           </Text>
-          <Text style={{ ...commonStyles.fs12_500, color: '#fff' }}>
+          <Text style={{...commonStyles.fs12_500, color: '#fff'}}>
             {'Free Period'}
           </Text>
         </View>
@@ -1121,7 +1143,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
                     }}
                 /> */}
 
-        <View style={{ padding: 20 }}>
+        <View style={{padding: 20}}>
           <TouchableHighlight style={styles.btn} onPress={handleSubmit}>
             <Text style={styles.btnText}>SUBMIT</Text>
           </TouchableHighlight>
@@ -1144,12 +1166,12 @@ const RenderCustomFilePicker = ({
   setFileError,
 }) => {
   return (
-    <View style={{ alignItems: 'center' }}>
+    <View style={{alignItems: 'center'}}>
       <Text style={styles.heading}>
         {title}
 
         {required == true && (
-          <Text style={{ ...styles.heading, color: '#FF0000' }}>{'  '}*</Text>
+          <Text style={{...styles.heading, color: '#FF0000'}}>{'  '}*</Text>
         )}
       </Text>
       {file?.length === 0 || file === null ? (
@@ -1162,24 +1184,24 @@ const RenderCustomFilePicker = ({
           underlayColor="#f7f8f9">
           <Image
             source={require('../../assets/attach.png')}
-            style={{ width: 24, height: 24, tintColor: '#BDBDBD' }}
+            style={{width: 24, height: 24, tintColor: '#BDBDBD'}}
           />
         </TouchableHighlight>
       ) : (
         <View style={[styles.gstCertificate, commonStyles.rowBetween]}>
-          <Text style={{ ...commonStyles.fs14_500 }}>{file?.name}</Text>
+          <Text style={{...commonStyles.fs14_500}}>{file?.name}</Text>
           <TouchableHighlight
             onPress={() => setFile('')}
             underlayColor="#f7f8f9">
             <Image
               source={require('../../assets/cross.png')}
-              style={{ width: 20, height: 20, tintColor: '#BDBDBD' }}
+              style={{width: 20, height: 20, tintColor: '#BDBDBD'}}
             />
           </TouchableHighlight>
         </View>
       )}
       {fileError ? (
-        <Text style={{ ...commonStyles.fs12_400, color: 'red' }}>
+        <Text style={{...commonStyles.fs12_400, color: 'red'}}>
           GST Certificate is mandatory
         </Text>
       ) : (
@@ -1189,15 +1211,15 @@ const RenderCustomFilePicker = ({
   );
 };
 
-const RenderCustomCheckBox = ({ title, list, selectedVal, callback }) => {
+const RenderCustomCheckBox = ({title, list, selectedVal, callback}) => {
   console.log('\n\n List: ', list);
   return (
-    <View style={{ paddingHorizontal: 20 }}>
-      <Text style={{ ...commonStyles.fs12_400 }}>{title}</Text>
+    <View style={{paddingHorizontal: 20}}>
+      <Text style={{...commonStyles.fs12_400}}>{title}</Text>
       <FlatList
         data={list}
         numColumns={3}
-        renderItem={({ item }) => {
+        renderItem={({item}) => {
           return (
             <TouchableOpacity
               style={[styles.checkboxWrapper]}
@@ -1218,7 +1240,7 @@ const RenderCustomCheckBox = ({ title, list, selectedVal, callback }) => {
                   }}
                 />
               </View>
-              <Text style={{ ...commonStyles.fs12_500, marginLeft: 8 }}>
+              <Text style={{...commonStyles.fs12_500, marginLeft: 8}}>
                 {item}
               </Text>
             </TouchableOpacity>
