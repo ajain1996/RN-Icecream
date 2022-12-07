@@ -205,6 +205,7 @@ export const updateUserPostRequest = async (
   comapny_ad,
   pan_number,
   typeOfCompany,
+  // isImageChanged,
   token,
   isImageChanged,
   successCallBack,
@@ -221,17 +222,17 @@ export const updateUserPostRequest = async (
   formdata.append('mobile', phone);
   // 0-------
   if (isImageChanged.user_profile == true) {
-    // formdata.append('user_profile', user_profile, user_profile.name);
+    formdata.append('user_profile', user_profile, user_profile.name);
   }
   if (isImageChanged.company_logo == true) {
-    // formdata.append('company_logo', company_logo, company_logo.name);
+    formdata.append('company_logo', company_logo, company_logo.name);
   }
   if (isImageChanged.company_brochure == true) {
-    // formdata.append(
-    //   'company_brochure',
-    //   company_brochure,
-    //   company_brochure.name,
-    // );
+    formdata.append(
+      'company_brochure',
+      company_brochure,
+      company_brochure.name,
+    );
   }
   // --
   formdata.append('organization_name', organization_name);

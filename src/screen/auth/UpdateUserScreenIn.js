@@ -543,7 +543,6 @@ export default function UpdateUserScreenIn({navigation, route}) {
     }
     if (userData?.business_category?.length != 0) {
       // set
-
       console.log(
         '\n\n\n ---->>>>>>>>>>> ',
         userData,
