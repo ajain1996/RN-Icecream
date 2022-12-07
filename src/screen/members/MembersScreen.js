@@ -8,9 +8,12 @@ import {Image} from 'react-native';
 import {ScrollView} from 'react-native';
 import {TouchableOpacity} from 'react-native';
 import {getAllUsersAPI} from '../../utils/API';
+import {useEffect} from 'react';
 
 export default function MembersScreen({navigation}) {
   const [members, setMembers] = React.useState([]);
+  const [tempMember, setTempMember] = React.useState([]);
+  const [searchInput, setSearchInput] = React.useState('');
 
   React.useEffect(() => {
     getAllUsersAPI(response => {
@@ -18,17 +21,32 @@ export default function MembersScreen({navigation}) {
         if (response?.status?.toLocaleLowerCase() === 'sucess') {
           console.log('\n\n getAllUsersAPI response: ', response?.data?.length);
           setMembers(response?.data);
+          setTempMember(response.data);
         }
       }
     });
   }, []);
+  useEffect(() => {
+    if (searchInput == '') {
+      setTempMember(members);
+    } else {
+      filterIt(searchInput);
+    }
+  }, [searchInput]);
+
+  const filterIt = text => {
+    const matchIt = members.filter(item => {
+      if (item.name.match(text)) return true;
+      if (item.short_name.match(text)) return true;
+    });
+  };
 
   return (
     <View style={{width: '100%', height: '100%', backgroundColor: '#fff'}}>
-      {membersHeader(navigation)}
+      {membersHeader(navigation, setSearchInput, searchInput)}
 
       <ScrollView>
-        {members?.map((item, index) => {
+        {tempMember?.map((item, index) => {
           return (
             <TouchableOpacity
               style={styles.itemWrapper}
@@ -67,7 +85,7 @@ export default function MembersScreen({navigation}) {
                 )}
                 <View style={styles.memberNameBlock}>
                   <Text style={[styles.memberName, {color: COLORS.theme}]}>
-                    {item?.short_name === null ? 'Full name' : item?.short_name}
+                    {item?.short_name === null ? '' : item?.short_name}
                   </Text>
                   <Text style={styles.conpanyName}>
                     (
@@ -78,7 +96,7 @@ export default function MembersScreen({navigation}) {
                   </Text>
 
                   <Text style={styles.memberAddress}>
-                    Address: {item?.address_1}
+                    Address: {item?.address_1 === null ? '' : item?.address_1}
                     {/* 180 Local street, Member Address, Member address 2 */}
                   </Text>
                   <Text style={styles.companywebsite}>
