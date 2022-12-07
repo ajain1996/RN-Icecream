@@ -28,6 +28,7 @@ import {Alert} from 'react-native';
 import CustomLoader, {CustomPanel} from '../../component/CustomLoader';
 import {response3} from './VerifyOTP';
 import {useIsFocused} from '@react-navigation/native';
+import {Button} from 'react-native-elements';
 
 const imageBase = 'https://icecream.drazs.com/api/storage/app/';
 export default function UpdateUserScreenIn({navigation, route}) {
@@ -35,7 +36,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
   const {userData} = useSelector(state => state.User);
   // const userData = response3?.data;
 
-  console.log('\n\n userData: ', userData);
+  console.log('\n\n userData: \n\n\n---->', userData);
 
   const companyTypeList = [
     {name: 'Public Ltd', value: 'Public Ltd'},
@@ -67,6 +68,11 @@ export default function UpdateUserScreenIn({navigation, route}) {
   const [alternateMobNo, setAlternateMobNo] = React.useState('');
   const [typeOfCompany, setTypeOfCompany] = React.useState('');
   const [businessType, setBusinessType] = React.useState('');
+  const [isImageChanged, setIsImageChanged] = useState({
+    user_profile: false,
+    company_logo: false,
+    company_brochure: false,
+  });
   const [businessTypeCategory, setBusinessTypeCategory] = React.useState('');
   const [categoryDropDown, setCategoryDropDown] = useState([]);
   const [country, setCountry] = React.useState('');
@@ -146,6 +152,8 @@ export default function UpdateUserScreenIn({navigation, route}) {
             ...response.assets[0],
             shortName: response.assets[0].fileName,
           });
+          setIsImageChanged({...isImageChanged, user_profile: true});
+
           setUser_Profile({
             ...response.assets[0],
             name: response.assets[0].fileName,
@@ -153,11 +161,13 @@ export default function UpdateUserScreenIn({navigation, route}) {
         } else if (text === 'logo') {
           console.log('logo', response.assets);
           // console.log()
+          setIsImageChanged({...isImageChanged, company_logo: true});
           setCompany_Logo({
             ...response.assets[0],
             name: response.assets[0].fileName,
           });
         } else if (text === 'brochure') {
+          setIsImageChanged({...isImageChanged, company_brochure: true});
           setCompany_Brochure({
             ...response.assets[0],
             name: response.assets[0].fileName,
@@ -367,6 +377,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
           comapny_ad,
           pan_number,
           typeOfCompany,
+          isImageChanged,
           token,
           async response => {
             const userData2 = response.data;
@@ -401,7 +412,12 @@ export default function UpdateUserScreenIn({navigation, route}) {
                 ...userData2,
                 business_category: response.business_category,
               });
-              dispatch(setUser(userData2));
+              dispatch(
+                setUser({
+                  ...userData2,
+                  business_category: response.business_category,
+                }),
+              );
               if (response?.message) {
                 Toast.show(response?.message);
                 return;
@@ -495,7 +511,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
       setPANFile(userData?.pan_image);
     }
     if (userData?.company_brochure !== undefined) {
-      setCompany_Brochure({uri: userData?.company_brochure});
+      setCompany_Brochure({uri: imageBase + userData?.company_brochure});
     }
     if (userData?.comapny_ad !== undefined) {
       setComapny_AD(userData?.comapny_ad);
@@ -526,23 +542,19 @@ export default function UpdateUserScreenIn({navigation, route}) {
     if (userData?.business_category?.length != 0) {
       // set
 
-      if (userData.business_category?.length == 0) {
-        setBusinessTypeCategory(
-          seqToBusinessCategory[userData.business_category],
-        );
-      } else {
-        console.log(
-          '\n\n\n ---->>>>>>>>>>> ',
-          userData.business_category,
-          '<<< \n\n\n this is business category --',
-        );
-        setBusinessTypeCategory(
-          seqToBusinessCategory[
-            userData.business_category[userData.business_category?.length - 1]
-              .business_category_id
-          ],
-        );
-      }
+      console.log(
+        '\n\n\n ---->>>>>>>>>>> ',
+        userData,
+        '<<< \n\n\n this is business category --',
+      );
+      setBusinessTypeCategory(
+        seqToBusinessCategory[
+          userData.business_category[userData.business_category?.length - 1]
+            .business_category_id
+        ],
+      );
+    } else {
+      setBusinessTypeCategory(seqToBusinessCategory[1]);
     }
   }, [isfocused]);
 
@@ -574,13 +586,22 @@ export default function UpdateUserScreenIn({navigation, route}) {
               />
             </View>
           ) : (
-            <Image
-              source={{
-                // uri: 'https://icecream.drazs.com/api/storage/app/public/img/user_profile/HkbQZZ7nAFiLRjEuAqEdYbDK230bHkD3PAUrCd9T.jpg',
-                uri: user_profile.uri,
-              }}
-              style={{width: 120, height: 120, borderRadius: 100}}
-            />
+            <>
+              <Image
+                source={{
+                  // uri: 'https://icecream.drazs.com/api/storage/app/public/img/user_profile/HkbQZZ7nAFiLRjEuAqEdYbDK230bHkD3PAUrCd9T.jpg',
+                  uri: user_profile.uri,
+                }}
+                style={{width: 120, height: 120, borderRadius: 100}}
+              />
+              <TouchableHighlight
+                style={{...styles.btn, width: 50, height: 30, marginTop: 10}}
+                onPress={() => {
+                  setUser_Profile({uri: null});
+                }}>
+                <Text style={{...styles.btnText, fontSize: 10}}>remove</Text>
+              </TouchableHighlight>
+            </>
           )}
         </TouchableHighlight>
         <Text />
@@ -656,13 +677,22 @@ export default function UpdateUserScreenIn({navigation, route}) {
                 />
               </View>
             ) : (
-              <Image
-                source={{
-                  uri: company_logo?.uri,
-                  // uri: 'https://icecream.drazs.com/api/storage/app/public/img/user_profile/HkbQZZ7nAFiLRjEuAqEdYbDK230bHkD3PAUrCd9T.jpg',
-                }}
-                style={{width: 120, height: 120, borderRadius: 8}}
-              />
+              <>
+                <Image
+                  source={{
+                    uri: company_logo?.uri,
+                    // uri: 'https://icecream.drazs.com/api/storage/app/public/img/user_profile/HkbQZZ7nAFiLRjEuAqEdYbDK230bHkD3PAUrCd9T.jpg',
+                  }}
+                  style={{width: 120, height: 120, borderRadius: 8}}
+                />
+                <TouchableHighlight
+                  style={{...styles.btn, width: 50, height: 30, marginTop: 10}}
+                  onPress={() => {
+                    setCompany_Logo({uri: null});
+                  }}>
+                  <Text style={{...styles.btnText, fontSize: 10}}>remove</Text>
+                </TouchableHighlight>
+              </>
             )}
           </TouchableHighlight>
         </>
@@ -694,11 +724,20 @@ export default function UpdateUserScreenIn({navigation, route}) {
                 />
               </View>
             ) : (
-              <Image
-                source={{uri: company_brochure?.uri}}
-                resizeMode="contain"
-                style={{width: '90%', height: 210, borderRadius: 8}}
-              />
+              <>
+                <Image
+                  source={{uri: company_brochure?.uri}}
+                  resizeMode="contain"
+                  style={{width: '90%', height: 210, borderRadius: 8}}
+                />
+                <TouchableHighlight
+                  style={{...styles.btn, width: 50, height: 30, marginTop: 10}}
+                  onPress={() => {
+                    setCompany_Brochure({uri: null});
+                  }}>
+                  <Text style={{...styles.btnText, fontSize: 10}}>remove</Text>
+                </TouchableHighlight>
+              </>
             )}
           </TouchableHighlight>
         </>

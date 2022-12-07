@@ -29,15 +29,15 @@ export default function App() {
     let data = await Auth.getAccount();
     console.log('data fetched: ', data);
     console.log('User fetched: ', data);
-    // Alert.alert('splash');
+    Alert.alert('splash');
     // console.log('\n\n\n\n\n\n\n\n', data, '<<<<\n\n\n\n\n\n this is data');
     // return null;
     if (data !== null) {
       getUserById(data.id, async res => {
         console.log(
-          '\n\n\n\n new user data',
+          '\n\n\n\n new user data\n\n\n\n\n',
           {...res.data, business_category: res.business_category},
-          '<<< thsi iiser user',
+          '\n\n\n\n<<< thsi iiser user',
         );
         await Auth.setAccount({
           ...res.data,
