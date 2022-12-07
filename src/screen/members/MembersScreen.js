@@ -43,10 +43,14 @@ export default function MembersScreen({navigation}) {
 
     const matchIt = members.filter(item => {
       if (item.name != null) {
-        if (item.name.match(text)) return true;
+        const name = item.name.toLocaleLowerCase();
+        const field = text.toLocaleLowerCase();
+        if (name.match(field)) return true;
       }
       if (item.short_name != null) {
-        if (item.short_name.match(text)) return true;
+        const field = text.toLocaleLowerCase();
+        const short = item.short_name.toLocaleLowerCase();
+        if (short.match(field)) return true;
       }
     });
     setTempMember(matchIt);
@@ -90,10 +94,10 @@ export default function MembersScreen({navigation}) {
               }}>
               <View style={{width: '100%', padding: 14}}>
                 <Text style={styles.memberName}>
-                  {item?.name === null ? 'Member name' : item?.name}
+                  {item?.name == 'null' ? 'Member name' : item?.name}
                 </Text>
                 <Text style={{...commonStyles.fs12_400, color: '#fff'}}>
-                  ({item?.email === null ? 'company@gmail.com' : item?.email})
+                  ({item?.email == 'null' ? 'company@gmail.com' : item?.email})
                 </Text>
               </View>
               <View style={styles.itemContent}>
@@ -116,18 +120,18 @@ export default function MembersScreen({navigation}) {
                 )}
                 <View style={styles.memberNameBlock}>
                   <Text style={[styles.memberName, {color: COLORS.theme}]}>
-                    {item?.short_name === null ? '' : item?.short_name}
+                    {item?.short_name == 'null' ? '' : item?.short_name}
                   </Text>
                   <Text style={styles.conpanyName}>
                     (
-                    {item?.organization_name === null
+                    {item?.organization_name == 'null'
                       ? 'Organization Name'
                       : item?.organization_name}
                     )
                   </Text>
 
                   <Text style={styles.memberAddress}>
-                    Address: {item?.address_1 === null ? '' : item?.address_1}
+                    Address: {item?.address_1 == 'null' ? '' : item?.address_1}
                     {/* 180 Local street, Member Address, Member address 2 */}
                   </Text>
                   <Text style={styles.companywebsite}>
