@@ -377,7 +377,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
             // );
             console.log('\n\n userData: ', response, '\n\n\n 2--------', {
               ...userData2,
-              business_category: [{business_category_id: 4}],
+              business_category: response.business_category,
             });
             // return null;
             // const userData2 = {
