@@ -369,7 +369,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
           typeOfCompany,
           token,
           async response => {
-            const userData2 = response['updated-User'];
+            const userData2 = response.data;
             setLoading(false);
             // console.log(
             //   '\n\n updateUserPostRequest response: ',
