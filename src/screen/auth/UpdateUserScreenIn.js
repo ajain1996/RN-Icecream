@@ -399,7 +399,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
             if (response !== null) {
               await Auth.setAccount({
                 ...userData2,
-                business_category: [{business_category_id: 4}],
+                business_category: response.business_category,
               });
               dispatch(setUser(userData2));
               if (response?.message) {
