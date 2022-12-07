@@ -208,7 +208,7 @@ export const updateUserPostRequest = async (
   token,
   successCallBack,
 ) => {
-  console.log('\n\n updateUserPostRequest Called : ', phone);
+  console.log('\n\n updateUserPostRequest Called : ', company_logo);
   var formdata = new FormData();
   formdata.append('token', token);
   // formdata.append('email', email);
@@ -219,7 +219,9 @@ export const updateUserPostRequest = async (
   formdata.append('business_type', typeOfCompany);
   formdata.append('mobile', phone);
   // 0-------
-  // formdata.append('user_profile', user_profile, user_profile.uri);
+  formdata.append('user_profile', user_profile, user_profile.name);
+  formdata.append('company_logo', company_logo, company_logo.name);
+
   formdata.append('organization_name', organization_name);
   formdata.append('short_name', short_name);
   formdata.append('mobile_2', mobile_2);
