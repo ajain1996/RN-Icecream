@@ -40,7 +40,7 @@ export default function MembersScreen({ navigation }) {
                         >
                             <View style={{ width: "100%", padding: 14 }}>
                                 <Text style={styles.memberName}>
-                                    {item?.name === null ? "Member name" : item?.name}
+                                    {item?.name === null ? "" : item?.name}
                                 </Text>
                                 <Text style={{ ...commonStyles.fs12_400, color: "#fff" }}>
                                     ({item?.email === null ? "company@gmail.com" : item?.email})
@@ -58,10 +58,10 @@ export default function MembersScreen({ navigation }) {
                                     />}
                                 <View style={styles.memberNameBlock}>
                                     <Text style={[styles.memberName, { color: COLORS.theme }]}>
-                                        {item?.short_name === null ? "Full name" : item?.short_name}
+                                        {item?.short_name === null ? "" : item?.short_name}
                                     </Text>
                                     <Text style={styles.conpanyName}>
-                                        ({item?.organization_name === null ? "Organization Name" : item?.organization_name})
+                                        ({item?.organization_name === null ? "" : item?.organization_name})
                                     </Text>
 
                                     <Text style={styles.memberAddress}>

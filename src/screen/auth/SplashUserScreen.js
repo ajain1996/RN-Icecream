@@ -6,16 +6,15 @@ import {
   TouchableHighlight,
   Alert,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {commonStyles} from '../../utils/Styles';
-import {COLORS, SIZES} from '../../component/Constant/Color';
+import React, { useEffect, useState } from 'react';
+import { commonStyles } from '../../utils/Styles';
+import { COLORS, SIZES } from '../../component/Constant/Color';
 import Auth from '../../service/Auth';
-import {useDispatch} from 'react-redux';
-import {setUser} from '../../redux/reducer/user';
-import {setUserType} from '../../redux/reducer/userType';
-import {response3} from './VerifyOTP';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../redux/reducer/user';
+import { setUserType } from '../../redux/reducer/userType';
 
-export default function SplashUserScreen({navigation}) {
+export default function SplashUserScreen({ navigation }) {
   const dispatch = useDispatch();
   const [loginChk, setLoginChk] = useState(true);
   // const { userType } = useSelector(state => state.UserType);
@@ -40,12 +39,12 @@ export default function SplashUserScreen({navigation}) {
   }
 
   return (
-    <View style={{...commonStyles.containerStyle}}>
+    <View style={{ ...commonStyles.containerStyle }}>
       <View style={styles.wrapper}>
         <Image
           source={require('../../assets/splash-mg.png')}
           resizeMode="contain"
-          style={{width: '80%', height: '80%'}}
+          style={{ width: '80%', height: '80%' }}
         />
       </View>
       {renderButton('Login As Member', () => {
@@ -55,9 +54,7 @@ export default function SplashUserScreen({navigation}) {
 
       {renderButton('As a Guest', async () => {
         dispatch(setUserType('guest'));
-        dispatch(setUser(response3.data));
-
-        // navigation.navigate('Login');
+        navigation.navigate('Login');
       })}
     </View>
   );
