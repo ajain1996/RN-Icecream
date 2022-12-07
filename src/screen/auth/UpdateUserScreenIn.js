@@ -27,7 +27,9 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import {Alert} from 'react-native';
 import CustomLoader, {CustomPanel} from '../../component/CustomLoader';
 import {response3} from './VerifyOTP';
+import {useIsFocused} from '@react-navigation/native';
 
+const imageBase = 'https://icecream.drazs.com/api/storage/app/';
 export default function UpdateUserScreenIn({navigation, route}) {
   const dispatch = useDispatch();
   const {userData} = useSelector(state => state.User);
@@ -86,7 +88,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
   const [paymentStatus, setPaymentStatus] = React.useState('');
 
   const [user_profile, setUser_Profile] = React.useState({
-    uri: userData?.userProfile,
+    uri: imageBase + userData?.userProfile,
   });
   const [businessCategorySeq, setBusinessCategorySeq] = useState(1);
   const [address_1, setAddress_1] = React.useState('');
@@ -131,11 +133,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
     },
   };
 
-  console.log(
-    '\n\n\n\n this is business category',
-    userData.business_category,
-    ' \n\n\n\n <<<<',
-  );
+  console.log('\n\n\n\n this is business category', userData, ' \n\n\n\n <<<<');
 
   const getImage = text => {
     launchImageLibrary(options, response => {
@@ -146,22 +144,23 @@ export default function UpdateUserScreenIn({navigation, route}) {
         if (text === 'profile') {
           console.log({
             ...response.assets[0],
-            filename: response.assets[0].fileName,
+            shortName: response.assets[0].fileName,
           });
           setUser_Profile({
             ...response.assets[0],
-            filename: response.assets[0].fileName,
+            name: response.assets[0].fileName,
           });
         } else if (text === 'logo') {
-          console.log('logo');
+          console.log('logo', response.assets);
+          // console.log()
           setCompany_Logo({
             ...response.assets[0],
-            filename: response.assets[0].fileName,
+            name: response.assets[0].fileName,
           });
         } else if (text === 'brochure') {
           setCompany_Brochure({
             ...response.assets[0],
-            filename: response.assets[0].fileName,
+            name: response.assets[0].fileName,
           });
         }
       }
@@ -188,7 +187,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
         realPath = res?.uri;
       }
       if (text.includes('Upload GST Certificate')) {
-        console.log(text, '<<<gst certificate', res);
+        // console.log(text, '<<<gst certificate', res);
         setGSTCertificate({...res[0], filename: res[0].fileCopyUri});
       } else if (text.includes('Upload Pan Number')) {
         // setPANFile(res[0]);
@@ -370,19 +369,17 @@ export default function UpdateUserScreenIn({navigation, route}) {
           typeOfCompany,
           token,
           async response => {
+            const userData2 = response['updated-User'];
             setLoading(false);
             // console.log(
             //   '\n\n updateUserPostRequest response: ',
             //   response?.status,
             // );
-            console.log(
-              '\n\n userData: ',
-              response,
-              '\n\n\n 2--------',
-              response['updated-User'],
-            );
+            console.log('\n\n userData: ', response, '\n\n\n 2--------', {
+              ...userData2,
+              business_category: [{business_category_id: 4}],
+            });
             // return null;
-            const userData2 = response['updated-User'];
             // const userData2 = {
             //   fullname: userData?.fullname,
             //   phone: userData?.phone,
@@ -398,8 +395,12 @@ export default function UpdateUserScreenIn({navigation, route}) {
             //       : organizationName,
             //   address: address_1?.length === 0 ? userData?.address : address_1,
             // };
+
             if (response !== null) {
-              await Auth.setAccount(userData2);
+              await Auth.setAccount({
+                ...userData2,
+                business_category: [{business_category_id: 4}],
+              });
               dispatch(setUser(userData2));
               if (response?.message) {
                 Toast.show(response?.message);
@@ -415,8 +416,10 @@ export default function UpdateUserScreenIn({navigation, route}) {
       });
     }
   };
+  const isfocused = useIsFocused();
 
   React.useEffect(() => {
+    Alert.alert('Focused');
     getCategories(res => {
       let values = [];
 
@@ -465,11 +468,19 @@ export default function UpdateUserScreenIn({navigation, route}) {
     if (userData?.longitude !== undefined) {
       setLongitude(userData?.latitude);
     }
-    if (userData?.company_logo !== undefined) {
-      setCompany_Logo({uri: userData?.company_logo});
+    if (userData?.company_logo != null) {
+      console.log(
+        '\n\n\n\n\n\n this is company logog \\n\n\n\n ',
+        imageBase + userData.company_logo,
+      );
+      setCompany_Logo({uri: imageBase + userData?.company_logo});
     }
     if (userData?.comapany_profile !== undefined) {
-      setComapany_Profile(userData?.comapany_profile);
+      setComapany_Profile(imageBase + userData?.comapany_profile);
+    }
+    if (userData?.user_profile != null) {
+      Alert.alert('setting company profile', imageBase + userData.user_profile);
+      setUser_Profile({uri: imageBase + userData?.user_profile});
     }
     if (userData?.gst_number !== undefined) {
       setGst_Number(userData?.gst_number);
@@ -514,19 +525,17 @@ export default function UpdateUserScreenIn({navigation, route}) {
     }
     if (userData?.business_category?.length != 0) {
       // set
-      console.log(
-        '\n\n\n\n\n\n\n>>>>>>>>>>>>>>>>>',
-        userData.business_category,
-        '--',
-        userData.business_category[userData?.business_category?.length - 1]
-          ?.business_category_id,
-      );
 
-      if (userData.business_category?.length == undefined) {
+      if (userData.business_category?.length == 0) {
         setBusinessTypeCategory(
           seqToBusinessCategory[userData.business_category],
         );
       } else {
+        console.log(
+          '\n\n\n ---->>>>>>>>>>> ',
+          userData.business_category,
+          '<<< \n\n\n this is business category --',
+        );
         setBusinessTypeCategory(
           seqToBusinessCategory[
             userData.business_category[userData.business_category?.length - 1]
@@ -535,9 +544,9 @@ export default function UpdateUserScreenIn({navigation, route}) {
         );
       }
     }
-  }, []);
+  }, [isfocused]);
 
-  console.log('\n\n user Profile', user_profile);
+  console.log('\n\n user Profile', comapany_profile);
 
   return (
     <>
@@ -567,6 +576,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
           ) : (
             <Image
               source={{
+                // uri: 'https://icecream.drazs.com/api/storage/app/public/img/user_profile/HkbQZZ7nAFiLRjEuAqEdYbDK230bHkD3PAUrCd9T.jpg',
                 uri: user_profile.uri,
               }}
               style={{width: 120, height: 120, borderRadius: 100}}
@@ -647,7 +657,10 @@ export default function UpdateUserScreenIn({navigation, route}) {
               </View>
             ) : (
               <Image
-                source={{uri: company_logo?.uri}}
+                source={{
+                  uri: company_logo?.uri,
+                  // uri: 'https://icecream.drazs.com/api/storage/app/public/img/user_profile/HkbQZZ7nAFiLRjEuAqEdYbDK230bHkD3PAUrCd9T.jpg',
+                }}
                 style={{width: 120, height: 120, borderRadius: 8}}
               />
             )}
