@@ -1,20 +1,21 @@
-import { View, StyleSheet } from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import React from 'react';
-import { commonStyles } from '../../utils/Styles';
-import { image_tap, image_tap2 } from '../../component/image_tap';
+import {commonStyles} from '../../utils/Styles';
+import {image_tap, image_tap2} from '../../component/image_tap';
 import Auth from '../../service/Auth';
-import { useDispatch, useSelector } from 'react-redux';
-import { removeUser } from '../../redux/reducer/user';
-import { CustomDrawer } from '../../component/drawer/CustomDrawer';
-import { TouchableOpacity } from 'react-native';
-import { Text } from 'react-native';
-import { COLORS } from '../../component/Constant/Color';
-import { TouchableHighlight } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {removeUser} from '../../redux/reducer/user';
+import {CustomDrawer} from '../../component/drawer/CustomDrawer';
+import {TouchableOpacity} from 'react-native';
+import {Text} from 'react-native';
+import {COLORS} from '../../component/Constant/Color';
+import {TouchableHighlight} from 'react-native';
+import {imageBase} from '../auth/UpdateUserScreenIn';
 
 export function home_header(navigation) {
   const dispatch = useDispatch();
-  const { userData } = useSelector(state => state.User);
-  const { userType } = useSelector(state => state.UserType);
+  const {userData} = useSelector(state => state.User);
+  const {userType} = useSelector(state => state.UserType);
   console.log('\n\nthis is uerData at header: ', userType, userData);
 
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -26,15 +27,18 @@ export function home_header(navigation) {
   };
 
   const showProfile = () => {
-    if (userData?.userProfile === null || userData?.userProfile === undefined) {
-      if (userType !== "guest") {
+    if (
+      userData?.user_profile === null ||
+      userData?.user_profile === undefined
+    ) {
+      if (userType !== 'guest') {
         return image_tap(require('../../assets/user.png'), 28, () => {
           navigation.navigate('MyProfileScreen');
         });
       }
     } else {
-      if (userType !== "guest") {
-        return image_tap2(userData?.userProfile, 30, () => {
+      if (userType !== 'guest') {
+        return image_tap2(imageBase + userData?.userProfile, 30, () => {
           navigation.navigate('MyProfileScreen');
         });
       }
@@ -49,9 +53,9 @@ export function home_header(navigation) {
         })}
 
         {Object.keys(userData)?.length !== 0 ? (
-          <View style={{ ...commonStyles.rowStart }}>
+          <View style={{...commonStyles.rowStart}}>
             {showProfile()}
-            <View style={{ width: 2 }} />
+            <View style={{width: 2}} />
 
             {image_tap(require('../../assets/logout.png'), 20, handleLogout)}
           </View>
@@ -61,7 +65,7 @@ export function home_header(navigation) {
             onPress={() => {
               navigation.navigate('SplashUserScreen');
             }}>
-            <Text style={{ color: '#fff', fontSize: 13 }}>SignIn/SignUp</Text>
+            <Text style={{color: '#fff', fontSize: 13}}>SignIn/SignUp</Text>
           </TouchableHighlight>
         )}
       </View>

@@ -8,16 +8,17 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { removeUser, userSlice } from '../../redux/reducer/user';
+import {useDispatch, useSelector} from 'react-redux';
+import {removeUser, userSlice} from '../../redux/reducer/user';
+import {imageBase} from '../../screen/auth/UpdateUserScreenIn';
 import Auth from '../../service/Auth';
-import { commonStyles } from '../../utils/Styles';
-import { COLORS, SIZES } from '../Constant/Color';
+import {commonStyles} from '../../utils/Styles';
+import {COLORS, SIZES} from '../Constant/Color';
 
-export const CustomDrawer = ({ modalVisible, callback, navigation }) => {
+export const CustomDrawer = ({modalVisible, callback, navigation}) => {
   const dispatch = useDispatch();
-  const { userData, login } = useSelector(state => state.User);
-  const { userType } = useSelector(state => state.UserType);
+  const {userData, login} = useSelector(state => state.User);
+  const {userType} = useSelector(state => state.UserType);
 
   const handleLogout = () => {
     Auth.logout().then(() => {
@@ -26,7 +27,7 @@ export const CustomDrawer = ({ modalVisible, callback, navigation }) => {
   };
 
   return (
-    <View style={{ alignItems: 'flex-start' }}>
+    <View style={{alignItems: 'flex-start'}}>
       <Modal
         animationType="fade"
         transparent={true}
@@ -45,18 +46,19 @@ export const CustomDrawer = ({ modalVisible, callback, navigation }) => {
                 backgroundColor: COLORS.theme,
                 marginTop: -35,
               }}>
-              <View style={{ padding: 30, paddingVertical: 40, marginBottom: 8 }}>
-                {userData?.userProfile !== undefined ? (
+              <View style={{padding: 30, paddingVertical: 40, marginBottom: 8}}>
+                {userData?.user_profile !== undefined ||
+                userData?.user_profile == null ? (
                   <Image
-                    source={{ uri: userData?.userProfile }}
+                    source={{uri: imageBase + userData?.user_profile}}
                     resizeMode="contain"
-                    style={{ width: 100, height: 100, borderRadius: 100 }}
+                    style={{width: 100, height: 100, borderRadius: 100}}
                   />
                 ) : (
                   <Image
                     source={require('../../assets/user.png')}
                     resizeMode="contain"
-                    style={{ width: 100, height: 100, borderRadius: 100 }}
+                    style={{width: 100, height: 100, borderRadius: 100}}
                   />
                 )}
                 {Object.keys(userData)?.length === 0 ? (
@@ -65,12 +67,12 @@ export const CustomDrawer = ({ modalVisible, callback, navigation }) => {
                     onPress={() => {
                       navigation.navigate('SplashUserScreen');
                     }}>
-                    <Text style={{ color: COLORS.theme, fontSize: 13 }}>
+                    <Text style={{color: COLORS.theme, fontSize: 13}}>
                       SignIn/SignUp
                     </Text>
                   </TouchableHighlight>
                 ) : (
-                  <View style={{ marginLeft: 5 }}>
+                  <View style={{marginLeft: 5}}>
                     <Text
                       style={{
                         ...commonStyles.fs17_600,
@@ -95,8 +97,8 @@ export const CustomDrawer = ({ modalVisible, callback, navigation }) => {
               </View>
             </View>
 
-            <View style={{ height: 10 }} />
-            <ScrollView style={{ marginLeft: -25 }}>
+            <View style={{height: 10}} />
+            <ScrollView style={{marginLeft: -25}}>
               <DrawerButton
                 title="Home"
                 image={require('../../assets/home.png')}
@@ -117,7 +119,7 @@ export const CustomDrawer = ({ modalVisible, callback, navigation }) => {
                 <DrawerButton
                   title="Enquiries"
                   image={require('../../assets/enquiry.png')}
-                  onPress={() => { }}
+                  onPress={() => {}}
                 />
               ) : (
                 <></>
@@ -139,13 +141,13 @@ export const CustomDrawer = ({ modalVisible, callback, navigation }) => {
                 <DrawerButton
                   title="Advertisement"
                   image={require('../../assets/ad.png')}
-                  onPress={() => { }}
+                  onPress={() => {}}
                 />
               ) : (
                 <></>
               )}
 
-              {login && userType !== "guest" ? (
+              {login && userType !== 'guest' ? (
                 <DrawerButton
                   title="My Profile"
                   image={require('../../assets/user.png')}
@@ -160,31 +162,31 @@ export const CustomDrawer = ({ modalVisible, callback, navigation }) => {
               <DrawerButton
                 title="Share App"
                 image={require('../../assets/share.png')}
-                onPress={() => { }}
+                onPress={() => {}}
               />
 
               <DrawerButton
                 title="Rate"
                 image={require('../../assets/rate.png')}
-                onPress={() => { }}
+                onPress={() => {}}
               />
 
               <DrawerButton
                 title="Privacy Policy"
                 image={require('../../assets/policy.png')}
-                onPress={() => { }}
+                onPress={() => {}}
               />
 
               <DrawerButton
                 title="Terms & Conditions"
                 image={require('../../assets/tnc.png')}
-                onPress={() => { }}
+                onPress={() => {}}
               />
 
               <DrawerButton
                 title="About Us"
                 image={require('../../assets/about.png')}
-                onPress={() => { }}
+                onPress={() => {}}
               />
 
               {login ? (
@@ -202,17 +204,17 @@ export const CustomDrawer = ({ modalVisible, callback, navigation }) => {
   );
 };
 
-export const DrawerButton = ({ title, image, onPress }) => {
+export const DrawerButton = ({title, image, onPress}) => {
   return (
     <TouchableHighlight
       style={[styles.button]}
       underlayColor="#eee"
       onPress={onPress}>
-      <View style={{ ...commonStyles.rowStart }}>
+      <View style={{...commonStyles.rowStart}}>
         <Image
           source={image}
           resizeMode="contain"
-          style={{ width: 24, height: 24 }}
+          style={{width: 24, height: 24}}
         />
         <Text style={styles.textStyle}>{title}</Text>
       </View>

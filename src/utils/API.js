@@ -209,7 +209,7 @@ export const updateUserPostRequest = async (
   isImageChanged,
   successCallBack,
 ) => {
-  console.log('\n\n updateUserPostRequest Called : ', company_brochure);
+  console.log('\n\n updateUserPostRequest Called : ', token);
   var formdata = new FormData();
   formdata.append('token', token);
   // formdata.append('email', email);
@@ -220,26 +220,26 @@ export const updateUserPostRequest = async (
   formdata.append('business_type', typeOfCompany);
   formdata.append('mobile', phone);
   // 0-------
-  if (isImageChanged.user_profile) {
-    formdata.append('user_profile', user_profile, user_profile.name);
+  if (isImageChanged.user_profile == true) {
+    // formdata.append('user_profile', user_profile, user_profile.name);
   }
-  if (isImageChanged.company_logo) {
-    formdata.append('company_logo', company_logo, company_logo.name);
+  if (isImageChanged.company_logo == true) {
+    // formdata.append('company_logo', company_logo, company_logo.name);
   }
-  if (isImageChanged.company_brochure) {
-    formdata.append(
-      'company_brochure',
-      company_brochure,
-      company_brochure.name,
-    );
+  if (isImageChanged.company_brochure == true) {
+    // formdata.append(
+    //   'company_brochure',
+    //   company_brochure,
+    //   company_brochure.name,
+    // );
   }
-
+  // --
   formdata.append('organization_name', organization_name);
   formdata.append('short_name', short_name);
   formdata.append('mobile_2', mobile_2);
   formdata.append('address_1', address_1);
   formdata.append('address_2', address_2);
-  formdata.append('address_3', address_3);
+  // formdata.append('address_3', address_3);
   formdata.append('country', country);
   formdata.append('state', state);
   formdata.append('city', city);
@@ -251,6 +251,8 @@ export const updateUserPostRequest = async (
   formdata.append('employee_number', employee_number);
   formdata.append('turnover', turnover);
   formdata.append('business_category', business_category0);
+
+  // ----------
 
   // formdata.append('business_category[0]', business_category0);
   // formdata.append('business_category[1]', business_category1);
