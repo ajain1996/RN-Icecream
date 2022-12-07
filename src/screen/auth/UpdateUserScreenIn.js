@@ -372,6 +372,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
           company_brochure,
           comapny_ad,
           pan_number,
+          isImageChanged,
           token,
           async response => {
             const userData2 = response.data;

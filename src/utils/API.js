@@ -205,8 +205,8 @@ export const updateUserPostRequest = async (
   comapny_ad,
   pan_number,
   typeOfCompany,
-  token,
   isImageChanged,
+  token,
   successCallBack,
 ) => {
   console.log('\n\n updateUserPostRequest Called : ', company_brochure);
