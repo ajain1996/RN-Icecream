@@ -65,10 +65,11 @@ export const CustomDrawer = ({modalVisible, callback, navigation}) => {
                   <TouchableHighlight
                     style={styles.loginBtn}
                     onPress={() => {
-                      navigation.navigate('SplashUserScreen');
+                      if (userType != 'guest')
+                        navigation.navigate('SplashUserScreen');
                     }}>
                     <Text style={{color: COLORS.theme, fontSize: 13}}>
-                      SignIn/SignUp
+                      {userType == 'guest' ? 'Guest User' : 'SignIn / SignUp'}
                     </Text>
                   </TouchableHighlight>
                 ) : (

@@ -60,13 +60,26 @@ export function home_header(navigation) {
             {image_tap(require('../../assets/logout.png'), 20, handleLogout)}
           </View>
         ) : (
-          <TouchableHighlight
-            style={styles.loginBtn}
-            onPress={() => {
-              navigation.navigate('SplashUserScreen');
-            }}>
-            <Text style={{color: '#fff', fontSize: 13}}>SignIn/SignUp</Text>
-          </TouchableHighlight>
+          <>
+            {/* <TouchableHighlight
+              style={styles.loginBtn}
+              onPress={() => {
+                if (userType != 'guest')
+                  navigation.navigate('SplashUserScreen');
+              }}>
+              <Text style={{color: '#fff', fontSize: 13}}>
+                {userType == 'guest' ? 'Guest User' : 'SignIn/SignUp'}
+              </Text>
+            </TouchableHighlight> */}
+            <View style={{...commonStyles.rowStart}}>
+              {image_tap(require('../../assets/logout.png'), 20, () => {
+                Auth.logout().then(() => {
+                  dispatch(removeUser([]));
+                });
+                navigation.navigate('SplashUserScreen');
+              })}
+            </View>
+          </>
         )}
       </View>
 

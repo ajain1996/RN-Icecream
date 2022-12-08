@@ -13,13 +13,14 @@ export const getAllUsersAPI = async successCallBack => {
   }
 };
 
-export const mobileLoginPostRequest = async (phone, successCallBack) => {
+export const mobileLoginPostRequest = async (phone, type, successCallBack) => {
   console.log('\n\n mobileLoginPostRequest Called : ', phone);
 
   let formData = new FormData();
   phone = '+91' + phone;
 
   formData.append('user_cred', phone);
+  formData.append('user_type', type);
 
   try {
     let response = await fetch(BASE_URL + 'api/login', {
