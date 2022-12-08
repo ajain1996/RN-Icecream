@@ -79,6 +79,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
   const [packageCode, setPackageCode] = React.useState('');
   const [city, setCity] = React.useState('');
   const [state, setState] = React.useState('');
+  const [mobile_2, setMobile_2] = useState('');
 
   const [allCountries, setAllCountries] = React.useState([]);
   const [allCities, setAllCities] = React.useState([]);
@@ -251,7 +252,6 @@ export default function UpdateUserScreenIn({navigation, route}) {
     } else if (!turnover || turnover?.length === 0) {
       Alert.alert('Alert', 'Turnover is mandatory');
     } else {
-      Alert.alert('Ready to submit');
       // console.log(
       //   userData?.email,
       //   '\n',
@@ -437,7 +437,6 @@ export default function UpdateUserScreenIn({navigation, route}) {
   const isfocused = useIsFocused();
 
   React.useEffect(() => {
-    Alert.alert('Focused');
     getCategories(res => {
       let values = [];
 
@@ -454,12 +453,15 @@ export default function UpdateUserScreenIn({navigation, route}) {
     if (userData?.organization_name !== undefined) {
       setOrganizationName(userData?.organization_name);
     }
+
     if (userData?.short_name !== undefined) {
       setShortName(userData?.short_name);
     }
+
     if (userData?.mobile !== undefined) {
-      setAlternateMobNo(userData?.mobile);
+      setAlternateMobNo(userData?.mobile_2);
     }
+
     if (userData?.address_1 !== undefined) {
       setAddress_1(userData?.address_1);
     }
@@ -497,7 +499,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
       setComapany_Profile(imageBase + userData?.comapany_profile);
     }
     if (userData?.user_profile != null) {
-      Alert.alert('setting company profile', imageBase + userData.user_profile);
+      // Alert.alert('setting company profile', imageBase + userData.user_profile);
       setUser_Profile({uri: imageBase + userData?.user_profile});
     }
     if (userData?.gst_number !== undefined) {
@@ -1000,6 +1002,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
           placeholderText="Establishment Year"
           labelValue={est_year}
           required={true}
+          keyboardType="numeric"
           onChangeText={val => {
             setEst_Year(val);
           }}
@@ -1023,6 +1026,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
           heading="Approx Turnover in Lacs"
           placeholderText="Approx Turnover in Lacs"
           required={true}
+          keyboardType="numeric"
           labelValue={turnover}
           onChangeText={val => {
             setTurnover(val);

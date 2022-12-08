@@ -240,7 +240,7 @@ export const updateUserPostRequest = async (
   formdata.append('mobile_2', mobile_2);
   formdata.append('address_1', address_1);
   formdata.append('address_2', address_2);
-  // formdata.append('address_3', address_3);
+  formdata.append('address_3', address_3); // this is web url
   formdata.append('country', country);
   formdata.append('state', state);
   formdata.append('city', city);
@@ -301,10 +301,10 @@ export const updateUserPostRequest = async (
 
   // 0-------------------------------------
 
-  // formdata.append('pan_number', pan_number);
+  formdata.append('pan_number', pan_number);
   // formdata.append('certificate_issue', '1');
 
-  formdata.append('pan_number', 'CREKG6733Y');
+  // formdata.append('pan_number', 'CREKG6733Y');
   formdata.append('certificate_issue', '1');
 
   var requestOptions = {
