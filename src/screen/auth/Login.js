@@ -28,6 +28,8 @@ function Login({navigation}) {
   const {userType} = useSelector(state => state.UserType);
 
   const [phone, setPhone] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [emailAddress, setemailAddress] = useState('');
   const [loading, setLoading] = useState(false);
 
   const loginUser = async () => {
@@ -78,7 +80,11 @@ function Login({navigation}) {
         barStyle="light-content"
         hidden={false}
       />
-      <View style={{justifyContent: 'space-between', height: '95%'}}>
+      <View
+        style={{
+          justifyContent: 'space-between',
+          height: userType == 'guest' ? '80%' : '95%',
+        }}>
         <View style={styles.uppercard}>
           <Text style={{color: '#fff', fontFamily: FONTS.Bold, fontSize: 25}}>
             Welcome
@@ -94,13 +100,32 @@ function Login({navigation}) {
               ...commonStyles.elevation9,
             }}>
             <View style={styles.cardView}>
-              <Text style={styles.Login}>Login</Text>
+              <Text style={{...styles.Login, fontSize: 25}}>
+                {userType == 'guest' ? 'Login as a Guest' : 'Member Login'}
+              </Text>
               <Text />
               <Text />
               <KeyboardAwareScrollView
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}>
-                <View style={[commonStyles.inputContainer, {marginTop: 10}]}>
+                {userType == 'guest' && (
+                  <View style={[commonStyles.inputContainer, {marginTop: 0}]}>
+                    <TextInput
+                      style={styles.inputs}
+                      placeholder="Full name"
+                      // keyboardType="n"
+                      autoCapitalize="none"
+                      underlineColorAndroid="transparent"
+                      maxLength={10}
+                      onChangeText={value => {
+                        setFullName(value);
+                      }}
+                      value={fullName}
+                      placeholderTextColor={COLORS.liteBlack}
+                    />
+                  </View>
+                )}
+                <View style={[commonStyles.inputContainer, {marginTop: 0}]}>
                   <TextInput
                     style={styles.inputs}
                     placeholder="Enter Mobile Number"
@@ -115,6 +140,23 @@ function Login({navigation}) {
                     placeholderTextColor={COLORS.liteBlack}
                   />
                 </View>
+                {userType == 'guest' && (
+                  <View style={[commonStyles.inputContainer, {marginTop: 0}]}>
+                    <TextInput
+                      style={styles.inputs}
+                      placeholder="Enter Email Address"
+                      // keyboardType="number"
+                      autoCapitalize="none"
+                      underlineColorAndroid="transparent"
+                      // maxLength={10}
+                      onChangeText={value => {
+                        setemailAddress(value);
+                      }}
+                      value={emailAddress}
+                      placeholderTextColor={COLORS.liteBlack}
+                    />
+                  </View>
+                )}
               </KeyboardAwareScrollView>
               <View style={{height: 4}} />
 
@@ -125,14 +167,16 @@ function Login({navigation}) {
           </View>
         </View>
 
-        <View style={styles.contactView}>
-          <Text style={styles.smallTxt}>New user?</Text>
-          <TouchableOpacity
-            style={{marginLeft: 4}}
-            onPress={() => Navigation.navigate('Register')}>
-            <Text style={styles.register}>Register Now</Text>
-          </TouchableOpacity>
-        </View>
+        {userType != 'guest' && (
+          <View style={styles.contactView}>
+            <Text style={styles.smallTxt}>New user?</Text>
+            <TouchableOpacity
+              style={{marginLeft: 4}}
+              onPress={() => Navigation.navigate('Register')}>
+              <Text style={styles.register}>Register Now</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </>
   );

@@ -8,10 +8,12 @@ import {Image} from 'react-native';
 import {image_tap} from '../../component/image_tap';
 import {TouchableOpacity} from 'react-native';
 import {ScrollView} from 'react-native';
+import {useState} from 'react';
+import {imageBase} from '../auth/UpdateUserScreenIn';
 
 export default function MemberDetailScreen({navigation, route}) {
   const {item} = route?.params;
-
+  const [showNumber, setShowNumber] = useState(false);
   return (
     <View style={{width: '100%', height: '100%', backgroundColor: '#fff'}}>
       <CustomHeader title="Member Details" />
@@ -34,7 +36,10 @@ export default function MemberDetailScreen({navigation, route}) {
           <View style={styles.itemContent}>
             <Image
               source={{
-                uri: 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1331&q=80',
+                uri:
+                  item.user_profile != null
+                    ? imageBase + item.user_profile
+                    : 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1331&q=80',
               }}
               style={styles.itemImg}
             />
@@ -63,7 +68,11 @@ export default function MemberDetailScreen({navigation, route}) {
               ...commonStyles.rowBetween,
               marginTop: -8,
             }}>
-            <TouchableOpacity style={styles.btn} onPress={() => {}}>
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={() => {
+                setShowNumber(true);
+              }}>
               <Text style={styles.btnText}>Show Phone Number</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.btnOutline} onPress={() => {}}>
@@ -96,12 +105,14 @@ export default function MemberDetailScreen({navigation, route}) {
             </Text>
           </View>
 
-          <View style={{...commonStyles.rowStart}}>
-            {image_tap(require('../../assets/enquiry.png'), 20, () => {})}
-            <Text style={styles.memberAddress}>
-              {item?.mobile_2 === null ? 'Not available' : item?.mobile_2}
-            </Text>
-          </View>
+          {showNumber && (
+            <View style={{...commonStyles.rowStart}}>
+              {image_tap(require('../../assets/enquiry.png'), 20, () => {})}
+              <Text style={styles.memberAddress}>
+                {item?.mobile_2 === null ? 'Not available' : item?.mobile_2}
+              </Text>
+            </View>
+          )}
 
           <View style={{...commonStyles.rowStart, marginTop: -8}}>
             {image_tap(require('../../assets/earth.png'), 20, () => {})}
@@ -156,10 +167,15 @@ export default function MemberDetailScreen({navigation, route}) {
             }}>
             <Text
               style={[styles.memberAddress, {marginTop: 12, width: '100%'}]}>
-              180 Local street, Member Address, Member address 2 180 Local
-              street, Member Address, Member address 2 180 Local street, Member
-              Address, Member address 2 street, Member Address, Member address 2
-              street, Member Address, Member
+              <View style={{...commonStyles.rowStart, marginTop: -8}}>
+                {/* {image_tap(require('../../assets/members.png'), 20, () => {})} */}
+                <Text style={styles.memberAddress}>
+                  Type of company:{' '}
+                  {item?.business_type == 'null'
+                    ? 'Not available'
+                    : item?.business_type}
+                </Text>
+              </View>
             </Text>
           </View>
         </View>

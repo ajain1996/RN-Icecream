@@ -11,7 +11,8 @@ import {getAllUsersAPI} from '../../utils/API';
 import {useEffect} from 'react';
 import {TextInput, TouchableHighlight} from 'react-native-gesture-handler';
 import {Settings} from 'react-native';
-import { height, width } from '../../utils/utils';
+import {height, width} from '../../utils/utils';
+import {imageBase} from '../auth/UpdateUserScreenIn';
 
 export default function MembersScreen({navigation}) {
   const [members, setMembers] = React.useState([]);
@@ -52,6 +53,46 @@ export default function MembersScreen({navigation}) {
       if (item.short_name != null) {
         const field = text.toLocaleLowerCase();
         const short = item.short_name.toLocaleLowerCase();
+        if (short.match(field)) return true;
+      }
+      if (item.address_3 != null) {
+        const field = text.toLocaleLowerCase();
+        const short = item.address_3.toLocaleLowerCase();
+        if (short.match(field)) return true;
+      }
+      if (item.city != null) {
+        const field = text.toLocaleLowerCase();
+        const short = item.city.toLocaleLowerCase();
+        if (short.match(field)) return true;
+      }
+      if (item.country != null) {
+        const field = text.toLocaleLowerCase();
+        const short = item.country.toLocaleLowerCase();
+        if (short.match(field)) return true;
+      }
+      if (item.state != null) {
+        const field = text.toLocaleLowerCase();
+        const short = item.state.toLocaleLowerCase();
+        if (short.match(field)) return true;
+      }
+      if (item.address_1 != null) {
+        const field = text.toLocaleLowerCase();
+        const short = item.address_1.toLocaleLowerCase();
+        if (short.match(field)) return true;
+      }
+      if (item.address_2 != null) {
+        const field = text.toLocaleLowerCase();
+        const short = item.address_2.toLocaleLowerCase();
+        if (short.match(field)) return true;
+      }
+      if (item.organization_name != null) {
+        const field = text.toLocaleLowerCase();
+        const short = item.organization_name.toLocaleLowerCase();
+        if (short.match(field)) return true;
+      }
+      if (item.email != null) {
+        const field = text.toLocaleLowerCase();
+        const short = item.email.toLocaleLowerCase();
         if (short.match(field)) return true;
       }
     });
@@ -115,7 +156,10 @@ export default function MembersScreen({navigation}) {
                 ) : (
                   <Image
                     source={{
-                      uri: 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1331&q=80',
+                      uri:
+                        item.user_profile != null
+                          ? imageBase + item.user_profile
+                          : 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1331&q=80',
                     }}
                     style={styles.itemImg}
                   />
@@ -137,7 +181,13 @@ export default function MembersScreen({navigation}) {
                     {/* 180 Local street, Member Address, Member address 2 */}
                   </Text>
                   <Text style={styles.companywebsite}>
-                    Website: (www.companywebsite.com)
+                    Website: (
+                    {item.address_3 == 'null' ||
+                    item.address_3 == '' ||
+                    item.address_3 == null
+                      ? '(Not provided)'
+                      : item.address_3}
+                    )
                   </Text>
                 </View>
               </View>
@@ -152,17 +202,23 @@ export default function MembersScreen({navigation}) {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
+          Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
-        }}
-      >
+        }}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Image style={{width: width / 1.5, height: height / 3}} source={require('../../assets/ad.png')} />
-            <TouchableOpacity 
-            style={{position: 'absolute', right: 0, padding: 15, borderRadius: 30}}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
+            <Image
+              style={{width: width / 1.5, height: height / 3}}
+              source={require('../../assets/ad.png')}
+            />
+            <TouchableOpacity
+              style={{
+                position: 'absolute',
+                right: 0,
+                padding: 15,
+                borderRadius: 30,
+              }}
+              onPress={() => setModalVisible(!modalVisible)}>
               <Text style={{fontWeight: '800', fontSize: 18}}>x</Text>
             </TouchableOpacity>
           </View>
@@ -233,43 +289,43 @@ const styles = StyleSheet.create({
   },
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 20,
     padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
+    elevation: 5,
   },
   button: {
     borderRadius: 20,
     padding: 10,
-    elevation: 2
+    elevation: 2,
   },
   buttonOpen: {
-    backgroundColor: "#F194FF",
+    backgroundColor: '#F194FF',
   },
   buttonClose: {
-    backgroundColor: "#2196F3",
+    backgroundColor: '#2196F3',
   },
   textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center"
-  }
+    textAlign: 'center',
+  },
 });

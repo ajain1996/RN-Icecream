@@ -421,11 +421,12 @@ export default function UpdateUserScreenIn({navigation, route}) {
                 }),
               );
               if (response?.message) {
-                Toast.show(response?.message);
+                Toast.show('Profile successfully updated');
+                navigation.navigate('Root');
                 return;
               }
-              Toast.show('Updated Successfully!');
-              //   navigation.goBack();
+              Toast.show('Profile successfully updated');
+              navigation.navigate('Root');
               // if (response?.status?.toString()?.toLocaleLowerCase() === "done") {
               // }
             }

@@ -11,18 +11,21 @@ import {Text} from 'react-native';
 import {COLORS} from '../../component/Constant/Color';
 import {TouchableHighlight} from 'react-native';
 import {imageBase} from '../auth/UpdateUserScreenIn';
+import {removeUserType} from '../../redux/reducer/userType';
+import {Alert} from 'react-native';
 
 export function home_header(navigation) {
   const dispatch = useDispatch();
   const {userData} = useSelector(state => state.User);
   const {userType} = useSelector(state => state.UserType);
-  console.log('\n\nthis is uerData at header: ', userType, userData);
+  console.log('\n\nthis is uerData at header: ', userType, '--', userData);
 
   const [modalVisible, setModalVisible] = React.useState(false);
 
   const handleLogout = () => {
     Auth.logout().then(() => {
       dispatch(removeUser([]));
+      dispatch(removeUserType());
     });
   };
 
@@ -49,6 +52,7 @@ export function home_header(navigation) {
     <>
       <View style={styles.headerContainer}>
         {image_tap(require('../../assets/menu.png'), 22, () => {
+          // Alert.alert('cliecked');
           setModalVisible(true);
         })}
 
@@ -61,24 +65,29 @@ export function home_header(navigation) {
           </View>
         ) : (
           <>
-            {/* <TouchableHighlight
-              style={styles.loginBtn}
-              onPress={() => {
-                if (userType != 'guest')
+            {userType == '' && (
+              <TouchableHighlight
+                style={styles.loginBtn}
+                onPress={() => {
+                  // logout()
                   navigation.navigate('SplashUserScreen');
-              }}>
-              <Text style={{color: '#fff', fontSize: 13}}>
-                {userType == 'guest' ? 'Guest User' : 'SignIn/SignUp'}
-              </Text>
-            </TouchableHighlight> */}
-            <View style={{...commonStyles.rowStart}}>
-              {image_tap(require('../../assets/logout.png'), 20, () => {
-                Auth.logout().then(() => {
-                  dispatch(removeUser([]));
-                });
-                navigation.navigate('SplashUserScreen');
-              })}
-            </View>
+                }}>
+                <Text style={{color: '#fff', fontSize: 13}}>
+                  {userType == 'guest' ? 'Guest User' : 'SignIn/SignUp'}
+                </Text>
+              </TouchableHighlight>
+            )}
+            {userType == 'guest' && (
+              <View style={{...commonStyles.rowStart}}>
+                {image_tap(require('../../assets/logout.png'), 20, () => {
+                  Auth.logout().then(() => {
+                    dispatch(removeUser([]));
+                    dispatch(removeUserType());
+                  });
+                  // navigation.navigate('SplashUserScreen');
+                })}
+              </View>
+            )}
           </>
         )}
       </View>
