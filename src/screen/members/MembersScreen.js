@@ -1,4 +1,4 @@
-import {View, Text} from 'react-native';
+import {View, Text, Modal} from 'react-native';
 import React from 'react';
 import {commonStyles} from '../../utils/Styles';
 import {StyleSheet} from 'react-native';
@@ -11,11 +11,13 @@ import {getAllUsersAPI} from '../../utils/API';
 import {useEffect} from 'react';
 import {TextInput, TouchableHighlight} from 'react-native-gesture-handler';
 import {Settings} from 'react-native';
+import { height, width } from '../../utils/utils';
 
 export default function MembersScreen({navigation}) {
   const [members, setMembers] = React.useState([]);
   const [tempMember, setTempMember] = React.useState([]);
   const [searchInput, setSearchInput] = React.useState('');
+  const [modalVisible, setModalVisible] = React.useState(false);
 
   React.useEffect(() => {
     getAllUsersAPI(response => {
@@ -145,6 +147,27 @@ export default function MembersScreen({navigation}) {
 
         <View style={{height: 20}} />
       </ScrollView>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Image style={{width: width / 1.5, height: height / 3}} source={require('../../assets/ad.png')} />
+            <TouchableOpacity 
+            style={{position: 'absolute', right: 0, padding: 15, borderRadius: 30}}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={{fontWeight: '800', fontSize: 18}}>x</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -208,4 +231,45 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     paddingHorizontal: 14,
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  }
 });
