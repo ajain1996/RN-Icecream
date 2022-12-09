@@ -14,9 +14,20 @@ import {Alert} from 'react-native';
 import {ActivityIndicator} from 'react-native';
 import CustomLoader, {CustomPanel} from '../../component/CustomLoader';
 import {useState} from 'react';
+const initialValue = {
+  name: '',
+  description: '',
+  category: '',
+  mrp: '',
+  uom_id: '',
+  sale_price: '',
+  tax_on_sale_price: '',
+  hsn_code: '',
+  gst_code: '',
+};
 
 export default function CreateProductScreen({navigation}) {
-  const [formData, setformData] = useState({});
+  const [formData, setformData] = useState(initialValue);
   const [imageData, setImageData] = useState([]);
   const [imageError, setimageError] = useState('');
 
@@ -24,6 +35,30 @@ export default function CreateProductScreen({navigation}) {
     setformData({...formData, [name]: value});
   };
   const handleSubmit = () => {
+    let allValid = true;
+    const validFields = [
+      'name',
+      'description',
+      'category',
+      'mrp',
+      'uom_id',
+      'sale_price',
+      'tax_on_sale_price',
+      'hsn_code',
+      'gst_code',
+    ];
+    validFields.map(item => {
+      if (formData[item].trim() == '') {
+        if (allValid == true) {
+          Alert.alert(item + ' is required !');
+          allValid = false;
+        }
+      }
+    });
+    if (!allValid) {
+      return null;
+    }
+
     addProductPostRequest({...formData, imageData}, res => {
       console.log(res);
     });

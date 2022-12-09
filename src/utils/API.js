@@ -40,6 +40,41 @@ export const mobileLoginPostRequest = async (phone, type, successCallBack) => {
     successCallBack(null);
   }
 };
+export const mobileLoginPostRequestGuest = async (
+  phone,
+  type,
+  email,
+  fullName,
+  successCallBack,
+) => {
+  console.log('\n\n mobileLoginPostRequest Called : ', phone);
+
+  let formData = new FormData();
+  phone = '+91' + phone;
+
+  formData.append('name', fullName);
+  formData.append('user_cred', phone);
+  formData.append('email', email);
+  formData.append('user_type', type);
+
+  try {
+    let response = await fetch(BASE_URL + 'api/login', {
+      method: 'POST',
+      // headers: {
+      //     Accept: 'application/json',
+      //     'Content-Type': 'application/json',
+      // },
+      body: formData,
+    });
+    let json = await response.text();
+    console.log('\n\n mobileLoginPostRequest success: ', json);
+    successCallBack(json);
+  } catch (error) {
+    console.log('\n\n mobileLoginPostRequest Failed');
+    console.error('error', error);
+    successCallBack(null);
+  }
+};
 
 export const mobileRegisterPostRequest = async (
   email,

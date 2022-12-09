@@ -14,7 +14,10 @@ import {FONTS} from '../../component/Constant/Font';
 import Navigation from '../../service/Navigation';
 import Toast from 'react-native-simple-toast';
 import {commonStyles} from '../../utils/Styles';
-import {mobileLoginPostRequest} from '../../utils/API';
+import {
+  mobileLoginPostRequest,
+  mobileLoginPostRequestGuest,
+} from '../../utils/API';
 import Auth from '../../service/Auth';
 import {useDispatch, useSelector} from 'react-redux';
 import {setUser} from '../../redux/reducer/user';
@@ -49,28 +52,79 @@ function Login({navigation}) {
       address: userData?.address === undefined ? '' : userData?.address,
     };
     setLoading(true);
-    mobileLoginPostRequest(phone, userType, async response => {
-      setLoading(false);
-      console.log(response, '<<<<this is response of  otp ');
-      // return null;
-      console.log('mobileLoginPostRequest response: ', getRawJSON(response));
-      if (response !== null) {
-        if (getRawJSON(response).toString().includes('SenttoUser')) {
-          Toast.show('OTP sent Successfully!!!!');
-          // await Auth.setAccount(userData2);
-          // dispatch(setUser(userData2));
-          // navigation.navigate("Root")
-          navigation.navigate('VerifyOTP', {
-            userData: {phone},
-            screen: 'Login',
-          });
+    if (userType == 'guest') {
+      mobileLoginPostRequestGuest(
+        phone,
+        userType,
+        emailAddress,
+        fullName,
+        async response => {
+          setLoading(false);
+          console.log(JSON.parse(response), '<<<<this is response of  otp ');
+          // return null;
+          console.log(
+            'mobileLoginPostRequest response: ',
+
+            getRawJSON(response),
+          );
+          if (response == null) {
+            return Toast.show('Oops! something went wrong');
+          }
+          if (JSON.parse(response)?.status == 'failed') {
+            return Toast.show('Number already registered');
+          } else {
+            Toast.show('OTP sent Successfully!!!!');
+            // await Auth.setAccount(userData2);
+            // dispatch(setUser(userData2));
+            // navigation.navigate("Root")
+            navigation.navigate('VerifyOTP', {
+              userData: {phone},
+              screen: 'Login',
+            });
+            return null;
+          }
+          if (response !== null) {
+            if (getRawJSON(response).toString().includes('SenttoUser')) {
+              Toast.show('OTP sent Successfully!!!!');
+              // await Auth.setAccount(userData2);
+              // dispatch(setUser(userData2));
+              // navigation.navigate("Root")
+              navigation.navigate('VerifyOTP', {
+                userData: {phone},
+                screen: 'Login',
+              });
+            } else {
+              Toast.show('Number not registered');
+            }
+          } else {
+            Toast.show('Oops! Something went wrogn');
+          }
+        },
+      );
+    } else {
+      mobileLoginPostRequest(phone, userType, async response => {
+        setLoading(false);
+        console.log(response, '<<<<this is response of  otp ');
+        // return null;
+        console.log('mobileLoginPostRequest response: ', getRawJSON(response));
+        if (response !== null) {
+          if (getRawJSON(response).toString().includes('SenttoUser')) {
+            Toast.show('OTP sent Successfully!!!!');
+            // await Auth.setAccount(userData2);
+            // dispatch(setUser(userData2));
+            // navigation.navigate("Root")
+            navigation.navigate('VerifyOTP', {
+              userData: {phone},
+              screen: 'Login',
+            });
+          } else {
+            Toast.show('Number not registered');
+          }
         } else {
-          Toast.show('Number not registered');
+          Toast.show('Oops! Something went wrogn');
         }
-      } else {
-        Toast.show('Oops! Something went wrogn');
-      }
-    });
+      });
+    }
   };
 
   return (
