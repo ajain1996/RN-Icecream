@@ -443,29 +443,60 @@ export const getCategories = callBack => {
     .catch(error => console.log('error', error));
 };
 
-export const addProductPostRequest = async (
-  name,
-  description,
-  image,
-  category0,
-  category1,
-  category2,
-  subcategory0,
-  subcategory1,
-  successCallBack,
-) => {
-  console.log('\n\n addProductPostRequest Called : ', name);
+export const addProductPostRequest = async (payloadData, callBack) => {
+  console.log('\n\n addProductPostRequest Called : \n\n\n');
 
   let formData = new FormData();
+  console.log(payloadData.imageData, '<<< this is payload data');
+  // return null;
+  const {name, description, product, imageData} = payloadData;
+  const values = {
+    name: payloadData.name,
+    description: payloadData.description,
+    product_code: payloadData.product_code,
+    type: 1,
+  };
+  Object.keys(values).map(item => {
+    formData.append(`${item}`, values[item]);
+  });
 
-  formData.append('name', name);
-  formData.append('description', description);
-  formData.append('image', image);
-  formData.append('category[0]', category0);
-  formData.append('category[1]', category1);
-  formData.append('category[2]', category2);
-  formData.append('subcategory[0]', subcategory0);
-  formData.append('subcategory[1]', subcategory1);
+  // payloadData.imageData.map((item, key) => {
+  //   formData.append(`image+${key + 1}`, item, item.name);
+  // });
+  if (payloadData.imageData.length > 0) {
+    formData.append('image1', imageData[0], imageData[0].name);
+  }
+  if (payloadData.imageData.length > 1) {
+    formData.append('image2', imageData[1], imageData[1].name);
+  }
+  if (payloadData.imageData.length > 2) {
+    formData.append('image3', imageData[2], imageData[2].name);
+  }
+  if (payloadData.imageData.length > 3) {
+    formData.append('image4', imageData[3], imageData[3].name);
+  }
+  if (payloadData.imageData.length > 4) {
+    formData.append('image5', imageData[4], imageData[4].name);
+  }
+  formData.append('category[0]', '1');
+  // formData.append('category[1]', '2');
+  // formData.append('category[3]', '3');
+  formData.append('subcategory[0]', '2');
+  // formData.append('subcategory[1]', '3');
+  formData.append('mrp', '230');
+  formData.append('hsn_code', 'GhSJ78R');
+  formData.append('gst_code', 'GHS674893YUI');
+  formData.append('on_portal', '1');
+  formData.append('pos_group_id', '67YUOK8');
+  formData.append('uom_id', '1');
+  formData.append('uom_quantity', '23');
+  formData.append('uom_2', '5');
+  // formData.append('image', image);
+  // formData.append('category[0]', category0);
+  // formData.append('category[1]', category1);
+  // formData.append('category[2]', category2);
+  // formData.append('subcategory[0]', subcategory0);
+  // formData.append('subcategory[1]', subcategory1);
 
   try {
     let response = await fetch(BASE_URL + 'api/addProduct', {
@@ -479,11 +510,11 @@ export const addProductPostRequest = async (
     let json = await response.json();
     console.log('\n\n addProductPostRequest success: ', json);
 
-    successCallBack(json);
+    callBack(json);
   } catch (error) {
     console.log('\n\n addProductPostRequest Failed');
     console.error('error', error);
-    successCallBack(null);
+    callBack(null);
   }
 };
 
