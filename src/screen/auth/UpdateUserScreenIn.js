@@ -1,9 +1,10 @@
-import {View, Text, TouchableOpacity, FlatList} from 'react-native';
+import {View, Text, TouchableOpacity, FlatList, Linking} from 'react-native';
 import React, {useState} from 'react';
 import Toast from 'react-native-simple-toast';
 import ApplyFormInput from '../../component/ApplyFormInput';
 import ApplyFormPicker from '../../component/ApplyFormPicker';
 import {COLORS, SIZES} from '../../component/Constant/Color';
+import {Country, State, City} from 'country-state-city';
 import CountryFormPicker from '../../component/CountryFormPicker';
 import CitiesFormPicker from '../../component/CitiesFormPicker';
 import {ScrollView} from 'react-native';
@@ -86,6 +87,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
   const [allStates, setAllStates] = React.useState([]);
 
   const [gstError, setGSTError] = React.useState(false);
+  const [broucherError, setbroucherError] = React.useState(false);
   const [panFileError, setPANFileError] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
@@ -110,7 +112,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
   const [business_category0, setBusiness_Category0] = React.useState('');
   const [company_logo, setCompany_Logo] = React.useState({uri: null});
   const [comapany_profile, setComapany_Profile] = React.useState('');
-  const [company_brochure, setCompany_Brochure] = React.useState({uri: null});
+  const [company_brochure, setCompany_Brochure] = React.useState('');
   const [comapny_ad, setComapny_AD] = React.useState('');
   const [pan_number, setPAN_Number] = React.useState('');
 
@@ -185,6 +187,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
         mode: 'import',
         copyTo: 'cachesDirectory',
       });
+      console.log(text, '<<this is text');
 
       var realPath;
       if (Platform.OS === 'ios') {
@@ -199,10 +202,16 @@ export default function UpdateUserScreenIn({navigation, route}) {
       }
       if (text.includes('Upload GST Certificate')) {
         // console.log(text, '<<<gst certificate', res);
-        setGSTCertificate({...res[0], filename: res[0].fileCopyUri});
+        console.log(res[0]);
+        setGSTCertificate({...res[0], uri: res[0].fileCopyUri});
+      }
+      if (text.includes('Upload Company brochure')) {
+        // console.log(text, '<<<gst certificate', res);
+        console.log(res[0]);
+        setCompany_Brochure({...res[0], uri: res[0].fileCopyUri});
       } else if (text.includes('Upload Pan Number')) {
         // setPANFile(res[0]);
-        setPANFile({...res[0], filename: res[0].fileCopyUri});
+        setPANFile({...res[0], uri: res[0].fileCopyUri});
       }
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -507,16 +516,29 @@ export default function UpdateUserScreenIn({navigation, route}) {
       setGst_Number(userData?.gst_number);
     }
     if (userData?.gst_image !== undefined) {
-      setGSTCertificate(userData?.gst_image);
+      setGSTCertificate({
+        uri: userData?.gst_image,
+        name: 'Gst certificate uploaded',
+      });
     }
     if (userData?.pan_number !== undefined) {
       setPAN_Number(userData?.pan_number);
     }
     if (userData?.pan_image !== undefined) {
-      setPANFile(userData?.pan_image);
+      setPANFile({name: 'Pan card file uploaded', uri: userData?.pan_image});
     }
     if (userData?.company_brochure !== undefined) {
-      setCompany_Brochure({uri: imageBase + userData?.company_brochure});
+      // setCompany_Brochure({uri: imageBase + userData?.company_brochure});
+      if (
+        userData.company_brochure == null ||
+        userData.company_brochure == 'null'
+      ) {
+      } else {
+        setCompany_Brochure({
+          name: 'Company brochure',
+          uri: userData.company_brochure,
+        });
+      }
     }
     if (userData?.comapny_ad !== undefined) {
       setComapny_AD(userData?.comapny_ad);
@@ -562,7 +584,20 @@ export default function UpdateUserScreenIn({navigation, route}) {
     }
   }, [isfocused]);
 
+  // Alert.alert('jjj');
+  console.log('<<all countries');
+
   console.log('\n\n user Profile', comapany_profile);
+  const openBrowser = link => {
+    Linking.canOpenURL(link).then(supported => {
+      if (supported) {
+        Linking.openURL(link);
+      } else {
+        console.log("Don't know how to open URI: " + link);
+      }
+      return false;
+    });
+  };
 
   return (
     <>
@@ -706,7 +741,22 @@ export default function UpdateUserScreenIn({navigation, route}) {
             Company Brochure
             {/* <Text style={{...styles.heading, color: '#FF0000'}}>{'  '}*</Text> */}
           </Text>
-          <TouchableHighlight
+
+          <RenderCustomFilePicker
+            title="Upload Company brochure"
+            file={company_brochure}
+            fileError={broucherError}
+            required={true}
+            setFile={setCompany_Brochure}
+            selectPdfFile={selectPdfFile}
+            setFileError={setbroucherError}
+            onPress={() => {
+              openBrowser(imageBase + company_brochure.uri);
+            }}
+          />
+
+          {/*  */}
+          {/* <TouchableHighlight
             style={{alignItems: 'center', marginBottom: 16, marginTop: 6}}
             onPress={() => {
               getImage('brochure');
@@ -743,7 +793,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
                 </TouchableHighlight>
               </>
             )}
-          </TouchableHighlight>
+          </TouchableHighlight> */}
         </>
 
         {/* <ApplyFormPicker
@@ -971,10 +1021,13 @@ export default function UpdateUserScreenIn({navigation, route}) {
           title="Upload GST Certificate"
           file={gstCertificate}
           fileError={gstError}
-          required={true}
+          // required={true}
           setFile={setGSTCertificate}
           selectPdfFile={selectPdfFile}
           setFileError={setGSTError}
+          onPress={() => {
+            openBrowser(imageBase + gstCertificate.name);
+          }}
         />
 
         <ApplyFormInput
@@ -996,6 +1049,9 @@ export default function UpdateUserScreenIn({navigation, route}) {
           required={true}
           selectPdfFile={selectPdfFile}
           setFileError={setPANFileError}
+          onPress={() => {
+            openBrowser(imageBase + panFile.name);
+          }}
         />
 
         <ApplyFormInput
@@ -1043,14 +1099,14 @@ export default function UpdateUserScreenIn({navigation, route}) {
           }}
         />
 
-        <ApplyFormInput
+        {/* <ApplyFormInput
           heading="Package Code Offered under this Subscription"
           placeholderText="Package Code Offered under this Subscription"
           labelValue={packageCode}
           onChangeText={val => {
             // setComments(val);
           }}
-        />
+        /> */}
 
         {/* <ApplyFormInput
                     heading="Your Service Account Manager Desk ID"
@@ -1060,7 +1116,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
                     }}
                 /> */}
 
-        <View
+        {/* <View
           style={{
             marginHorizontal: 20,
             marginBottom: 8,
@@ -1073,7 +1129,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
           <Text style={{...commonStyles.fs12_500, color: '#fff'}}>
             {'desk-id'}
           </Text>
-        </View>
+        </View> */}
 
         {/* <ApplyFormInput
                     heading="Your Service Account Manager Name with Photo"
@@ -1082,7 +1138,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
                         // setComments(val);
                     }}
                 /> */}
-        <View
+        {/* <View
           style={{
             marginHorizontal: 20,
             marginBottom: 8,
@@ -1095,7 +1151,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
           <Text style={{...commonStyles.fs12_500, color: '#fff'}}>
             {'manager-name'}
           </Text>
-        </View>
+        </View> */}
 
         {/* <ApplyFormInput
                     heading="Your Service Account Manager Mob"
@@ -1104,7 +1160,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
                         // setComments(val);
                     }}
                 /> */}
-        <View
+        {/* <View
           style={{
             marginHorizontal: 20,
             marginBottom: 8,
@@ -1117,9 +1173,9 @@ export default function UpdateUserScreenIn({navigation, route}) {
           <Text style={{...commonStyles.fs12_500, color: '#fff'}}>
             {'manager-phone'}
           </Text>
-        </View>
+        </View> */}
 
-        <View
+        {/* <View
           style={{
             marginHorizontal: 20,
             backgroundColor: COLORS.theme,
@@ -1131,7 +1187,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
           <Text style={{...commonStyles.fs12_500, color: '#fff'}}>
             {'Activated'}
           </Text>
-        </View>
+        </View> */}
 
         {/* <RenderCustomCheckBox
                     title=""
@@ -1143,7 +1199,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
                 /> */}
         <View style={{height: 10}} />
 
-        <View
+        {/* <View
           style={{
             marginHorizontal: 20,
             backgroundColor: COLORS.theme,
@@ -1155,7 +1211,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
           <Text style={{...commonStyles.fs12_500, color: '#fff'}}>
             {'Free Period'}
           </Text>
-        </View>
+        </View> */}
 
         {/* <RenderCustomCheckBox
                     title=""
@@ -1195,6 +1251,7 @@ const RenderCustomFilePicker = ({
   selectPdfFile,
   required,
   setFileError,
+  onPress,
 }) => {
   return (
     <View style={{alignItems: 'center'}}>
@@ -1220,7 +1277,9 @@ const RenderCustomFilePicker = ({
         </TouchableHighlight>
       ) : (
         <View style={[styles.gstCertificate, commonStyles.rowBetween]}>
-          <Text style={{...commonStyles.fs14_500}}>{file?.name}</Text>
+          <TouchableHighlight onPress={onPress}>
+            <Text style={{...commonStyles.fs14_500}}>{file?.name}</Text>
+          </TouchableHighlight>
           <TouchableHighlight
             onPress={() => setFile('')}
             underlayColor="#f7f8f9">

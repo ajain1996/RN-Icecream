@@ -8,12 +8,19 @@ import {StyleSheet} from 'react-native';
 import {commonStyles} from '../../utils/Styles';
 import CustomHeader from '../../component/Header/CustomHeader';
 import {RenderUpload} from '../../component/RenderImageUpload';
-import {addProductPostRequest} from '../../utils/API';
+import {
+  addProductPostRequest,
+  getProductCategories,
+  getProductSubCategories,
+} from '../../utils/API';
 import Toast from 'react-native-simple-toast';
 import {Alert} from 'react-native';
 import {ActivityIndicator} from 'react-native';
 import CustomLoader, {CustomPanel} from '../../component/CustomLoader';
 import {useState} from 'react';
+import ApplyFormPicker from '../../component/ApplyFormPicker';
+import {useEffect} from 'react';
+// import { ToastAndroid } from 'react-native';
 const initialValue = {
   name: '',
   description: '',
@@ -24,16 +31,36 @@ const initialValue = {
   tax_on_sale_price: '',
   hsn_code: '',
   gst_code: '',
+  subcategory: '',
 };
+let productCategory = [
+  {
+    name: 'category 1',
+    value: 'category 1',
+  },
+];
 
 export default function CreateProductScreen({navigation}) {
   const [formData, setformData] = useState(initialValue);
   const [imageData, setImageData] = useState([]);
   const [imageError, setimageError] = useState('');
-
+  const [AllCategories, setProductCategories] = useState([]);
+  const [productApiCategory, setProductApiCategory] = useState([]);
+  const [productApiSubcategory, setProductApiSubCategory] = useState([]);
+  const [AllSubCategories, setProductSubCategory] = useState([]);
   const handleChange = (name, value) => {
     setformData({...formData, [name]: value});
   };
+  const getCategoryId = (arr, name) => {
+    let id = 1;
+    arr.map(item => {
+      if (item.name == name) {
+        id = item.id;
+      }
+    });
+    return id;
+  };
+
   const handleSubmit = () => {
     let allValid = true;
     const validFields = [
@@ -44,7 +71,7 @@ export default function CreateProductScreen({navigation}) {
       'uom_id',
       'sale_price',
       'tax_on_sale_price',
-      'hsn_code',
+
       'gst_code',
     ];
     validFields.map(item => {
@@ -59,12 +86,68 @@ export default function CreateProductScreen({navigation}) {
       return null;
     }
 
-    addProductPostRequest({...formData, imageData}, res => {
-      console.log(res);
-    });
+    addProductPostRequest(
+      {
+        ...formData,
+        category: getCategoryId(productApiCategory, formData?.category),
+        subcategory: getCategoryId(
+          productApiSubcategory,
+          formData?.subcategory,
+        ),
+        imageData,
+      },
+      res => {
+        console.log(res.message);
+        Toast.show(res.message);
+        if (res.Status == true) {
+          navigation.navigate('Root');
+        }
+      },
+    );
   };
+
+  useEffect(() => {
+    getProductCategories(res => {
+      let category = [];
+      console.log(res, '<<< these are product categories');
+      setProductApiCategory(res.data);
+      res.data.map(item => {
+        category = [
+          ...category,
+          {
+            name: item.name,
+            value: item.name,
+            id: item.id,
+          },
+        ];
+      });
+      setProductCategories(category);
+    });
+    getProductSubCategories(res => {
+      console.log(res, '<<< these are product sub categories');
+      let category = [];
+      setProductApiSubCategory(res.data);
+      console.log(res, '<<< these are product categories');
+      res.data.map(item => {
+        category = [
+          ...category,
+          {
+            name: item.name,
+            value: item.name,
+            id: item.id,
+          },
+        ];
+      });
+      setProductSubCategory(category);
+    });
+  }, []);
+
   console.log(imageData);
 
+  console.log(
+    getCategoryId(productApiCategory, formData.category),
+    '<<< thisis category',
+  );
   return (
     <>
       <CustomHeader title="Product Management" />
@@ -98,6 +181,34 @@ export default function CreateProductScreen({navigation}) {
           }}
         />
 
+        <ApplyFormPicker
+          heading="Product category"
+          placeholderText="Select category"
+          required={true}
+          dropDownValue={formData.category}
+          width={SIZES.width - 120}
+          height={300}
+          onDateSelected={function (val) {
+            console.log('\n\n Selected val :::: ', val);
+            handleChange('category', val);
+          }}
+          data={AllCategories}
+        />
+        <ApplyFormPicker
+          heading="Product Subcategory"
+          placeholderText="Select Subcategory"
+          required={true}
+          dropDownValue={formData?.subcategory}
+          width={SIZES.width - 120}
+          height={300}
+          onDateSelected={function (val) {
+            console.log('\n\n Selected val :::: ', val);
+            handleChange('subcategory', val);
+            // handleChange('subcategoryId', val);
+          }}
+          data={AllSubCategories}
+        />
+
         <ApplyFormInput
           heading="BAR CODE of the proudct"
           placeholderText="BAR CODE of the proudct"
@@ -109,23 +220,23 @@ export default function CreateProductScreen({navigation}) {
 
         {/* Reorder / Low Stock Warning */}
 
-        <ApplyFormInput
+        {/* <ApplyFormInput
           heading="Category of the product"
           placeholderText="Category of the product"
           labelValue={formData?.category}
           onChangeText={val => {
             handleChange('category', val);
           }}
-        />
+        /> */}
 
-        <ApplyFormInput
+        {/* <ApplyFormInput
           heading="Sub Category of the product"
           placeholderText="Sub Category of the product"
           labelValue={formData?.sub_category}
           onChangeText={val => {
             handleChange('sub_category', val);
           }}
-        />
+        /> */}
 
         <ApplyFormInput
           heading="UOM of the product"
@@ -190,6 +301,7 @@ export default function CreateProductScreen({navigation}) {
           placeholderText="MRP"
           keyboardType="number-pad"
           onChangeText={val => {
+            handleChange('mrp', val);
             // setComments(val);
           }}
         />
@@ -197,9 +309,9 @@ export default function CreateProductScreen({navigation}) {
         <ApplyFormInput
           heading="HSN Code"
           placeholderText="HSN Code"
-          labelValue={formData?.mrp}
+          labelValue={formData?.hsn_code}
           onChangeText={val => {
-            handleChange('mrp', val);
+            handleChange('hsn_code', val);
           }}
         />
 

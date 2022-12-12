@@ -40,6 +40,23 @@ export const mobileLoginPostRequest = async (phone, type, successCallBack) => {
     successCallBack(null);
   }
 };
+
+export const getSubcategories = async (category, successCallBack) => {
+  var requestOptions = {
+    method: 'GET',
+    redirect: 'follow',
+  };
+
+  fetch(
+    'https://Icecream.drazs.com/api/public/api/getBusinessSubCategory?category_id=' +
+      category,
+    requestOptions,
+  )
+    .then(response => response.text())
+    .then(result => successCallBack(JSON.parse(result)))
+    .catch(error => console.log('error', error));
+};
+
 export const mobileLoginPostRequestGuest = async (
   phone,
   type,
@@ -462,6 +479,7 @@ export const getUserById = (id, callBack) => {
 };
 
 export const getCategories = callBack => {
+  // business
   var requestOptions = {
     method: 'GET',
     redirect: 'follow',
@@ -477,10 +495,41 @@ export const getCategories = callBack => {
     })
     .catch(error => console.log('error', error));
 };
+export const getProductCategories = successCallBack => {
+  var requestOptions = {
+    method: 'GET',
+
+    redirect: 'follow',
+  };
+
+  fetch('https://Icecream.drazs.com/api/public/api/getcategory', requestOptions)
+    .then(response => response.text())
+    .then(result => {
+      successCallBack(JSON.parse(result));
+    })
+    .catch(error => console.log('error', error));
+};
+export const getProductSubCategories = successCallBack => {
+  var requestOptions = {
+    method: 'GET',
+    redirect: 'follow',
+  };
+
+  fetch(
+    'https://Icecream.drazs.com/api/public/api/getsubcategory',
+    requestOptions,
+  )
+    .then(response => response.text())
+    .then(result => {
+      successCallBack(JSON.parse(result));
+    })
+    .catch(error => console.log('error', error));
+};
 
 export const addProductPostRequest = async (payloadData, callBack) => {
   console.log('\n\n addProductPostRequest Called : \n\n\n');
-
+  console.log(payloadData, '<<<thisis payload data');
+  // return null;
   let formData = new FormData();
   console.log(payloadData.imageData, '<<< this is payload data');
   // return null;
@@ -513,12 +562,11 @@ export const addProductPostRequest = async (payloadData, callBack) => {
   if (payloadData.imageData.length > 4) {
     formData.append('image5', imageData[4], imageData[4].name);
   }
-  formData.append('category[0]', '1');
-  // formData.append('category[1]', '2');
-  // formData.append('category[3]', '3');
-  formData.append('subcategory[0]', '2');
-  // formData.append('subcategory[1]', '3');
-  formData.append('mrp', '230');
+
+  formData.append('category', payloadData.category);
+  formData.append('subcategory', payloadData.subcategory);
+  // formData.append("image1", fileInput.files[0], "/C:/Users/hp/Downloads/Saly-36 (1).png");
+  formData.append('mrp', parseInt(payloadData.mrp));
   formData.append('hsn_code', 'GhSJ78R');
   formData.append('gst_code', 'GHS674893YUI');
   formData.append('on_portal', '1');
@@ -526,12 +574,6 @@ export const addProductPostRequest = async (payloadData, callBack) => {
   formData.append('uom_id', '1');
   formData.append('uom_quantity', '23');
   formData.append('uom_2', '5');
-  // formData.append('image', image);
-  // formData.append('category[0]', category0);
-  // formData.append('category[1]', category1);
-  // formData.append('category[2]', category2);
-  // formData.append('subcategory[0]', subcategory0);
-  // formData.append('subcategory[1]', subcategory1);
 
   try {
     let response = await fetch(BASE_URL + 'api/addProduct', {

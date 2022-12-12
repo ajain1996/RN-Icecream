@@ -32,7 +32,7 @@ export default function renderCategoryItem(item, navigation) {
             // source={require("../../assets/prod/i1.webp")}
             // source={{uri: imageBase + item.image1}}
             source={{
-              uri: imageBase + item.image1,
+              uri: imageBase + item.image,
               // 'public/img/Product/AJBZDyrlg21DhNVnTkEmozbGZ5iAy6lQsIUoPocZ.png',
             }}
             resizeMode="stretch"
@@ -43,9 +43,9 @@ export default function renderCategoryItem(item, navigation) {
           style={{...commonStyles.fs13_400, textAlign: 'center', marginTop: 8}}>
           {item?.name}
         </Text>
-        <Text style={{...commonStyles.fs13_400, textAlign: 'center'}}>
-          (Members: {item?.description})
-        </Text>
+        {/* <Text style={{...commonStyles.fs13_400, textAlign: 'center'}}>
+          {item?.description}
+        </Text> */}
       </View>
     </TouchableHighlight>
   );
