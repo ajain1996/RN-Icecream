@@ -1,5 +1,5 @@
 import {View, Text, TouchableOpacity, FlatList, Linking} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Toast from 'react-native-simple-toast';
 import ApplyFormInput from '../../component/ApplyFormInput';
 import ApplyFormPicker from '../../component/ApplyFormPicker';
@@ -83,8 +83,12 @@ export default function UpdateUserScreenIn({navigation, route}) {
   const [mobile_2, setMobile_2] = useState('');
 
   const [allCountries, setAllCountries] = React.useState([]);
+  // const [, set] = useState(second)
   const [allCities, setAllCities] = React.useState([]);
   const [allStates, setAllStates] = React.useState([]);
+  const [conutryCode, setConutryCode] = useState('');
+  const [stateCode, setstateCode] = useState('');
+  const [cityCode, setcityCode] = useState('');
 
   const [gstError, setGSTError] = React.useState(false);
   const [broucherError, setbroucherError] = React.useState(false);
@@ -111,6 +115,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
   const [turnover, setTurnover] = React.useState('');
   const [business_category0, setBusiness_Category0] = React.useState('');
   const [company_logo, setCompany_Logo] = React.useState({uri: null});
+
   const [comapany_profile, setComapany_Profile] = React.useState('');
   const [company_brochure, setCompany_Brochure] = React.useState('');
   const [comapny_ad, setComapny_AD] = React.useState('');
@@ -125,15 +130,6 @@ export default function UpdateUserScreenIn({navigation, route}) {
   const [businessOwnerPhone, setBusinessOwnerPhone] = React.useState(
     userData.mobile,
   );
-
-  const fetchCountries = async () => {
-    const response = await fetch(
-      'https://countriesnow.space/api/v0.1/countries/states',
-    );
-    const json = await response.json();
-    setAllCountries(json?.data);
-    return json;
-  };
 
   let options = {
     storageOptions: {
@@ -447,6 +443,14 @@ export default function UpdateUserScreenIn({navigation, route}) {
   const isfocused = useIsFocused();
 
   React.useEffect(() => {
+    // Alert.alert(`${Country.getAllCountries()}`);
+    console.log(Country.getAllCountries(), '<<<allcountries');
+    console.log(State.getAllStates());
+    setAllCountries(
+      Country.getAllCountries().map(item => {
+        return {name: item.name, countryCode: item.isoCode};
+      }),
+    );
     getCategories(res => {
       let values = [];
 
@@ -585,7 +589,58 @@ export default function UpdateUserScreenIn({navigation, route}) {
   }, [isfocused]);
 
   // Alert.alert('jjj');
-  console.log('<<all countries');
+  // console.log(allCountries, '<<<sss');
+
+  useEffect(() => {
+    const selectedCountry = allCountries.filter(item => item.name == country);
+    console.log('in useEffect', selectedCountry, '<<<this is selected country');
+    if (
+      selectedCountry &&
+      selectedCountry != undefined &&
+      selectedCountry.length
+    ) {
+      console.log(selectedCountry, '<<<< thisis selected country');
+      setConutryCode(selectedCountry[0].countryCode);
+      const temp = State.getStatesOfCountry(selectedCountry[0].countryCode);
+      console.log(
+        temp,
+        '<<<these are all state of',
+        selectedCountry[0].countryCode,
+      );
+      setAllStates(
+        temp.map(item => {
+          return {name: item.name, stateCode: item.isoCode};
+        }),
+      );
+    }
+  }, [country]);
+  useEffect(() => {
+    const selectedState = allStates.filter(item => item.name == state);
+
+    if (selectedState && selectedState != undefined && selectedState.length) {
+      console.log(selectedState, '<<<< thisis selected country');
+      setstateCode(selectedState[0].stateCode);
+      const temp = City.getCitiesOfState(conutryCode, stateCode);
+      console.log(
+        temp,
+        '<<<these are all state of',
+        conutryCode,
+        selectedState[0].stateCode,
+      );
+      setAllCities(
+        City.getCitiesOfState(conutryCode, selectedState[0].stateCode).map(
+          item => {
+            return {name: item.name};
+          },
+        ),
+      );
+    }
+  }, [state]);
+
+  // useEffect(() => {
+  //   const selectedCountry = allCountries.filter(item => item.name == country);
+  //   setConutryCode(selectedCountry[0].countryCode);
+  // }, [country]);
 
   console.log('\n\n user Profile', comapany_profile);
   const openBrowser = link => {
@@ -883,7 +938,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
           }}
         />
 
-        <ApplyFormInput
+        {/* <ApplyFormInput
           heading="Country"
           placeholderText="Country"
           labelValue={country}
@@ -891,80 +946,90 @@ export default function UpdateUserScreenIn({navigation, route}) {
           onChangeText={val => {
             setCountry(val);
           }}
-        />
-
-        {/* <CountryFormPicker
-              heading="Country"
-              placeholderText="Country"
-              dropDownValue={country}
-              width={SIZES.width / 1.05}
-              height={SIZES.height / 1.14}
-              onDateSelected={function (val, states) {
-                  console.log('\n\n Selected states :::: ', states);
-                  setCountry(val);
-                  setAllStates(states);
-              }}
-              data={allCountries}
-          /> */}
-
-        <ApplyFormInput
-          heading="State"
-          placeholderText="State"
-          required={true}
-          labelValue={state}
-          onChangeText={val => {
-            setState(val);
-          }}
-        />
-
-        {/* <CountryFormPicker
-            heading="State"
-            placeholderText="State"
-            dropDownValue={state}
-            width={SIZES.width / 1.05}
-            height={SIZES.height / 1.14}
-            onDateSelected={async function (val) {
-                console.log('\n\n Selected val :::: ', val);
-                setState(val);
-
-                const body = {
-                    country: 'India',
-                    state: 'Madhya Pradesh',
-                };
-
-                const citiesData = await fetch(
-                    'https://countriesnow.space/api/v0.1/countries/state/cities',
-                    {
-                        method: 'POST',
-                        headers: {
-                            'X-Powered-By': 'Express',
-                            'Access-Control-Allow-Origin': '*',
-                            'Access-Control-Allow-Headers': '*',
-                            'Content-Type': 'application/json',
-                            'Content-Length': '1036708',
-                            ETag: 'W/"fd1a4-+y1qCVg9E600sahDr1s3nW1FTHQ"',
-                            Date: 'Sun, 02 Aug 2020 10:37:45 GMT',
-                            Connection: 'keep-alive',
-                        },
-                        body: JSON.stringify(body),
-                    },
-                );
-
-                const json = await citiesData.json();
-                setAllCities(json?.data);
-            }}
-            data={allStates}
         /> */}
 
-        <ApplyFormInput
-          heading="Cities"
-          placeholderText="Cities"
-          labelValue={city}
-          required={true}
-          onChangeText={val => {
-            setCity(val);
+        <CountryFormPicker
+          heading="Country"
+          placeholderText="Country"
+          dropDownValue={country}
+          width={SIZES.width / 1.05}
+          height={SIZES.height / 1.14}
+          onDateSelected={function (val) {
+            console.log('\n\n Selected states :::: ', val);
+            setCountry(val);
+
+            // setAllStates(states);
           }}
+          data={allCountries}
         />
+        <CountryFormPicker
+          heading="State"
+          placeholderText="State"
+          dropDownValue={state}
+          width={SIZES.width / 1.05}
+          height={SIZES.height / 1.14}
+          onDateSelected={function (val) {
+            console.log('\n\n Selected states :::: ', val);
+            // setCountry(val);
+
+            // setAllStates(states);
+            setState(val);
+          }}
+          data={allStates}
+        />
+        <CountryFormPicker
+          heading="City"
+          placeholderText="City"
+          dropDownValue={city}
+          width={SIZES.width / 1.05}
+          height={SIZES.height / 1.14}
+          onDateSelected={function (val) {
+            console.log('\n\n Selected states :::: ', val);
+            setCity(val);
+
+            // setAllStates(states);
+          }}
+          data={allCities}
+        />
+
+        {/* <CountryFormPicker
+          heading="State"
+          placeholderText="State"
+          dropDownValue={state}
+          width={SIZES.width / 1.05}
+          height={SIZES.height / 1.14}
+          onDateSelected={async function (val) {
+            console.log('\n\n Selected val :::: ', val);
+            setState(val);
+
+            const body = {
+              country: 'India',
+              state: 'Madhya Pradesh',
+            };
+
+            const citiesData = await fetch(
+              'https://countriesnow.space/api/v0.1/countries/state/cities',
+              {
+                method: 'POST',
+                headers: {
+                  'X-Powered-By': 'Express',
+                  'Access-Control-Allow-Origin': '*',
+                  'Access-Control-Allow-Headers': '*',
+                  'Content-Type': 'application/json',
+                  'Content-Length': '1036708',
+                  ETag: 'W/"fd1a4-+y1qCVg9E600sahDr1s3nW1FTHQ"',
+                  Date: 'Sun, 02 Aug 2020 10:37:45 GMT',
+                  Connection: 'keep-alive',
+                },
+                body: JSON.stringify(body),
+              },
+            );
+
+            const json = await citiesData.json();
+            // setAllCities(json?.data);
+          }}
+          data={allStates}
+        /> */}
 
         {/* <CitiesFormPicker
                     heading="Cities"

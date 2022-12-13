@@ -96,12 +96,12 @@ export default function MemberDetailScreen({navigation, route}) {
           <View style={{...commonStyles.rowStart}}>
             {image_tap(require('../../assets/home.png'), 20, () => {})}
             <Text style={[styles.memberAddress, {marginTop: 0}]}>
-              {item?.address_1 === null ? '' : item?.address_1 + ','}{' '}
-              {item?.address_2 === null ? '' : item?.address_2 + ','}{' '}
-              {item?.address_3 === null ? '' : item?.address_3 + ','}{' '}
-              {item?.state === null ? '' : item?.state + '.'}{' '}
-              {item?.city === null ? '' : item?.city + ','}{' '}
-              {item?.country === null ? '' : item?.country}
+              {item?.address_1 == 'null' ? '' : item?.address_1 + ','}{' '}
+              {item?.address_2 == 'null' ? '' : item?.address_2 + ','}{' '}
+              {item?.address_3 == 'null' ? '' : item?.address_3 + ','}{' '}
+              {item?.state == 'null' ? '' : item?.state + '.'}{' '}
+              {item?.city == 'null' ? '' : item?.city + ','}{' '}
+              {item?.country == 'null' ? '' : item?.country}
             </Text>
           </View>
 

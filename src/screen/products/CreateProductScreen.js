@@ -71,7 +71,6 @@ export default function CreateProductScreen({navigation}) {
       'uom_id',
       'sale_price',
       'tax_on_sale_price',
-
       'gst_code',
     ];
     validFields.map(item => {
@@ -209,14 +208,14 @@ export default function CreateProductScreen({navigation}) {
           data={AllSubCategories}
         />
 
-        <ApplyFormInput
+        {/* <ApplyFormInput
           heading="BAR CODE of the proudct"
           placeholderText="BAR CODE of the proudct"
           labelValue={formData?.barcode}
           onChangeText={val => {
             handleChange('barcode', val);
           }}
-        />
+        /> */}
 
         {/* Reorder / Low Stock Warning */}
 
@@ -247,16 +246,16 @@ export default function CreateProductScreen({navigation}) {
           }}
         />
 
-        <ApplyFormInput
+        {/* <ApplyFormInput
           heading="Alternate UOM of the product"
           placeholderText="Alternate UOM of the product"
           labelValue={formData?.uom_2}
           onChangeText={val => {
             handleChange('uom_2', val);
           }}
-        />
+        /> */}
 
-        <ApplyFormInput
+        {/* <ApplyFormInput
           heading="Purchase Price"
           placeholderText="Purchase Price"
           keyboardType="number-pad"
@@ -264,8 +263,8 @@ export default function CreateProductScreen({navigation}) {
           onChangeText={val => {
             handleChange('purchase_price', val);
           }}
-        />
-
+        /> */}
+        {/* 
         <ApplyFormInput
           heading="Tax On Purchase Price"
           placeholderText="Tax On Purchase Price"
@@ -274,7 +273,7 @@ export default function CreateProductScreen({navigation}) {
           onChangeText={val => {
             handleChange('tax_on_purchase_price', val);
           }}
-        />
+        /> */}
 
         <ApplyFormInput
           heading="Sales Price"
@@ -318,6 +317,7 @@ export default function CreateProductScreen({navigation}) {
         <ApplyFormInput
           heading="GST Rate"
           placeholderText="GST Rate"
+          keyboardType="number-pad"
           labelValue={formData?.gst_code}
           onChangeText={val => {
             handleChange('gst_code', val);
@@ -340,14 +340,14 @@ export default function CreateProductScreen({navigation}) {
           title="Product Photo Upload - Max 5 Photo"
         />
 
-        <RenderCustomCheckBox
+        {/* <RenderCustomCheckBox
           title="Show this product on Online Sales Portal "
           list={['Yes', 'No']}
           selectedVal={formData?.on_portal}
           callback={item => {
             handleChange('on_portal', item.toLocaleLowerCase());
           }}
-        />
+        /> */}
 
         <View style={{padding: 20}}>
           <TouchableHighlight style={styles.btn} onPress={handleSubmit}>
