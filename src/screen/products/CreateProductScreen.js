@@ -15,6 +15,7 @@ import {
 } from '../../utils/API';
 import Toast from 'react-native-simple-toast';
 import {Alert} from 'react-native';
+import {RadioButton} from 'react-native-paper';
 import {ActivityIndicator} from 'react-native';
 import CustomLoader, {CustomPanel} from '../../component/CustomLoader';
 import {useState} from 'react';
@@ -28,7 +29,7 @@ const initialValue = {
   mrp: '',
   uom_id: '',
   sale_price: '',
-  tax_on_sale_price: '',
+  tax_on_sale_price: 'Included',
   hsn_code: '',
   gst_code: '',
   subcategory: '',
@@ -285,7 +286,40 @@ export default function CreateProductScreen({navigation}) {
           }}
         />
 
-        <ApplyFormInput
+        <Text
+          style={{marginTop: 0, marginLeft: 20, fontSize: 12, color: '#000'}}>
+          Tax on Sales Price
+        </Text>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingHorizontal: 12,
+            marginBottom: 10,
+          }}>
+          <RadioButton
+            value="Included"
+            status={
+              formData?.tax_on_sale_price == 'Included'
+                ? 'checked'
+                : 'unchecked'
+            }
+            onPress={() => handleChange('tax_on_sale_price', 'Included')}
+          />
+          <Text>Included</Text>
+          <View style={{width: 25}} />
+          <RadioButton
+            value="Extra"
+            status={
+              formData?.tax_on_sale_price == 'Extra' ? 'checked' : 'unchecked'
+            }
+            onPress={() => handleChange('tax_on_sale_price', 'Extra')}
+          />
+          <Text>Extra</Text>
+        </View>
+
+        {/* <ApplyFormInput
           heading="Tax On Sales Price"
           placeholderText="Tax On Sales Price"
           keyboardType="number-pad"
@@ -293,7 +327,7 @@ export default function CreateProductScreen({navigation}) {
           onChangeText={val => {
             handleChange('tax_on_sale_price', val);
           }}
-        />
+        /> */}
 
         <ApplyFormInput
           heading="MRP"

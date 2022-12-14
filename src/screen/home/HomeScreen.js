@@ -59,7 +59,7 @@ export default function HomeScreen({navigation}) {
           <View style={styles.modalView}>
             <Image
               style={{width: width / 1.5, height: height / 3}}
-              source={require('../../assets/ad.png')}
+              source={require('../../assets/iicbs.jpeg')}
             />
             <TouchableOpacity
               style={{

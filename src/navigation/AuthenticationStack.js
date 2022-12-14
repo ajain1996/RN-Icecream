@@ -13,6 +13,7 @@ import MembersScreen from '../screen/members/MembersScreen';
 import MemberDetailScreen from '../screen/members/MemberDetailScreen';
 import ProductDetailScreen from '../screen/products/ProductDetailScreen';
 import ProductSubCategoryScreen from '../screen/products/ProductSubCategoryScreen';
+import NewsDetailScreen from '../screen/news/NewsDetailScreen';
 
 const Stack = createStackNavigator();
 
@@ -37,6 +38,7 @@ export default function AuthenticationStack() {
       <Stack.Screen name="UpdateUserScreen" component={UpdateUserScreen} />
       <Stack.Screen name="BlogsDetailScreen" component={BlogsDetailScreen} />
       <Stack.Screen name="MembersScreen" component={MembersScreen} />
+      <Stack.Screen name="NewsDetailScreen" component={NewsDetailScreen} />
       <Stack.Screen name="MemberDetailScreen" component={MemberDetailScreen} />
       <Stack.Screen name="ProductDetailScreen" component={ProductDetailScreen} />
       <Stack.Screen name="ProductSubCategoryScreen" component={ProductSubCategoryScreen} />

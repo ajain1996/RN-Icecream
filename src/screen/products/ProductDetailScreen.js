@@ -26,7 +26,7 @@ export default function ProductDetailScreen({navigation, route}) {
 
   return (
     <View style={{width: '100%', height: '100%', backgroundColor: '#fff'}}>
-      <CustomHeader title="Cone" />
+      <CustomHeader title="Product Detail" />
 
       <ScrollView style={{padding: 24}}>
         <View style={{...commonStyles.rowStart, marginBottom: 16}}>
@@ -34,16 +34,34 @@ export default function ProductDetailScreen({navigation, route}) {
             source={{
               uri: imageBase + product?.image1,
             }}
-            style={{width: 84, height: 84, borderRadius: 8}}
+            style={{width: 130, height: 130, borderRadius: 8}}
           />
           <View style={{marginLeft: 16}}>
             <Text style={{...commonStyles.fs16_700}}>{product?.name}</Text>
             <Text style={{...commonStyles.fs12_500}}>
-              {product?.description}
+             Description - {product?.description}
+            </Text>
+            <Text style={{...commonStyles.fs12_500}}>
+             MRP - {product?.mrp}
+            </Text>
+            <Text style={{...commonStyles.fs12_500}}>
+             HSN Code - {product?.hsn_code}
+            </Text>
+            <Text style={{...commonStyles.fs12_500}}>
+             GST Code - {product?.gst_code}
+            </Text>
+            <Text style={{...commonStyles.fs12_500}}>
+             Purchase Price - {product?.purchase_price == null ? 'No Data Entered' : product?.purchase_price}
+            </Text>
+            <Text style={{...commonStyles.fs12_500}}>
+             Sales Price - {product?.sale_price == null ? 'No Data Entered' : product?.sale_price}
+            </Text>
+            <Text style={{...commonStyles.fs12_500}}>
+             Tax on Sales Price - {product?.tax_on_sale_price == null ? 'No Data Entered' : product?.tax_on_sale_price}
             </Text>
           </View>
         </View>
-
+{/* 
         {coneTypes.map((item, index) => {
           return (
             <View
@@ -61,7 +79,7 @@ export default function ProductDetailScreen({navigation, route}) {
               </View>
             </View>
           );
-        })}
+        })} */}
 
         {ProductsData.map((item, index) => {
           return (
