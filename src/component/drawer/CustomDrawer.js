@@ -138,7 +138,7 @@ export const CustomDrawer = ({modalVisible, callback, navigation}) => {
                 <></>
               )}
 
-              {login ? (
+              {/* {login ? (
                 <DrawerButton
                   title="Advertisement"
                   image={require('../../assets/ad.png')}
@@ -146,7 +146,7 @@ export const CustomDrawer = ({modalVisible, callback, navigation}) => {
                 />
               ) : (
                 <></>
-              )}
+              )} */}
 
               {login && userType !== 'guest' ? (
                 <DrawerButton

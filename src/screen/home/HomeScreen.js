@@ -25,7 +25,7 @@ export default function HomeScreen({navigation}) {
   React.useEffect(() => {
     setModalVisible(true);
     getAllProductsAPI(response => {
-      console.log('\n\n getAllNewsAPI response', response);
+      console.log('\n\n getAllProductAPI response', response);
       if (response !== null) {
         if (response?.Status?.toString() === 'true') {
           let categories = [];
