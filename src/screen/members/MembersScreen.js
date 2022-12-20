@@ -16,6 +16,7 @@ import {imageBase} from '../auth/UpdateUserScreenIn';
 import {color} from 'react-native-reanimated';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useState} from 'react';
+import {useRef} from 'react';
 
 export default function MembersScreen({navigation}) {
   const [members, setMembers] = React.useState([]);
@@ -24,6 +25,7 @@ export default function MembersScreen({navigation}) {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [count, setCount] = useState(0);
 
+  const scrollRef = useRef();
   React.useEffect(() => {
     getAllUsersAPI(response => {
       if (response !== null) {
@@ -110,6 +112,10 @@ export default function MembersScreen({navigation}) {
       let sec = first + 30;
       setTempMember(members.slice(first, sec));
       setCount(count + 1);
+      scrollRef.current?.scrollTo({
+        y: 0,
+        animated: true,
+      });
     }
   };
   const PressPrev = () => {
@@ -119,6 +125,10 @@ export default function MembersScreen({navigation}) {
       let sec = first + 30;
       setTempMember(members.slice(first, sec));
       setCount(count - 1);
+      scrollRef.current?.scrollTo({
+        y: 0,
+        animated: true,
+      });
     }
   };
 
@@ -147,7 +157,7 @@ export default function MembersScreen({navigation}) {
           style={styles.searchInput}
         />
       </View>
-      <ScrollView>
+      <ScrollView ref={scrollRef}>
         {tempMember?.map((item, index) => {
           return (
             <TouchableOpacity
@@ -159,12 +169,19 @@ export default function MembersScreen({navigation}) {
                   item: item,
                 });
               }}>
-              <View style={{width: '100%', padding: 14}}>
+              <View
+                style={{
+                  width: '100%',
+                  padding: 7,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
                 <Text style={styles.memberName}>
                   {item?.name == 'null' ? 'Member name' : item?.name}
                 </Text>
-                <Text style={{...commonStyles.fs12_400, color: '#fff'}}>
-                  ({item?.email == 'null' ? 'company@gmail.com' : item?.email})
+                <Text style={{...commonStyles.fs10_400, color: '#fff'}}>
+                  {'   '} (
+                  {item?.email == 'null' ? 'not provided' : item?.email})
                 </Text>
               </View>
               <View style={styles.itemContent}>
@@ -318,14 +335,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   itemImg: {
-    width: 90,
-    height: 90,
+    width: 60,
+    height: 60,
     borderRadius: 100,
     marginTop: 20,
   },
   memberNameBlock: {
     width: '100%',
     padding: 16,
+    paddingTop: 5,
     width: '80%',
   },
   memberName: {
@@ -338,7 +356,7 @@ const styles = StyleSheet.create({
   },
   memberAddress: {
     ...commonStyles.fs18_500,
-    marginTop: 14,
+    marginTop: 5,
   },
   companywebsite: {
     ...commonStyles.fs12_400,

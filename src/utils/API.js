@@ -518,6 +518,7 @@ export const getProductCategories = successCallBack => {
   fetch('https://Icecream.drazs.com/api/public/api/getcategory', requestOptions)
     .then(response => response.text())
     .then(result => {
+      console.log(result, '<<<<<this is result');
       successCallBack(JSON.parse(result));
     })
     .catch(error => {

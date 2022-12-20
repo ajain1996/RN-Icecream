@@ -30,6 +30,7 @@ export default function HomeScreen({navigation}) {
         if (response?.Status?.toString() === 'true') {
           let categories = [];
           response.data.map(item => {
+            console.log(item, '<<<<<<<');
             if (categories.includes(item.name)) return null;
             else categories.push(item.name);
           });
@@ -42,6 +43,7 @@ export default function HomeScreen({navigation}) {
       setCategories(res.data);
     });
   }, []);
+  console.log(productsData, '<<<< ankit');
 
   return (
     <View style={{width: '100%', height: '100%', backgroundColor: '#fff'}}>

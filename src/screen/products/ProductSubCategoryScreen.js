@@ -49,7 +49,7 @@ export default function ProductSubCategoryScreen({navigation, route}) {
   React.useEffect(() => {
     // setModalVisible(true);
     getAllProductsAPI(response => {
-      console.log('\n\n getAllNewsAPI response', response);
+      console.log('\n\n getAllPRoduct response', response);
       if (response !== null) {
         if (response?.Status?.toString() === 'true') {
           const data = response.data.filter(pro => {
