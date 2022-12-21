@@ -179,10 +179,6 @@ export default function MembersScreen({navigation}) {
                 <Text style={styles.memberName}>
                   {item?.name == 'null' ? 'Member name' : item?.name}
                 </Text>
-                <Text style={{...commonStyles.fs10_400, color: '#fff'}}>
-                  {'   '} (
-                  {item?.email == 'null' ? 'not provided' : item?.email})
-                </Text>
               </View>
               <View style={styles.itemContent}>
                 {item?.user_profile?.includes('http') ? (
@@ -215,6 +211,10 @@ export default function MembersScreen({navigation}) {
                       ? 'Organization Name'
                       : item?.organization_name}
                     )
+                  </Text>
+                  <Text style={{...commonStyles.fs10_400, color: '#000'}}>
+                    ({item?.email == 'null' ? 'not provided' : item?.email}
+                    )ddfdf
                   </Text>
 
                   <Text style={styles.memberAddress}>
@@ -349,6 +349,7 @@ const styles = StyleSheet.create({
   memberName: {
     ...commonStyles.fs18_500,
     color: '#fff',
+    fontSize: 15,
   },
   conpanyName: {
     ...commonStyles.fs12_400,

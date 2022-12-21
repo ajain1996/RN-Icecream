@@ -14,6 +14,7 @@ import {imageBase} from '../auth/UpdateUserScreenIn';
 export default function MemberDetailScreen({navigation, route}) {
   const {item} = route?.params;
   const [showNumber, setShowNumber] = useState(false);
+  console.log(item, '<<<<this is single item');
   return (
     <View style={{width: '100%', height: '100%', backgroundColor: '#fff'}}>
       <CustomHeader title="Member Details" />
@@ -96,12 +97,21 @@ export default function MemberDetailScreen({navigation, route}) {
           <View style={{...commonStyles.rowStart}}>
             {image_tap(require('../../assets/home.png'), 20, () => {})}
             <Text style={[styles.memberAddress, {marginTop: 0}]}>
-              {item?.address_1 == 'null' ? '' : item?.address_1 + ','}{' '}
-              {item?.address_2 == 'null' ? '' : item?.address_2 + ','}{' '}
-              {/* {item?.address_3 == 'null' ? '' : item?.address_3 + ','}{' '} */}
-              {item?.state == 'null' ? '' : item?.state + '.'}{' '}
-              {item?.city == 'null' ? '' : item?.city + ','}{' '}
-              {item?.country == 'null' ? '' : item?.country}
+              {item?.address_1 == null || item?.address_1 == 'null'
+                ? ''
+                : item?.address_1 + ','}{' '}
+              {item?.address_2 == 'null' || item?.address_2 == null
+                ? ''
+                : item?.address_2 + ','}{' '}
+              {item?.state == 'null' || item?.state == null
+                ? ''
+                : item?.state + '.'}{' '}
+              {item?.city == 'null' || item?.city == null
+                ? ''
+                : item?.city + ','}{' '}
+              {item?.country == 'null' || item?.country == null
+                ? ''
+                : item?.country}
             </Text>
           </View>
 
@@ -109,7 +119,9 @@ export default function MemberDetailScreen({navigation, route}) {
             <View style={{...commonStyles.rowStart}}>
               {image_tap(require('../../assets/enquiry.png'), 20, () => {})}
               <Text style={styles.memberAddress}>
-                {item?.mobile_2 === null ? 'Not available' : item?.mobile_2}
+                {item?.mobile == null || item?.mobile == 'null'
+                  ? 'Not available'
+                  : item?.mobile}
               </Text>
             </View>
           )}
@@ -117,7 +129,11 @@ export default function MemberDetailScreen({navigation, route}) {
           <View style={{...commonStyles.rowStart, marginTop: -8}}>
             {image_tap(require('../../assets/earth.png'), 20, () => {})}
             <Text style={styles.memberAddress}>
-              {item.address_3 == 'null' ? 'Not provided' : item.address_3}
+              {item.address_3 == 'null' ||
+              item.address_3 == null ||
+              item?.address_3 == ''
+                ? 'Not provided'
+                : item.address_3}
             </Text>
           </View>
 
