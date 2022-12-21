@@ -14,6 +14,7 @@ import MemberDetailScreen from '../screen/members/MemberDetailScreen';
 import ProductDetailScreen from '../screen/products/ProductDetailScreen';
 import ProductSubCategoryScreen from '../screen/products/ProductSubCategoryScreen';
 import NewsDetailScreen from '../screen/news/NewsDetailScreen';
+import CreateProductEnquiryScreen from '../screen/enquiry/CreateProductEnquiryScreen';
 
 const Stack = createStackNavigator();
 
