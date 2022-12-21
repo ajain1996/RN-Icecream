@@ -265,9 +265,12 @@ export const updateUserPostRequest = async (
   // isImageChanged,
   token,
   isImageChanged,
+  isPanChange,
+  isGstFileChanged,
   successCallBack,
 ) => {
   console.log('\n\n updateUserPostRequest Called : ', token);
+  // return null;
   var formdata = new FormData();
   formdata.append('token', token);
   // formdata.append('email', email);
@@ -352,8 +355,13 @@ export const updateUserPostRequest = async (
   // );
   // ---------------------------
 
-  // formdata.append('gst_image', gst_image, gst_image.uri);
-  // formdata.append('pan_image', pan_image, pan_image.uri);
+  if (isPanChange) {
+    formdata.append('pan_image', pan_image, pan_image.uri);
+  }
+  if (isGstFileChanged) {
+    formdata.append('gst_image', gst_image, gst_image.uri);
+  }
+
   // formdata.append('comapny_ad', comapny_ad, comapny_ad.uri);
 
   // 0-------------------------------------

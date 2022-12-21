@@ -102,6 +102,8 @@ export default function UpdateUserScreenIn({ navigation, route }) {
 
   const [user_profile, setUser_Profile] = React.useState();
   const [businessCategorySeq, setBusinessCategorySeq] = useState(1);
+  const [isPanChange, setIsPanChange] = useState(false);
+  const [isGstFileChanged, setisGstFileChanged] = useState(false);
   const [address_1, setAddress_1] = React.useState('');
   const [address_2, setAddress_2] = React.useState('');
   const [address_3, setAddress_3] = React.useState('');
@@ -198,6 +200,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
         // console.log(text, '<<<gst certificate', res);
         console.log(res[0]);
         setGSTCertificate({ ...res[0], uri: res[0].fileCopyUri });
+        setisGstFileChanged(true);
       }
       if (text.includes('Upload Company brochure')) {
         // console.log(text, '<<<gst certificate', res);
@@ -206,6 +209,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
       } else if (text.includes('Upload Pan Number')) {
         // setPANFile(res[0]);
         setPANFile({ ...res[0], uri: res[0].fileCopyUri });
+        isPanChange(true);
       }
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -384,6 +388,8 @@ export default function UpdateUserScreenIn({ navigation, route }) {
           typeOfCompany,
           token,
           isImageChanged,
+          isPanChange,
+          isGstFileChanged,
           async response => {
             const userData2 = response.data;
             setLoading(false);
@@ -391,7 +397,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
             //   '\n\n updateUserPostRequest response: ',
             //   response?.status,
             // );
-            console.log('\n\n userData: ', response, '\n\n\n 2--------', {
+            console.log('\n\n userData value: ', response, '\n\n\n 2--------', {
               ...userData2,
               business_category: response.business_category,
             });
@@ -598,15 +604,23 @@ export default function UpdateUserScreenIn({ navigation, route }) {
     }
   }, [isfocused]);
   useEffect(() => {
-    // Alert.alert('alert');
-    const filtered = categoryDropDown.filter(item => {
-      if (item.id == userData.business_category[0].business_category_id) {
-        return true;
-      }
-    });
-    console.log(filtered, '<<<this is filterd');
-    setBusinessTypeCategory(filtered[0]?.name);
-  }, [businessTypeCategory]);
+    if (userData.business_category.length > 0) {
+      let filter = [];
+      categoryDropDown.map(item => {
+        console.log(item, '<<<<item');
+        const totalCategory = +userData.business_category.length - 1;
+        if (
+          item.id ==
+          userData.business_category[totalCategory].business_category_id
+        ) {
+          filter = [...filter, item];
+        } else {
+        }
+      });
+      console.log(filter, '<<<this is filterd');
+      setBusinessTypeCategory(filter[0]?.name);
+    }
+  }, [categoryDropDown]);
 
   // Alert.alert('jjj');
   // console.log(allCountries, '<<<sss');
@@ -1121,7 +1135,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
           selectPdfFile={selectPdfFile}
           setFileError={setGSTError}
           onPress={() => {
-            openBrowser(imageBase + gstCertificate.name);
+            openBrowser(imageBase + gstCertificate.uri);
           }}
         />
 
@@ -1145,7 +1159,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
           selectPdfFile={selectPdfFile}
           setFileError={setPANFileError}
           onPress={() => {
-            openBrowser(imageBase + panFile.name);
+            openBrowser(imageBase + panFile.uri);
           }}
         />
 
