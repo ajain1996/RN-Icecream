@@ -100,9 +100,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
   const [currentStatus, setCurrentStatus] = React.useState('');
   const [paymentStatus, setPaymentStatus] = React.useState('');
 
-  const [user_profile, setUser_Profile] = React.useState({
-    uri: imageBase + userData?.userProfile,
-  });
+  const [user_profile, setUser_Profile] = React.useState();
   const [businessCategorySeq, setBusinessCategorySeq] = useState(1);
   const [address_1, setAddress_1] = React.useState('');
   const [address_2, setAddress_2] = React.useState('');
@@ -115,7 +113,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
   const [turnover, setTurnover] = React.useState('');
   const [business_category0, setBusiness_Category0] = React.useState('');
   const [company_logo, setCompany_Logo] = React.useState({ uri: null });
-
+  const [businessCategoryIndex, setBusinessCategoryIndex] = useState(1);
   const [comapany_profile, setComapany_Profile] = React.useState('');
   const [company_brochure, setCompany_Brochure] = React.useState('');
   const [comapny_ad, setComapny_AD] = React.useState('');
@@ -373,7 +371,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
           est_year,
           employee_number,
           turnover,
-          businessCategorybySeq[businessTypeCategory],
+          businessCategoryIndex,
           'business_category1',
           'business_category2',
           company_logo,
@@ -441,9 +439,9 @@ export default function UpdateUserScreenIn({ navigation, route }) {
     }
   };
   const isfocused = useIsFocused();
-
   React.useEffect(() => {
     // Alert.alert(`${Country.getAllCountries()}`);
+
     console.log(Country.getAllCountries(), '<<<allcountries');
     console.log(State.getAllStates());
     setAllCountries(
@@ -456,9 +454,11 @@ export default function UpdateUserScreenIn({ navigation, route }) {
 
       setCategoryDropDown(
         res.data.map(item => {
+          // console.log(res.data, '<<<<<this is category');
           return {
             name: item.category_name,
             value: item.category_name,
+            id: item.id,
           };
         }),
       );
@@ -512,9 +512,11 @@ export default function UpdateUserScreenIn({ navigation, route }) {
     if (userData?.comapany_profile !== undefined) {
       setComapany_Profile(imageBase + userData?.comapany_profile);
     }
-    if (userData?.user_profile != null) {
+    if (userData?.user_profile) {
       // Alert.alert('setting company profile', imageBase + userData.user_profile);
       setUser_Profile({ uri: imageBase + userData?.user_profile });
+    } else {
+      setUser_Profile({ uri: null });
     }
     if (userData?.gst_number !== undefined) {
       setGst_Number(userData?.gst_number);
@@ -577,16 +579,34 @@ export default function UpdateUserScreenIn({ navigation, route }) {
         userData?.business_category !== undefined,
         '<<< \n\n\n this is business category --',
       );
-      setBusinessTypeCategory(
-        seqToBusinessCategory[
-        userData?.business_category[userData?.business_category?.length - 1]
-          .business_category_id
-        ],
-      );
+
+      const filtered = categoryDropDown.filter(item => {
+        if (item.id == userData.business_category[0].business_category_id) {
+          return true;
+        }
+      });
+      console.log(filtered, '<<<this is filterd');
+      setBusinessTypeCategory(filtered[0]?.name);
+      // setBusinessTypeCategory(
+      //   seqToBusinessCategory[
+      //     userData.business_category[userData.business_category?.length - 1]
+      //       .business_category_id
+      //   ],
+      // );
     } else {
-      setBusinessTypeCategory(seqToBusinessCategory[1]);
+      setBusinessTypeCategory(categoryDropDown[0]);
     }
   }, [isfocused]);
+  useEffect(() => {
+    // Alert.alert('alert');
+    const filtered = categoryDropDown.filter(item => {
+      if (item.id == userData.business_category[0].business_category_id) {
+        return true;
+      }
+    });
+    console.log(filtered, '<<<this is filterd');
+    setBusinessTypeCategory(filtered[0]?.name);
+  }, [businessTypeCategory]);
 
   // Alert.alert('jjj');
   // console.log(allCountries, '<<<sss');
@@ -654,6 +674,15 @@ export default function UpdateUserScreenIn({ navigation, route }) {
     });
   };
 
+  const setToBusinessCategoryId = val => {
+    categoryDropDown.map(item => {
+      if (val == item.name) {
+        setBusinessCategoryIndex(item.id);
+      }
+    });
+  };
+  console.log(businessCategoryIndex, '<<<this is item');
+
   return (
     <>
       <CustomHeader title="Update Profile " />
@@ -665,7 +694,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
             getImage('profile');
           }}
           underlayColor="transparent">
-          {user_profile.uri == null ? (
+          {user_profile?.uri == null ? (
             <View
               style={{
                 width: 120,
@@ -684,7 +713,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
               <Image
                 source={{
                   // uri: 'https://icecream.drazs.com/api/storage/app/public/img/user_profile/HkbQZZ7nAFiLRjEuAqEdYbDK230bHkD3PAUrCd9T.jpg',
-                  uri: user_profile.uri,
+                  uri: user_profile?.uri,
                 }}
                 style={{ width: 120, height: 120, borderRadius: 100 }}
               />
@@ -756,7 +785,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
               getImage('logo');
             }}
             underlayColor="transparent">
-            {company_logo.uri == null ? (
+            {company_logo?.uri == null ? (
               <View
                 style={{
                   width: 120,
@@ -806,7 +835,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
             selectPdfFile={selectPdfFile}
             setFileError={setbroucherError}
             onPress={() => {
-              openBrowser(imageBase + company_brochure.uri);
+              openBrowser(imageBase + company_brochure?.uri);
             }}
           />
 
@@ -817,7 +846,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
               getImage('brochure');
             }}
             underlayColor="transparent">
-            {company_brochure.uri == null ? (
+            {company_brochure?.uri == null ? (
               <View
                 style={{
                   width: '90%',
@@ -875,6 +904,7 @@ export default function UpdateUserScreenIn({ navigation, route }) {
           onDateSelected={function (val) {
             console.log('\n\n Selected val :::: ', val);
             setBusinessTypeCategory(val);
+            setToBusinessCategoryId(val);
             // setBusinessCategorySeq()
           }}
           data={categoryDropDown}

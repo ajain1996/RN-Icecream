@@ -2,11 +2,13 @@ const BASE_URL = 'https://Icecream.drazs.com/api/public/';
 
 export const getAllUsersAPI = async successCallBack => {
   try {
+    console.log('callign get memeber');
     let response = await fetch(BASE_URL + 'api/getAllUser', {
       method: 'GET',
     });
     let json = await response.json();
     successCallBack(json);
+    console.log('called -- get memeber');
   } catch (error) {
     console.error('error', error);
     successCallBack(null);
@@ -54,7 +56,9 @@ export const getSubcategories = async (category, successCallBack) => {
   )
     .then(response => response.text())
     .then(result => successCallBack(JSON.parse(result)))
-    .catch(error => console.log('error', error));
+    .catch(error => {
+      successCallBack(null);
+    });
 };
 
 export const mobileLoginPostRequestGuest = async (
@@ -374,7 +378,10 @@ export const updateUserPostRequest = async (
       // return null;
       successCallBack(JSON.parse(result));
     })
-    .catch(error => console.log('error', error));
+    .catch(error => {
+      successCallBack(null);
+      console.log('error', error);
+    });
 };
 export const updateUserPostRequest1 = async (
   email,
@@ -475,7 +482,10 @@ export const getUserById = (id, callBack) => {
   )
     .then(response => response.text())
     .then(result => callBack(JSON.parse(result)))
-    .catch(error => console.log('error', error));
+    .catch(error => {
+      successCallBack(null);
+      console.log('error', error);
+    });
 };
 
 export const getCategories = callBack => {
@@ -493,7 +503,10 @@ export const getCategories = callBack => {
     .then(result => {
       callBack(JSON.parse(result));
     })
-    .catch(error => console.log('error', error));
+    .catch(error => {
+      successCallBack(null);
+      console.log('error', error);
+    });
 };
 export const getProductCategories = successCallBack => {
   var requestOptions = {
@@ -505,9 +518,13 @@ export const getProductCategories = successCallBack => {
   fetch('https://Icecream.drazs.com/api/public/api/getcategory', requestOptions)
     .then(response => response.text())
     .then(result => {
+      console.log(result, '<<<<<this is result');
       successCallBack(JSON.parse(result));
     })
-    .catch(error => console.log('error', error));
+    .catch(error => {
+      successCallBack(null);
+      console.log('error', error);
+    });
 };
 export const getProductSubCategories = successCallBack => {
   var requestOptions = {
@@ -523,7 +540,10 @@ export const getProductSubCategories = successCallBack => {
     .then(result => {
       successCallBack(JSON.parse(result));
     })
-    .catch(error => console.log('error', error));
+    .catch(error => {
+      successCallBack(null);
+      console.log('error', error);
+    });
 };
 
 export const addProductPostRequest = async (payloadData, callBack) => {

@@ -38,30 +38,38 @@ export default function ProductDetailScreen({navigation, route}) {
           />
           <View style={{marginLeft: 16}}>
             <Text style={{...commonStyles.fs16_700}}>{product?.name}</Text>
-            <Text style={{...commonStyles.fs12_500}}>
-             Description - {product?.description}
+            <Text style={{...commonStyles.fs10_400}}>
+              {product?.description}
             </Text>
-            <Text style={{...commonStyles.fs12_500}}>
-             MRP - {product?.mrp}
+            <View style={{height: 10}} />
+            <Text style={{...commonStyles.fs10_400}}>MRP - {product?.mrp}</Text>
+            <Text style={{...commonStyles.fs10_400}}>
+              HSN Code - {product?.hsn_code}
             </Text>
-            <Text style={{...commonStyles.fs12_500}}>
-             HSN Code - {product?.hsn_code}
+            <Text style={{...commonStyles.fs10_400}}>
+              GST Code - {product?.gst_code}
             </Text>
-            <Text style={{...commonStyles.fs12_500}}>
-             GST Code - {product?.gst_code}
+            <Text style={{...commonStyles.fs10_400}}>
+              Purchase Price -{' '}
+              {product?.purchase_price == null
+                ? 'No Data Entered'
+                : product?.purchase_price}
             </Text>
-            <Text style={{...commonStyles.fs12_500}}>
-             Purchase Price - {product?.purchase_price == null ? 'No Data Entered' : product?.purchase_price}
+            <Text style={{...commonStyles.fs10_400}}>
+              Sales Price -{' '}
+              {product?.sale_price == null
+                ? 'No Data Entered'
+                : product?.sale_price}
             </Text>
-            <Text style={{...commonStyles.fs12_500}}>
-             Sales Price - {product?.sale_price == null ? 'No Data Entered' : product?.sale_price}
-            </Text>
-            <Text style={{...commonStyles.fs12_500}}>
-             Tax on Sales Price - {product?.tax_on_sale_price == null ? 'No Data Entered' : product?.tax_on_sale_price}
+            <Text style={{...commonStyles.fs10_400}}>
+              Tax on Sales Price -{' '}
+              {product?.tax_on_sale_price == null
+                ? 'No Data Entered'
+                : product?.tax_on_sale_price}
             </Text>
           </View>
         </View>
-{/* 
+        {/* 
         {coneTypes.map((item, index) => {
           return (
             <View

@@ -1,4 +1,4 @@
-import {View, Text, Modal} from 'react-native';
+import {View, Text, Modal, Button} from 'react-native';
 import React from 'react';
 import {commonStyles} from '../../utils/Styles';
 import {StyleSheet} from 'react-native';
@@ -13,20 +13,27 @@ import {TextInput, TouchableHighlight} from 'react-native-gesture-handler';
 import {Settings} from 'react-native';
 import {height, width} from '../../utils/utils';
 import {imageBase} from '../auth/UpdateUserScreenIn';
+import {color} from 'react-native-reanimated';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {useState} from 'react';
+import {useRef} from 'react';
 
 export default function MembersScreen({navigation}) {
   const [members, setMembers] = React.useState([]);
   const [tempMember, setTempMember] = React.useState([]);
   const [searchInput, setSearchInput] = React.useState('');
   const [modalVisible, setModalVisible] = React.useState(false);
+  const [count, setCount] = useState(0);
 
+  const scrollRef = useRef();
   React.useEffect(() => {
     getAllUsersAPI(response => {
       if (response !== null) {
+        console.log('get response');
         if (response?.status?.toLocaleLowerCase() === 'sucess') {
-          console.log('\n\n getAllUsersAPI response: ', response?.data?.length);
+          console.log('\n\n getAllUsersAPI response: ', response?.data);
           setMembers(response?.data);
-          setTempMember(response.data);
+          setTempMember(response.data.slice(0, 30));
         }
       }
     });
@@ -34,7 +41,7 @@ export default function MembersScreen({navigation}) {
   useEffect(() => {
     console.log(searchInput, '<<<sear');
     if (searchInput == '') {
-      setTempMember(members);
+      setTempMember(members.slice(0, 30));
     } else {
       filterIt(searchInput);
     }
@@ -98,10 +105,37 @@ export default function MembersScreen({navigation}) {
     });
     setTempMember(matchIt);
   };
+  const PressNext = () => {
+    console.log(count, '<<<this is count');
+    if (count != members.length % 30) {
+      let first = (count + 1) * 30;
+      let sec = first + 30;
+      setTempMember(members.slice(first, sec));
+      setCount(count + 1);
+      scrollRef.current?.scrollTo({
+        y: 0,
+        animated: true,
+      });
+    }
+  };
+  const PressPrev = () => {
+    console.log(count, '<<<<<this is count');
+    if (count > 0) {
+      let first = (count - 1) * 30;
+      let sec = first + 30;
+      setTempMember(members.slice(first, sec));
+      setCount(count - 1);
+      scrollRef.current?.scrollTo({
+        y: 0,
+        animated: true,
+      });
+    }
+  };
 
   return (
     <View style={{width: '100%', height: '100%', backgroundColor: '#fff'}}>
       {/* {membersHeader(navigation, setSearchInput, searchInput)} */}
+
       <View style={styles.headerContainer}>
         <TouchableHighlight
           onPress={() => navigation.goBack()}
@@ -123,7 +157,7 @@ export default function MembersScreen({navigation}) {
           style={styles.searchInput}
         />
       </View>
-      <ScrollView>
+      <ScrollView ref={scrollRef}>
         {tempMember?.map((item, index) => {
           return (
             <TouchableOpacity
@@ -135,12 +169,19 @@ export default function MembersScreen({navigation}) {
                   item: item,
                 });
               }}>
-              <View style={{width: '100%', padding: 14}}>
+              <View
+                style={{
+                  width: '100%',
+                  padding: 7,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
                 <Text style={styles.memberName}>
                   {item?.name == 'null' ? 'Member name' : item?.name}
                 </Text>
-                <Text style={{...commonStyles.fs12_400, color: '#fff'}}>
-                  ({item?.email == 'null' ? 'company@gmail.com' : item?.email})
+                <Text style={{...commonStyles.fs10_400, color: '#fff'}}>
+                  {'   '} (
+                  {item?.email == 'null' ? 'not provided' : item?.email})
                 </Text>
               </View>
               <View style={styles.itemContent}>
@@ -196,6 +237,56 @@ export default function MembersScreen({navigation}) {
         })}
 
         <View style={{height: 20}} />
+        <TouchableOpacity
+          style={{
+            // position: 'absolute',
+            // backgroundColor: '#000',
+            width: '100%',
+
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            // marginHorizontal: 15,
+            zIndex: 99,
+            color: '#fff',
+            borderRadius: 20,
+          }}>
+          <Text
+            style={{
+              width: 85,
+              paddingVertical: 10,
+              borderRadius: 20,
+              // height: 25,
+              marginLeft: 10,
+              backgroundColor: count == 0 ? '#808080' : '#000',
+              textAlign: 'center',
+              color: '#fff',
+              alignSelf: 'flex-start',
+              // flexDirection: 'row',
+              // alignItems: 'center',
+            }}
+            onPress={PressPrev}>
+            Previous
+          </Text>
+          <Text
+            style={{
+              width: 85,
+              paddingVertical: 10,
+              alignSelf: 'flex-end',
+              borderRadius: 20,
+              // height: 25,
+              color: '#fff',
+              marginRight: 10,
+              backgroundColor:
+                count == members.length % 30 ? '#808080' : '#000',
+              textAlign: 'center',
+              // flexDirection: 'row',
+              // alignItems: 'center',
+            }}
+            onPress={PressNext}>
+            Next
+          </Text>
+        </TouchableOpacity>
       </ScrollView>
       <Modal
         animationType="slide"
@@ -244,14 +335,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   itemImg: {
-    width: 90,
-    height: 90,
+    width: 60,
+    height: 60,
     borderRadius: 100,
     marginTop: 20,
   },
   memberNameBlock: {
     width: '100%',
     padding: 16,
+    paddingTop: 5,
     width: '80%',
   },
   memberName: {
@@ -264,7 +356,7 @@ const styles = StyleSheet.create({
   },
   memberAddress: {
     ...commonStyles.fs18_500,
-    marginTop: 14,
+    marginTop: 5,
   },
   companywebsite: {
     ...commonStyles.fs12_400,

@@ -47,7 +47,7 @@ export default function SplashUserScreen({navigation}) {
           style={{width: '80%', height: '80%'}}
         />
       </View>
-      {renderButton('Login As Member', () => {
+      {renderButton('Login', () => {
         dispatch(setUserType('member'));
         navigation.navigate('Login');
       })}
