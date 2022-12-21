@@ -1,4 +1,4 @@
-import {View, Text, Modal, Button} from 'react-native';
+import {View, Text, Modal, Button, Alert} from 'react-native';
 import React from 'react';
 import {commonStyles} from '../../utils/Styles';
 import {StyleSheet} from 'react-native';
@@ -17,11 +17,13 @@ import {color} from 'react-native-reanimated';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useState} from 'react';
 import {useRef} from 'react';
+import {ActivityIndicator} from 'react-native-paper';
 
 export default function MembersScreen({navigation}) {
   const [members, setMembers] = React.useState([]);
   const [tempMember, setTempMember] = React.useState([]);
   const [searchInput, setSearchInput] = React.useState('');
+  const [isSearching, setIsSearching] = useState(false);
   const [modalVisible, setModalVisible] = React.useState(false);
   const [count, setCount] = useState(0);
 
@@ -38,20 +40,27 @@ export default function MembersScreen({navigation}) {
       }
     });
   }, []);
-  useEffect(() => {
-    console.log(searchInput, '<<<sear');
-    if (searchInput == '') {
-      setTempMember(members.slice(0, 30));
-    } else {
-      filterIt(searchInput);
-    }
-  }, [searchInput]);
+  // useEffect(() => {
+  //   console.log(searchInput, '<<<sear');
+  //   if (searchInput == '') {
+  //     setTempMember(members.slice(0, 30));
+  //   } else {
+  //     filterIt(searchInput);
+  //   }
+  // }, [searchInput]);
 
   const filterIt = text => {
     console.log(text, '<<<this is text');
     // return null;
+    if (text == '') {
+      setTempMember(members.slice(0, 30));
+      return null;
+    }
+    setIsSearching(true);
+    // const matchIt = members.filter(item => {
 
-    const matchIt = members.filter(item => {
+    const tempArr = members.slice(0, 200);
+    const matchIt = tempArr.filter(item => {
       if (item.name != null) {
         const name = item.name.toLocaleLowerCase();
         const field = text.toLocaleLowerCase();
@@ -62,11 +71,11 @@ export default function MembersScreen({navigation}) {
         const short = item.short_name.toLocaleLowerCase();
         if (short.match(field)) return true;
       }
-      if (item.address_3 != null) {
-        const field = text.toLocaleLowerCase();
-        const short = item.address_3.toLocaleLowerCase();
-        if (short.match(field)) return true;
-      }
+      // if (item.address_3 != null) {
+      //   const field = text.toLocaleLowerCase();
+      //   const short = item.address_3.toLocaleLowerCase();
+      //   if (short.match(field)) return true;
+      // }
       if (item.city != null) {
         const field = text.toLocaleLowerCase();
         const short = item.city.toLocaleLowerCase();
@@ -82,28 +91,29 @@ export default function MembersScreen({navigation}) {
         const short = item.state.toLocaleLowerCase();
         if (short.match(field)) return true;
       }
-      if (item.address_1 != null) {
-        const field = text.toLocaleLowerCase();
-        const short = item.address_1.toLocaleLowerCase();
-        if (short.match(field)) return true;
-      }
-      if (item.address_2 != null) {
-        const field = text.toLocaleLowerCase();
-        const short = item.address_2.toLocaleLowerCase();
-        if (short.match(field)) return true;
-      }
+      // if (item.address_1 != null) {
+      //   const field = text.toLocaleLowerCase();
+      //   const short = item.address_1.toLocaleLowerCase();
+      //   if (short.match(field)) return true;
+      // }
+      // if (item.address_2 != null) {
+      //   const field = text.toLocaleLowerCase();
+      //   const short = item.address_2.toLocaleLowerCase();
+      //   if (short.match(field)) return true;
+      // }
       if (item.organization_name != null) {
         const field = text.toLocaleLowerCase();
         const short = item.organization_name.toLocaleLowerCase();
         if (short.match(field)) return true;
       }
-      if (item.email != null) {
-        const field = text.toLocaleLowerCase();
-        const short = item.email.toLocaleLowerCase();
-        if (short.match(field)) return true;
-      }
+      // if (item.email != null) {
+      //   const field = text.toLocaleLowerCase();
+      //   const short = item.email.toLocaleLowerCase();
+      //   if (short.match(field)) return true;
+      // }
     });
     setTempMember(matchIt);
+    setIsSearching(false);
   };
   const PressNext = () => {
     console.log(count, '<<<this is count');
@@ -152,89 +162,97 @@ export default function MembersScreen({navigation}) {
           placeholderTextColor="#999"
           onChangeText={text => {
             console.log(text);
-            setSearchInput(text);
+            // setSearchInput(text);
+            filterIt(text);
           }}
           style={styles.searchInput}
         />
       </View>
       <ScrollView ref={scrollRef}>
-        {tempMember?.map((item, index) => {
-          return (
-            <TouchableOpacity
-              style={styles.itemWrapper}
-              key={index}
-              activeOpacity={0.9}
-              onPress={() => {
-                navigation.navigate('MemberDetailScreen', {
-                  item: item,
-                });
-              }}>
-              <View
-                style={{
-                  width: '100%',
-                  padding: 7,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <Text style={styles.memberName}>
-                  {item?.name == 'null' ? 'Member name' : item?.name}
-                </Text>
-              </View>
-              <View style={styles.itemContent}>
-                {item?.user_profile?.includes('http') ? (
-                  <Image
-                    source={{
-                      uri:
-                        'https://icecream.drazs.com/api/storage/app/' +
-                        item?.user_profile,
-                    }}
-                    style={styles.itemImg}
-                  />
-                ) : (
-                  <Image
-                    source={{
-                      uri:
-                        item.user_profile != null
-                          ? imageBase + item.user_profile
-                          : 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1331&q=80',
-                    }}
-                    style={styles.itemImg}
-                  />
-                )}
-                <View style={styles.memberNameBlock}>
-                  <Text style={[styles.memberName, {color: COLORS.theme}]}>
-                    {item?.short_name == 'null' ? '' : item?.short_name}
-                  </Text>
-                  <Text style={styles.conpanyName}>
-                    (
-                    {item?.organization_name == 'null'
-                      ? 'Organization Name'
-                      : item?.organization_name}
-                    )
-                  </Text>
-                  <Text style={{...commonStyles.fs10_400, color: '#000'}}>
-                    ({item?.email == 'null' ? 'not provided' : item?.email}
-                    )ddfdf
-                  </Text>
+        {isSearching && (
+          <>
+            <ActivityIndicator />
+          </>
+        )}
 
-                  <Text style={styles.memberAddress}>
-                    Address: {item?.address_1 == 'null' ? '' : item?.address_1}
-                    {/* 180 Local street, Member Address, Member address 2 */}
-                  </Text>
-                  <Text style={styles.companywebsite}>
-                    Website: (
-                    {item.address_3 == 'null' ||
-                    item.address_3 == '' ||
-                    item.address_3 == null
-                      ? '(Not provided)'
-                      : item.address_3}
-                    )
+        {!isSearching &&
+          tempMember?.map((item, index) => {
+            return (
+              <TouchableOpacity
+                style={styles.itemWrapper}
+                key={index}
+                activeOpacity={0.9}
+                onPress={() => {
+                  navigation.navigate('MemberDetailScreen', {
+                    item: item,
+                  });
+                }}>
+                <View
+                  style={{
+                    width: '100%',
+                    padding: 7,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Text style={styles.memberName}>
+                    {item?.name == 'null' ? 'Member name' : item?.name}
                   </Text>
                 </View>
-              </View>
-            </TouchableOpacity>
-          );
-        })}
+                <View style={styles.itemContent}>
+                  {item?.user_profile?.includes('http') ? (
+                    <Image
+                      source={{
+                        uri:
+                          'https://icecream.drazs.com/api/storage/app/' +
+                          item?.user_profile,
+                      }}
+                      style={styles.itemImg}
+                    />
+                  ) : (
+                    <Image
+                      source={{
+                        uri:
+                          item.user_profile != null
+                            ? imageBase + item.user_profile
+                            : 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1331&q=80',
+                      }}
+                      style={styles.itemImg}
+                    />
+                  )}
+                  <View style={styles.memberNameBlock}>
+                    <Text style={[styles.memberName, {color: COLORS.theme}]}>
+                      {item?.short_name == 'null' ? '' : item?.short_name}
+                    </Text>
+                    <Text style={styles.conpanyName}>
+                      (
+                      {item?.organization_name == 'null'
+                        ? 'Organization Name'
+                        : item?.organization_name}
+                      )
+                    </Text>
+                    <Text style={{...commonStyles.fs10_400, color: '#000'}}>
+                      ({item?.email == 'null' ? 'not provided' : item?.email})
+                    </Text>
+
+                    <Text style={styles.memberAddress}>
+                      Address:{' '}
+                      {item?.address_1 == 'null' ? '' : item?.address_1}
+                      {/* 180 Local street, Member Address, Member address 2 */}
+                    </Text>
+                    <Text style={styles.companywebsite}>
+                      Website: (
+                      {item.address_3 == 'null' ||
+                      item.address_3 == '' ||
+                      item.address_3 == null
+                        ? '(Not provided)'
+                        : item.address_3}
+                      )
+                    </Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            );
+          })}
 
         <View style={{height: 20}} />
         <TouchableOpacity
