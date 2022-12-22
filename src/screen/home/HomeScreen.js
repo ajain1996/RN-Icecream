@@ -94,9 +94,9 @@ export default function HomeScreen({navigation}) {
             <View style={{alignItems: 'center'}}>
               {home_search(() => {})}
 
-              <View style={{height: 250}}>
+              {/* <View style={{height: 250}}>
                 <HomeCarousel />
-              </View>
+              </View> */}
 
               <View
                 style={{
