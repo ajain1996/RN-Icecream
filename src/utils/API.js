@@ -593,6 +593,7 @@ export const addProductPostRequest = async (payloadData, callBack) => {
 
   formData.append('category', payloadData.category);
   formData.append('subcategory', payloadData.subcategory);
+  formData.append('user_id', payloadData.user_id);
   // formData.append("image1", fileInput.files[0], "/C:/Users/hp/Downloads/Saly-36 (1).png");
   formData.append('mrp', parseInt(payloadData.mrp));
   formData.append('hsn_code', 'GhSJ78R');

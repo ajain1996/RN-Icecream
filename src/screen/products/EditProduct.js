@@ -10,6 +10,7 @@ import CustomHeader from '../../component/Header/CustomHeader';
 import {RenderUpload} from '../../component/RenderImageUpload';
 import {
   addProductPostRequest,
+  getAllProductsAPI,
   getProductCategories,
   getProductSubCategories,
 } from '../../utils/API';
@@ -42,7 +43,8 @@ let productCategory = [
   },
 ];
 
-export default function CreateProductScreen({navigation}) {
+export default function EditProductScreen({navigation, route}) {
+  console.log(route.params, '<<<<< thisisroutes');
   const [formData, setformData] = useState(initialValue);
   const [imageData, setImageData] = useState([]);
   const [imageError, setimageError] = useState('');
@@ -64,7 +66,7 @@ export default function CreateProductScreen({navigation}) {
     });
     return id;
   };
-  console.log(userData, '<<<this is userdata');
+  console.log(formData, '<<<this is formData');
 
   const handleSubmit = () => {
     let allValid = true;
@@ -112,6 +114,20 @@ export default function CreateProductScreen({navigation}) {
   };
 
   useEffect(() => {
+    getAllProductsAPI(response => {
+      console.log('\n\n getAllPRoduct response', response);
+      if (response !== null) {
+        if (response?.Status?.toString() === 'true') {
+          const data = response.data.filter(
+            item => item.id == route.params.product.id,
+          );
+          setformData(data[0]);
+          console.log(data, '<<<<< this isdata');
+          // setProductsData(filterPro);
+        }
+      }
+    });
+
     getProductCategories(res => {
       let category = [];
       console.log(res, '<<< these are product categories');
@@ -338,6 +354,7 @@ export default function CreateProductScreen({navigation}) {
           heading="MRP"
           placeholderText="MRP"
           keyboardType="number-pad"
+          labelValue={formData?.mrp}
           onChangeText={val => {
             handleChange('mrp', val);
             // setComments(val);

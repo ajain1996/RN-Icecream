@@ -131,7 +131,8 @@ export const CustomDrawer = ({modalVisible, callback, navigation}) => {
                   title="My Products"
                   image={require('../../assets/products.png')}
                   onPress={() => {
-                    navigation.navigate('CreateProductScreen');
+                    // navigation.navigate('CreateProductScreen');
+                    navigation.navigate('UserProductScreen');
                   }}
                 />
               ) : (

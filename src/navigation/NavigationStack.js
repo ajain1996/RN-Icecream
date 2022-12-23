@@ -1,6 +1,6 @@
 import React from 'react';
-import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
-import { COLORS } from '../component/Constant/Color';
+import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
+import {COLORS} from '../component/Constant/Color';
 import HomeScreen from '../screen/home/HomeScreen';
 import ChatScreen from '../screen/ChatScreen';
 import SingleChat from '../screen/chat/SingleChat';
@@ -19,21 +19,22 @@ import MyProfileScreen from '../screen/auth/MyProfileScreen';
 import UpdateUserScreenIn from '../screen/auth/UpdateUserScreenIn';
 import MemberDetailScreen from '../screen/members/MemberDetailScreen';
 import CreateProductEnquiryScreen from '../screen/enquiry/CreateProductEnquiryScreen';
+import UserProductScreen from '../screen/products/UserProductsScreen';
+import EditProductScreen from '../screen/products/EditProduct';
 
 const Stack = createStackNavigator();
 export default function NavigationStack() {
   return (
     <Stack.Navigator
       screenOptions={{
-        cardStyle: { backgroundColor: COLORS.button },
+        cardStyle: {backgroundColor: COLORS.button},
         gestureEnabled: true,
         backgroundColor: COLORS.button,
         gestureDirection: 'horizontal',
         ...TransitionPresets.SlideFromRightIOS,
         headerShown: false,
       }}
-      initialRouteName="CreateProductEnquiryScreen">
-      <Stack.Screen name="CreateProductEnquiryScreen" component={CreateProductEnquiryScreen} />
+      initialRouteName="Root">
       <Stack.Screen name="Root" component={BottomTabs} />
       <Stack.Screen name="NewsScreen" component={NewsScreen} />
       <Stack.Screen name="BlogsScreen" component={BlogsScreen} />
@@ -41,10 +42,16 @@ export default function NavigationStack() {
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="SingleChat" component={SingleChat} />
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
+      <Stack.Screen name="UserProductScreen" component={UserProductScreen} />
+      <Stack.Screen name="EditProductScreen" component={EditProductScreen} />
       <Stack.Screen name="AllProductsScreen" component={AllProductsScreen} />
       <Stack.Screen
         name="ProductDetailScreen"
         component={ProductDetailScreen}
+      />
+      <Stack.Screen
+        name="CreateProductEnquiryScreen"
+        component={CreateProductEnquiryScreen}
       />
       <Stack.Screen
         name="ProductSubCategoryScreen"
