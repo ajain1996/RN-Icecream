@@ -10,6 +10,7 @@ import CustomHeader from '../../component/Header/CustomHeader';
 import {RenderUpload} from '../../component/RenderImageUpload';
 import {
   addProductPostRequest,
+  EditProduct,
   getAllProductsAPI,
   getProductCategories,
   getProductSubCategories,
@@ -23,6 +24,7 @@ import {useState} from 'react';
 import ApplyFormPicker from '../../component/ApplyFormPicker';
 import {useEffect} from 'react';
 import {useSelector} from 'react-redux';
+import {imageBase} from '../auth/UpdateUserScreenIn';
 // import { ToastAndroid } from 'react-native';
 const initialValue = {
   name: '',
@@ -66,35 +68,36 @@ export default function EditProductScreen({navigation, route}) {
     });
     return id;
   };
+  const getCategoryNameFromId = (arr, id) => {
+    let name = '';
+    arr.map(item => {
+      if (item.id == id) {
+        name = item.name;
+      }
+    });
+    return name;
+  };
   console.log(formData, '<<<this is formData');
 
   const handleSubmit = () => {
     let allValid = true;
-    const validFields = [
-      'name',
-      'description',
-      'category',
-      'mrp',
-      'uom_id',
-      'sale_price',
-      'tax_on_sale_price',
-      'gst_code',
-    ];
-    validFields.map(item => {
-      if (formData[item].trim() == '') {
-        if (allValid == true) {
-          Alert.alert(item + ' is required !');
-          allValid = false;
-        }
-      }
-    });
-    if (!allValid) {
-      return null;
-    }
+    // const validFields = ['name', 'description', 'category', 'mrp', 'gst_code'];
+    // validFields.map(item => {
+    //   if (formData[item].trim() == '') {
+    //     if (allValid == true) {
+    //       Alert.alert(item + ' is required !');
+    //       allValid = false;
+    //     }
+    //   }
+    // });
+    // if (!allValid) {
+    //   return null;
+    // }
 
-    addProductPostRequest(
+    EditProduct(
       {
         ...formData,
+        product_id: formData.id,
         category: getCategoryId(productApiCategory, formData?.category),
         user_id: userData.id,
         subcategory: getCategoryId(
@@ -114,20 +117,6 @@ export default function EditProductScreen({navigation, route}) {
   };
 
   useEffect(() => {
-    getAllProductsAPI(response => {
-      console.log('\n\n getAllPRoduct response', response);
-      if (response !== null) {
-        if (response?.Status?.toString() === 'true') {
-          const data = response.data.filter(
-            item => item.id == route.params.product.id,
-          );
-          setformData(data[0]);
-          console.log(data, '<<<<< this isdata');
-          // setProductsData(filterPro);
-        }
-      }
-    });
-
     getProductCategories(res => {
       let category = [];
       console.log(res, '<<< these are product categories');
@@ -143,7 +132,32 @@ export default function EditProductScreen({navigation, route}) {
         ];
       });
       setProductCategories(category);
+
+      // -----------------
+      getAllProductsAPI(response => {
+        console.log('\n\n getAllPRoduct response', response);
+        if (response !== null) {
+          if (response?.Status?.toString() === 'true') {
+            const data = response.data.filter(
+              item => item.id == route.params.product.id,
+            );
+
+            setformData({
+              ...data[0],
+              category: getCategoryNameFromId(res.data, data[0].category_id),
+            });
+            setImageData([
+              {
+                uri: imageBase + data[0].image1,
+              },
+            ]);
+            console.log(data, '<<<<< this isdata');
+            // setProductsData(filterPro);
+          }
+        }
+      });
     });
+
     getProductSubCategories(res => {
       console.log(res, '<<< these are product sub categories');
       let category = [];
@@ -165,10 +179,7 @@ export default function EditProductScreen({navigation, route}) {
 
   console.log(imageData);
 
-  console.log(
-    getCategoryId(productApiCategory, formData.category),
-    '<<< thisis category',
-  );
+  console.log(formData, '<<< formdatavalues');
   return (
     <>
       <CustomHeader title="Product Management" />
@@ -353,8 +364,8 @@ export default function EditProductScreen({navigation, route}) {
         <ApplyFormInput
           heading="MRP"
           placeholderText="MRP"
-          keyboardType="number-pad"
-          labelValue={formData?.mrp}
+          // keyboardType="number-pad"
+          labelValue={`${formData?.mrp}`}
           onChangeText={val => {
             handleChange('mrp', val);
             // setComments(val);

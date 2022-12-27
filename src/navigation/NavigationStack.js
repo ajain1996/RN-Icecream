@@ -21,6 +21,7 @@ import MemberDetailScreen from '../screen/members/MemberDetailScreen';
 import CreateProductEnquiryScreen from '../screen/enquiry/CreateProductEnquiryScreen';
 import UserProductScreen from '../screen/products/UserProductsScreen';
 import EditProductScreen from '../screen/products/EditProduct';
+import NewsDetailScreen from '../screen/news/NewsDetailScreen';
 
 const Stack = createStackNavigator();
 export default function NavigationStack() {
@@ -44,6 +45,7 @@ export default function NavigationStack() {
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
       <Stack.Screen name="UserProductScreen" component={UserProductScreen} />
       <Stack.Screen name="EditProductScreen" component={EditProductScreen} />
+      <Stack.Screen name="NewsDetailScreen" component={NewsDetailScreen} />
       <Stack.Screen name="AllProductsScreen" component={AllProductsScreen} />
       <Stack.Screen
         name="ProductDetailScreen"

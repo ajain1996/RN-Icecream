@@ -32,6 +32,7 @@ const initialValue = {
   sale_price: '',
   tax_on_sale_price: 'Included',
   hsn_code: '',
+  sale_price: '',
   gst_code: '',
   subcategory: '',
 };

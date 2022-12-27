@@ -199,13 +199,18 @@ export const getAllBlogsAPI = async successCallBack => {
   console.log('\n\n getAllBlogsAPI Called : ');
 
   try {
-    let response = await fetch(BASE_URL + 'api/getBlog', {
+    var requestOptions = {
       method: 'GET',
-      // headers: { "Authorization": `Bearer ${bearerToken}` }
-    });
-    let json = await response.json();
-    console.log('\n\n getAllBlogsAPI success');
-    successCallBack(json);
+      redirect: 'follow',
+    };
+
+    fetch('https://Icecream.drazs.com/api/public/api/getPosts', requestOptions)
+      .then(response => response.text())
+      .then(result => {
+        console.log(result, '<<<< result');
+        successCallBack(JSON.parse(result));
+      })
+      .catch(error => console.log('error', error));
   } catch (error) {
     console.log('\n\n getAllBlogsAPI Failed');
     console.error('error', error);
@@ -314,46 +319,6 @@ export const updateUserPostRequest = async (
   formdata.append('business_category', business_category0);
 
   // ----------
-
-  // formdata.append('business_category[0]', business_category0);
-  // formdata.append('business_category[1]', business_category1);
-  // formdata.append('business_category[2]', business_category2);
-
-  // 0000000000000000000000000
-  // formdata.append('organization_name', 'Strix DIgital');
-  // formdata.append('short_name', 'SD');
-
-  // formdata.append('mobile_2', '8989510738');
-  // formdata.append('address_1', 'New Durga');
-  // formdata.append('address_2', 'Market');
-  // formdata.append('address_3', 'Salichouka');
-  // formdata.append('country', 'India');
-  // formdata.append('state', 'MP');
-  // formdata.append('city', 'Gadarwara');
-  // formdata.append('landmark', 'Near Mandir');
-  // formdata.append('latitude', '67.89');
-  // formdata.append('longitude', '89.87');
-  // formdata.append('gst_number', 'GS567GRt89IOI');
-  // formdata.append('est_year', '2020');
-  // formdata.append('employee_number', '14');
-  // formdata.append('turnover', '24 L');
-  // formdata.append('business_category[0]', '1');
-  // formdata.append('business_category[1]', '2');
-  // formdata.append('business_category[2]', '3');
-  // formdata.append('business_sub_category[0]', '1');
-  // formdata.append('business_sub_category[1]', '2');
-
-  // 0000000000000
-
-  // formdata.append('business_sub_category[0]', busis);
-  // formdata.append('business_sub_category[1]', '2');
-  // formdata.append('company_logo', company_logo, company_logo.uri);
-  // formdata.append(
-  //   'comapany_profile',
-  //   fileInput.files[0],
-  //   '/C:/Users/hp/Downloads/Saly-13 (1).png',
-  // );
-  // ---------------------------
 
   if (isPanChange) {
     formdata.append('pan_image', pan_image, pan_image.uri);
@@ -596,13 +561,15 @@ export const addProductPostRequest = async (payloadData, callBack) => {
   formData.append('user_id', payloadData.user_id);
   // formData.append("image1", fileInput.files[0], "/C:/Users/hp/Downloads/Saly-36 (1).png");
   formData.append('mrp', parseInt(payloadData.mrp));
-  formData.append('hsn_code', 'GhSJ78R');
-  formData.append('gst_code', 'GHS674893YUI');
+  // formData.append('tax_on_sale_price', parseInt(payloadData.tax_on_sale_price));
+
+  formData.append('hsn_code', payloadData?.hsn_code);
+  formData.append('gst_code', payloadData?.gst_code);
   formData.append('on_portal', '1');
   formData.append('pos_group_id', '67YUOK8');
-  formData.append('uom_id', '1');
-  formData.append('uom_quantity', '23');
-  formData.append('uom_2', '5');
+  formData.append('uom_id', payloadData.uom_id);
+  formData.append('uom_quantity', '0');
+  formData.append('uom_2', '0');
 
   try {
     let response = await fetch(BASE_URL + 'api/addProduct', {
@@ -617,6 +584,78 @@ export const addProductPostRequest = async (payloadData, callBack) => {
     console.log('\n\n addProductPostRequest success: ', json);
 
     callBack(json);
+  } catch (error) {
+    console.log('\n\n addProductPostRequest Failed');
+    console.error('error', error);
+    callBack(null);
+  }
+};
+export const EditProduct = async (payloadData, callBack) => {
+  console.log('\n\n addProductPostRequest Called : \n\n\n');
+  console.log(payloadData, '<<<thisis payload data');
+  // return null;
+  let formData = new FormData();
+  console.log(payloadData.imageData, '<<< this is payload data');
+  // return null;
+  const {name, description, product, imageData} = payloadData;
+  const values = {
+    name: payloadData.name,
+    description: payloadData.description,
+    product_code: payloadData.product_code,
+    type: 1,
+  };
+  Object.keys(values).map(item => {
+    formData.append(`${item}`, values[item]);
+  });
+
+  formData.append('product_id', payloadData.product_id);
+  // payloadData.imageData.map((item, key) => {
+  //   formData.append(`image+${key + 1}`, item, item.name);
+  // });
+  // if (payloadData.imageData.length > 0) {
+  //   formData.append('image1', imageData[0], imageData[0].name);
+  // }
+  // if (payloadData.imageData.length > 1) {
+  //   formData.append('image2', imageData[1], imageData[1].name);
+  // }
+  // if (payloadData.imageData.length > 2) {
+  //   formData.append('image3', imageData[2], imageData[2].name);
+  // }
+  // if (payloadData.imageData.length > 3) {
+  //   formData.append('image4', imageData[3], imageData[3].name);
+  // }
+  // if (payloadData.imageData.length > 4) {
+  //   formData.append('image5', imageData[4], imageData[4].name);
+  // }
+
+  formData.append('category', payloadData.category);
+  formData.append('subcategory', '1');
+  // formData.append('sale_price', payloadData.sale_price);
+  // formData.append('user_id', payloadData.user_id);
+  // formData.append("image1", fileInput.files[0], "/C:/Users/hp/Downloads/Saly-36 (1).png");
+  // formData.append('mrp', parseInt(payloadData.mrp));
+  // formData.append('hsn_code', 'GhSJ78R');
+  // formData.append('gst_code', 'GHS674893YUI');
+  // formData.append('on_portal', '1');
+  // formData.append('tax_on_sale_price', payloadData.tax_on_sale_price);
+  // formData.append('pos_group_id', '67YUOK8');
+  formData.append('uom_id', payloadData?.uom_id);
+  formData.append('uom_quantity', '23');
+  // formData.append('uom_2', '5');
+
+  try {
+    let response = await fetch(BASE_URL + 'api/addProduct', {
+      method: 'POST',
+      headers: {
+        // Accept: 'application/json',
+        // 'Content-Type': 'application/json',
+      },
+      body: formData,
+    });
+    let json = await response.json();
+    console.log('\n\n addProductPostRequest success: ', json);
+
+    // callBack(json);
   } catch (error) {
     console.log('\n\n addProductPostRequest Failed');
     console.error('error', error);

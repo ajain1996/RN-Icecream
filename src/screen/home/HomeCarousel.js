@@ -1,44 +1,49 @@
 import * as React from 'react';
-import { FlatList, Image, Text, View } from 'react-native';
-import { SIZES } from '../../component/Constant/Color';
-import { commonStyles } from '../../utils/Styles';
+import {FlatList, Image, Text, View} from 'react-native';
+import {SIZES} from '../../component/Constant/Color';
+import {commonStyles} from '../../utils/Styles';
 
 const slideList = [
-    { image: require("../../assets/prod/i1.webp") },
-    { image: require("../../assets/prod/i2.webp") },
-    { image: require("../../assets/prod/i3.webp") },
-    { image: require("../../assets/prod/i4.webp") },
-    { image: require("../../assets/prod/i5.webp") },
-    { image: require("../../assets/prod/i7.webp") },
-    { image: require("../../assets/prod/i8.webp") },
-    { image: require("../../assets/prod/i9.webp") },
-    { image: require("../../assets/prod/i10.webp") },
-    { image: require("../../assets/prod/i11.webp") },
-]
+  {image: require('../../assets/prod/i1.webp')},
+  {image: require('../../assets/prod/i2.webp')},
+  {image: require('../../assets/prod/i3.webp')},
+  {image: require('../../assets/prod/i4.webp')},
+  {image: require('../../assets/prod/i5.webp')},
+  {image: require('../../assets/prod/i7.webp')},
+  {image: require('../../assets/prod/i8.webp')},
+  {image: require('../../assets/prod/i9.webp')},
+  {image: require('../../assets/prod/i10.webp')},
+  {image: require('../../assets/prod/i11.webp')},
+];
 
 export default function HomeCarousel() {
-    return (
-        <FlatList
-            data={slideList}
-            renderItem={({ item }) => {
-                return <Slide data={item} />;
-            }}
-            pagingEnabled
-            horizontal
-            showsHorizontalScrollIndicator={false}
-        />
-    );
+  return (
+    <FlatList
+      data={slideList}
+      renderItem={({item}) => {
+        return <Slide data={item} />;
+      }}
+      pagingEnabled
+      horizontal
+      showsHorizontalScrollIndicator={false}
+    />
+  );
 }
 
-function Slide({ data }) {
-    return (
-        <View style={{ ...commonStyles.centerStyles, paddingVertical: 14, paddingHorizontal: 10 }}>
-            <Image
-                source={data.image}
-                style={{ height: 220, width: SIZES.width - 20, borderRadius: 12 }}
-            />
-        </View>
-    );
+function Slide({data}) {
+  return (
+    <View
+      style={{
+        ...commonStyles.centerStyles,
+        paddingVertical: 14,
+        paddingHorizontal: 10,
+      }}>
+      <Image
+        source={data.image}
+        style={{height: 220, width: SIZES.width - 20, borderRadius: 12}}
+      />
+    </View>
+  );
 }
 
 // export default function HomeCarousel() {
