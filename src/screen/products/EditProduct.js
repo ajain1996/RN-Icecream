@@ -99,7 +99,7 @@ export default function EditProductScreen({navigation, route}) {
         ...formData,
         product_id: formData.id,
         category: getCategoryId(productApiCategory, formData?.category),
-        user_id: userData.id,
+        user_id: formData.user_id,
         subcategory: getCategoryId(
           productApiSubcategory,
           formData?.subcategory,
@@ -272,6 +272,7 @@ export default function EditProductScreen({navigation, route}) {
 
         <ApplyFormInput
           heading="UOM of the product"
+          // heading={formData.uom_id}
           placeholderText="UOM of the product"
           labelValue={formData?.uom_id}
           onChangeText={val => {
@@ -312,7 +313,7 @@ export default function EditProductScreen({navigation, route}) {
           heading="Sales Price"
           placeholderText="Sales Price"
           keyboardType="number-pad"
-          labelValue={formData?.sale_price}
+          labelValue={parseInt(formData?.sale_price)}
           onChangeText={val => {
             handleChange('sale_price', val);
           }}

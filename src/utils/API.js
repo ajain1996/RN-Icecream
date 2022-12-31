@@ -640,11 +640,12 @@ export const EditProduct = async (payloadData, callBack) => {
   // formData.append('tax_on_sale_price', payloadData.tax_on_sale_price);
   // formData.append('pos_group_id', '67YUOK8');
   formData.append('uom_id', payloadData?.uom_id);
+  formData.append('user_id', payloadData?.user_id);
   formData.append('uom_quantity', '23');
   // formData.append('uom_2', '5');
 
   try {
-    let response = await fetch(BASE_URL + 'api/addProduct', {
+    let response = await fetch(BASE_URL + 'api/updateProduct', {
       method: 'POST',
       headers: {
         // Accept: 'application/json',
@@ -653,11 +654,11 @@ export const EditProduct = async (payloadData, callBack) => {
       body: formData,
     });
     let json = await response.json();
-    console.log('\n\n addProductPostRequest success: ', json);
-
+    console.log('\n\n editproduct success: ', json);
+    callBack(json);
     // callBack(json);
   } catch (error) {
-    console.log('\n\n addProductPostRequest Failed');
+    console.log('\n\n editproduct Failed');
     console.error('error', error);
     callBack(null);
   }
