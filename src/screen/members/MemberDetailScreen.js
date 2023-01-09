@@ -1,4 +1,4 @@
-import {View, Text} from 'react-native';
+import {View, Text, Modal} from 'react-native';
 import React from 'react';
 import CustomHeader from '../../component/Header/CustomHeader';
 import {StyleSheet} from 'react-native';
@@ -10,16 +10,76 @@ import {TouchableOpacity} from 'react-native';
 import {ScrollView} from 'react-native';
 import {useState} from 'react';
 import {imageBase} from '../auth/UpdateUserScreenIn';
+import {height, width} from '../../utils/utils';
+import {TextInput} from 'react-native-gesture-handler';
 
 export default function MemberDetailScreen({navigation, route}) {
   const {item} = route?.params;
   const [showNumber, setShowNumber] = useState(false);
+  const [modalVisible, setModalVisible] = React.useState(false);
+
   console.log(item, '<<<<this is single item');
   return (
     <View style={{width: '100%', height: '100%', backgroundColor: '#fff'}}>
       <CustomHeader title="Member Details" />
 
       <ScrollView>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+            // setModalVisible(!modalVisible);
+          }}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text
+                style={{fontWeight: '700', fontSize: 19, marginTop: 20, marginBottom: 30}}>
+                Reach out to Members
+              </Text>
+              <TextInput
+                placeholder="Contact Number"
+                placeholderTextColor="#999"
+                onChangeText={text => {
+                  console.log(text);
+                }}
+                style={styles.searchInput}
+              />
+              <View style={{height: 10}} />
+              <TextInput
+                placeholder="Topic of Discussion"
+                placeholderTextColor="#999"
+                onChangeText={text => {
+                  console.log(text);
+                }}
+                style={styles.searchInput}
+              />
+              <View style={{height: 10}} />
+              <TextInput
+                placeholder="Description"
+                placeholderTextColor="#999"
+                onChangeText={text => {
+                  console.log(text);
+                }}
+                style={styles.searchInput}
+              />
+              <TouchableOpacity style={styles.btnModal}>
+                <Text style={styles.btnText}>Submit</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  position: 'absolute',
+                  right: 0,
+                  padding: 15,
+                  borderRadius: 30,
+                }}
+                onPress={() => setModalVisible(!modalVisible)}>
+                <Text style={{fontWeight: '800', fontSize: 18}}>x</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
         <View
           style={styles.itemWrapper}
           activeOpacity={0.9}
@@ -76,7 +136,11 @@ export default function MemberDetailScreen({navigation, route}) {
               }}>
               <Text style={styles.btnText}>Show Phone Number</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.btnOutline} onPress={() => {}}>
+            <TouchableOpacity
+              style={styles.btnOutline}
+              onPress={() => {
+                setModalVisible(true);
+              }}>
               <Text style={styles.btnTextOutlined}>MAKE AN ENQUIRY</Text>
             </TouchableOpacity>
           </View>
@@ -204,6 +268,36 @@ export default function MemberDetailScreen({navigation, route}) {
 }
 
 const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  searchInput: {
+    borderWidth: 1,
+    borderColor: '#999',
+    width: width / 1.5,
+    // marginLeft: 20,
+    height: 45,
+    borderRadius: 6,
+    paddingHorizontal: 14,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 30,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
   itemWrapper: {
     elevation: 9,
     shadowColor: '#999',
@@ -259,6 +353,17 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.theme,
     width: '49%',
     height: 42,
+    borderRadius: 9,
+    elevation: 1,
+    shadowColor: '#999',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  btnModal: {
+    backgroundColor: COLORS.theme,
+    width: width / 5,
+    height: 42,
+    marginTop: 30,
     borderRadius: 9,
     elevation: 1,
     shadowColor: '#999',

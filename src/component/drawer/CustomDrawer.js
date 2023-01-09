@@ -120,7 +120,9 @@ export const CustomDrawer = ({modalVisible, callback, navigation}) => {
                 <DrawerButton
                   title="Enquiries"
                   image={require('../../assets/enquiry.png')}
-                  onPress={() => {}}
+                  onPress={() => {
+                    navigation.navigate('CreateProductEnquiryScreen');
+                  }}
                 />
               ) : (
                 <></>

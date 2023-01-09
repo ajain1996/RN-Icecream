@@ -2,32 +2,88 @@ import {
   View,
   Text,
   Image,
-  FlatList,
+  Modal,
   StyleSheet,
+  TextInput,
   TouchableOpacity,
 } from 'react-native';
 import React from 'react';
 import CustomHeader from '../../component/Header/CustomHeader';
 import {commonStyles} from '../../utils/Styles';
-import {SIZES} from '../../component/Constant/Color';
+import {COLORS, SIZES} from '../../component/Constant/Color';
 import {menuItems} from './ProductSubCategoryScreen';
 import {ScrollView} from 'react-native';
 import {imageBase} from '../auth/UpdateUserScreenIn';
+import {width} from '../../utils/utils';
 
 export default function ProductDetailScreen({navigation, route}) {
   console.log(route.params.product);
   const {product, ProductsData} = route?.params;
-  const [coneTypes, setConeTypes] = React.useState([
-    {name: 'Large Cone', price: '120/-', gm: '150'},
-    {name: 'Big Cone', price: '80/-', gm: '120'},
-    {name: 'Medium Cone', price: '60/-', gm: '60'},
-    {name: 'Small Cone', price: '30/-', gm: '30'},
-  ]);
+  const [modalVisible, setModalVisible] = React.useState(false);
 
   return (
     <View style={{width: '100%', height: '100%', backgroundColor: '#fff'}}>
       <CustomHeader title="Product Detail" />
-
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          // setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text
+              style={{
+                fontWeight: '700',
+                fontSize: 19,
+                marginTop: 20,
+                marginBottom: 30,
+              }}>
+              Enquire for Product
+            </Text>
+            {/* <TextInput
+              placeholder="Contact Number"
+              placeholderTextColor="#999"
+              onChangeText={text => {
+                console.log(text);
+              }}
+              style={styles.searchInput}
+            />
+            <View style={{height: 10}} />
+            <TextInput
+              placeholder="Topic of Discussion"
+              placeholderTextColor="#999"
+              onChangeText={text => {
+                console.log(text);
+              }}
+              style={styles.searchInput}
+            /> */}
+            <TextInput
+              placeholder="Describe your requirement"
+              placeholderTextColor="#999"
+              onChangeText={text => {
+                console.log(text);
+              }}
+              style={styles.searchInput}
+            />
+            <TouchableOpacity style={styles.btnModal}>
+              <Text style={styles.btnText}>Submit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                position: 'absolute',
+                right: 0,
+                padding: 15,
+                borderRadius: 30,
+              }}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={{fontWeight: '800', fontSize: 18}}>x</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
       <ScrollView style={{padding: 24}}>
         <View style={{...commonStyles.rowStart, marginBottom: 16}}>
           <Image
@@ -38,30 +94,30 @@ export default function ProductDetailScreen({navigation, route}) {
           />
           <View style={{marginLeft: 16}}>
             <Text style={{...commonStyles.fs16_700}}>{product?.name}</Text>
-            <Text style={{...commonStyles.fs10_400}}>
+            <Text style={{...commonStyles.fs12_400}}>
               {product?.description}
             </Text>
             <View style={{height: 10}} />
-            <Text style={{...commonStyles.fs10_400}}>MRP - {product?.mrp}</Text>
-            <Text style={{...commonStyles.fs10_400}}>
+            <Text style={{...commonStyles.fs12_400}}>MRP - {product?.mrp}</Text>
+            <Text style={{...commonStyles.fs12_400}}>
               HSN Code - {product?.hsn_code}
             </Text>
-            <Text style={{...commonStyles.fs10_400}}>
+            <Text style={{...commonStyles.fs12_400}}>
               GST Code - {product?.gst_code}
             </Text>
-            <Text style={{...commonStyles.fs10_400}}>
+            <Text style={{...commonStyles.fs12_400}}>
               Purchase Price -{' '}
               {product?.purchase_price == null
                 ? 'No Data Entered'
                 : product?.purchase_price}
             </Text>
-            <Text style={{...commonStyles.fs10_400}}>
+            <Text style={{...commonStyles.fs12_400}}>
               Sales Price -{' '}
               {product?.sale_price == null
                 ? 'No Data Entered'
                 : product?.sale_price}
             </Text>
-            <Text style={{...commonStyles.fs10_400}}>
+            <Text style={{...commonStyles.fs12_400}}>
               Tax on Sales Price -{' '}
               {product?.tax_on_sale_price == null
                 ? 'No Data Entered'
@@ -69,6 +125,22 @@ export default function ProductDetailScreen({navigation, route}) {
             </Text>
           </View>
         </View>
+        <TouchableOpacity
+          onPress={() => {
+            setModalVisible(true);
+          }}
+          style={{
+            alignSelf: 'center',
+            borderRadius: 8,
+            borderColor: 'grey',
+            borderWidth: 1,
+            paddingHorizontal: 11,
+            paddingVertical: 3,
+          }}>
+          <Text style={{color: '#333', fontWeight: '600', fontSize: 14}}>
+            Enquire Now
+          </Text>
+        </TouchableOpacity>
         {/* 
         {coneTypes.map((item, index) => {
           return (
@@ -131,5 +203,51 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  btnModal: {
+    backgroundColor: COLORS.theme,
+    width: width / 5,
+    height: 42,
+    marginTop: 30,
+    borderRadius: 9,
+    elevation: 1,
+    shadowColor: '#999',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  btnText: {
+    color: '#fff',
+    fontSize: 12,
+    marginTop: 2,
+  },
+  searchInput: {
+    borderWidth: 1,
+    borderColor: '#999',
+    width: width / 1.5,
+    // marginLeft: 20,
+    height: 45,
+    borderRadius: 6,
+    paddingHorizontal: 14,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 30,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
 });
