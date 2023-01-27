@@ -12,6 +12,7 @@ import RenderMessageBlock from './renderMessageComponent';
 import RenderMessageImgComponent from './renderMessageImgComponent';
 import { commonStyles } from '../../utils/Styles';
 import TextStrings from '../../utils/TextStrings';
+// import { Icon } from 'react-native-elements';
 
 const SingleChatScreen = (props) => {
 
@@ -90,8 +91,8 @@ const SingleChatScreen = (props) => {
                 >
                     <Icon
                         color={COLORS.white}
-                        name="image"
-                        type="Ionicons"
+                        name="image-outline"
+                        // type="Ionicons"
                         size={26}
                     />
 
