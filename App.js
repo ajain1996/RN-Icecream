@@ -4,12 +4,13 @@ import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {COLORS} from './src/component/Constant/Color';
 import {useDispatch, useSelector} from 'react-redux';
 import Auth from './src/service/Auth';
-import {setUser} from './src/redux/reducer/user';
+import {setFreeAccess, setUser} from './src/redux/reducer/user';
 import NavigationStack from './src/navigation/NavigationStack';
 import AuthenticationStack from './src/navigation/AuthenticationStack';
 import Navigation from './src/service/Navigation';
 import {Alert} from 'react-native';
 import {getUserById} from './src/utils/API';
+import {isUserFreeAccess} from './src/utils/utils';
 
 const Stack = createStackNavigator();
 
@@ -34,16 +35,19 @@ export default function App() {
     // return null;
     if (data !== null) {
       getUserById(data.id, async res => {
+        const checkAccess = isUserFreeAccess(res.data.created_at);
+        // const checkAccess = isUserFreeAccess('2023-01-28T16:33:48.000000Z');
         console.log(
           '\n\n\n\n new user data\n\n\n\n\n',
           {...res.data, business_category: res.business_category},
+          checkAccess,
           '\n\n\n\n<<< thsi iiser user',
         );
         await Auth.setAccount({
           ...res.data,
           business_category: res.business_category,
         });
-
+        dispatch(setFreeAccess(checkAccess));
         dispatch(
           setUser({...res.data, business_category: res.business_category}),
         );

@@ -9,9 +9,12 @@ import {useSelector} from 'react-redux';
 import ApplyFormInput from '../../component/ApplyFormInput';
 import PersonalLeaveDatePicker from '../../component/CustomDatePicker';
 import ApplyFormPicker from '../../component/ApplyFormPicker';
+import {Button} from 'react-native-elements';
+import ViewEnquiry from './ViewEnquiry';
 
-export default function CreateProductEnquiryScreen() {
+export default function CreateProductEnquiryScreen({navigation}) {
   const {userType} = useSelector(state => state.UserType);
+  const {userData} = useSelector(state => state.User);
   const [selectedDate, setselectedDate] = React.useState('');
   const [selectedDateError, setselectedDateError] = React.useState(false);
   const [filter, setFilter] = useState([]);
@@ -20,8 +23,18 @@ export default function CreateProductEnquiryScreen() {
     <View style={{width: '100%', height: '100%', backgroundColor: '#fff'}}>
       <StatusBar backgroundColor="#fff" barStyle="dark-content" />
 
-      <CustomHeader title="Product Management" />
-      <ScrollView>
+      {/* <CustomHeader title="Enquiries" /> */}
+      <ViewEnquiry navigation={navigation} />
+      {/* <ScrollView>
+        <Button
+          onPress={() => {}}
+          title="View Enquiry"
+          color="#841584"
+          style={{
+            width: '50%',
+          }}
+          accessibilityLabel="Learn more about this purple button"
+        />
         <Text />
         <View
           style={{
@@ -83,7 +96,7 @@ export default function CreateProductEnquiryScreen() {
           }}
           data={filter}
         />
-      </ScrollView>
+      </ScrollView> */}
     </View>
   );
 }

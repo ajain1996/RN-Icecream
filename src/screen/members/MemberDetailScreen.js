@@ -12,13 +12,61 @@ import {useState} from 'react';
 import {imageBase} from '../auth/UpdateUserScreenIn';
 import {height, width} from '../../utils/utils';
 import {TextInput} from 'react-native-gesture-handler';
-
+import {PostEnquiry} from '../../utils/API';
+import {useEffect} from 'react';
+import {useSelector} from 'react-redux';
+import {Alert} from 'react-native';
+const initialState = {
+  to_user: null,
+  from_user: null,
+  discussion: null,
+  description: null,
+  contact: null,
+};
 export default function MemberDetailScreen({navigation, route}) {
   const {item} = route?.params;
   const [showNumber, setShowNumber] = useState(false);
   const [modalVisible, setModalVisible] = React.useState(false);
+  const [formData, setformData] = useState(initialState);
+  const {userData, isFreeAccess} = useSelector(state => state.User);
+  const [errorMsg, setErrorMsg] = useState('');
+  useEffect(() => {
+    setformData({
+      ...formData,
+      to_user: item.id,
+      from_user: userData.id,
+    });
+    // const {data} = JSON.parse(userData);
+    // console.log(userData, '<<<< this is user dat/a');
+  }, []);
+
+  const onSubmit = () => {
+    // if(formData.)
+    const {contact, description, discussion} = formData;
+    if (contact == null || contact == '' || contact.length < 10)
+      return setErrorMsg('Please fill valid contact number');
+    if (discussion == null || discussion == '')
+      return setErrorMsg('Topic of discussion is required');
+    if (description == null || description == '')
+      return setErrorMsg('Description is required');
+
+    PostEnquiry(formData, res => {
+      console.log(res);
+      setModalVisible(false);
+      const {message} = JSON.parse(res);
+      Alert.alert(message);
+    });
+  };
+
+  const handleChange = (name, value) => {
+    if (errorMsg != '') {
+      setErrorMsg('');
+    }
+    setformData({...formData, [name]: value});
+  };
 
   console.log(item, '<<<<this is single item');
+
   return (
     <View style={{width: '100%', height: '100%', backgroundColor: '#fff'}}>
       <CustomHeader title="Member Details" />
@@ -35,14 +83,22 @@ export default function MemberDetailScreen({navigation, route}) {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text
-                style={{fontWeight: '700', fontSize: 19, marginTop: 20, marginBottom: 30}}>
+                style={{
+                  fontWeight: '700',
+                  fontSize: 19,
+                  marginTop: 20,
+                  marginBottom: 30,
+                }}>
                 Reach out to Members
               </Text>
               <TextInput
                 placeholder="Contact Number"
                 placeholderTextColor="#999"
+                maxLength={10}
+                keyboardType="number-pad"
                 onChangeText={text => {
                   console.log(text);
+                  handleChange('contact', text);
                 }}
                 style={styles.searchInput}
               />
@@ -52,6 +108,7 @@ export default function MemberDetailScreen({navigation, route}) {
                 placeholderTextColor="#999"
                 onChangeText={text => {
                   console.log(text);
+                  handleChange('discussion', text);
                 }}
                 style={styles.searchInput}
               />
@@ -61,12 +118,19 @@ export default function MemberDetailScreen({navigation, route}) {
                 placeholderTextColor="#999"
                 onChangeText={text => {
                   console.log(text);
+                  handleChange('description', text);
                 }}
                 style={styles.searchInput}
               />
+
               <TouchableOpacity style={styles.btnModal}>
-                <Text style={styles.btnText}>Submit</Text>
+                <Text style={styles.btnText} onPress={onSubmit}>
+                  Submit
+                </Text>
               </TouchableOpacity>
+              {errorMsg != '' && (
+                <Text style={{color: '#FF0000'}}>{errorMsg}</Text>
+              )}
               <TouchableOpacity
                 style={{
                   position: 'absolute',
@@ -139,7 +203,28 @@ export default function MemberDetailScreen({navigation, route}) {
             <TouchableOpacity
               style={styles.btnOutline}
               onPress={() => {
-                setModalVisible(true);
+                if (isFreeAccess) {
+                  setModalVisible(true);
+                } else {
+                  Alert.alert(
+                    'Free Plan Expired',
+                    'Your free (7) days plan has expired. Please buy membership',
+                    [
+                      {
+                        text: 'Cancel',
+                        // onPress: async () => {
+                        //   navigation.navigate('UpdateUserScreenIn');
+                        // }
+                      },
+                      {
+                        text: 'Go to buy',
+                        onPress: async () => {
+                          navigation.navigate('UpdateUserScreenIn');
+                        },
+                      },
+                    ],
+                  );
+                }
               }}>
               <Text style={styles.btnTextOutlined}>MAKE AN ENQUIRY</Text>
             </TouchableOpacity>

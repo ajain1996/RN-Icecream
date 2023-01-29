@@ -20,6 +20,7 @@ import {
   businessCategorybySeq,
   categoryIdValue,
   getCategories,
+  getCategoryPaymentData,
   seqToBusinessCategory,
   updateUserPostRequest,
 } from '../../utils/API';
@@ -30,14 +31,15 @@ import CustomLoader, {CustomPanel} from '../../component/CustomLoader';
 import {response3} from './VerifyOTP';
 import {useIsFocused} from '@react-navigation/native';
 import {Button} from 'react-native-elements';
+import {isUserFreeAccess} from '../../utils/utils';
 
 export const imageBase = 'https://icecream.drazs.com/api/storage/app/';
 export default function UpdateUserScreenIn({navigation, route}) {
   const dispatch = useDispatch();
-  const {userData} = useSelector(state => state.User);
+  const {userData, isFreeAccess} = useSelector(state => state.User);
   // const userData = response3?.data;
 
-  console.log('\n\n userData: \n\n\n---->', userData);
+  console.log('\n\n userData: \n\n\n---->', userData, isFreeAccess);
 
   const companyTypeList = [
     {name: 'Public Ltd', value: 'Public Ltd'},
@@ -69,6 +71,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
   const [alternateMobNo, setAlternateMobNo] = React.useState('');
   const [typeOfCompany, setTypeOfCompany] = React.useState('');
   const [businessType, setBusinessType] = React.useState('');
+  const [packageDetail, setpackageDetail] = useState({});
   const [isImageChanged, setIsImageChanged] = useState({
     user_profile: false,
     company_logo: false,
@@ -393,10 +396,12 @@ export default function UpdateUserScreenIn({navigation, route}) {
           async response => {
             const userData2 = response.data;
             setLoading(false);
+
             // console.log(
             //   '\n\n updateUserPostRequest response: ',
             //   response?.status,
             // );
+
             console.log('\n\n userData value: ', response, '\n\n\n 2--------', {
               ...userData2,
               business_category: response.business_category,
@@ -408,7 +413,8 @@ export default function UpdateUserScreenIn({navigation, route}) {
             //   email: userData?.email,
             //   password: userData?.password,
             //   userProfile:
-            //     user_profile?.length === 0
+            //     user_profile?.length ===
+
             //       ? userData?.userProfile
             //       : user_profile,
             //   companyName:
@@ -447,7 +453,8 @@ export default function UpdateUserScreenIn({navigation, route}) {
   const isfocused = useIsFocused();
   React.useEffect(() => {
     // Alert.alert(`${Country.getAllCountries()}`);
-
+    console.log(userData, '<<<thisisuserdat');
+    isUserFreeAccess(userData.created_at);
     console.log(Country.getAllCountries(), '<<<allcountries');
     console.log(State.getAllStates());
     setAllCountries(
@@ -595,7 +602,9 @@ export default function UpdateUserScreenIn({navigation, route}) {
         }
       });
       console.log(filtered, '<<<this is filterd');
+      // getPackageByBusinessCategoryId(filtered[0]?.id);
       setBusinessTypeCategory(filtered[0]?.name);
+      // setBusinessTypeCategory("cate");
       // setBusinessTypeCategory(
       //   seqToBusinessCategory[
       //     userData.business_category[userData.business_category?.length - 1]
@@ -604,6 +613,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
       // );
     } else {
       setBusinessTypeCategory(categoryDropDown[0]);
+      // setBusinessTypeCategory(categoryDropDown[0]);
     }
   }, [isfocused]);
   useEffect(() => {
@@ -622,6 +632,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
       });
       console.log(filter, '<<<this is filterd');
       setBusinessTypeCategory(filter[0]?.name);
+      getPackageByBusinessCategoryId(filter[0]?.id);
     }
   }, [categoryDropDown]);
 
@@ -695,10 +706,29 @@ export default function UpdateUserScreenIn({navigation, route}) {
     categoryDropDown.map(item => {
       if (val == item.name) {
         setBusinessCategoryIndex(item.id);
+        getPackageByBusinessCategoryId(item.id);
       }
     });
   };
   console.log(businessCategoryIndex, '<<<this is item');
+  const getPackageByBusinessCategoryId = id => {
+    console.log(id, '<<<<businesscategoryedit');
+    getCategoryPaymentData(id, res => {
+      if (res.status == 'error') {
+      }
+      if (res.Status == true) {
+        const singleCat = res.data.filter(item => item.category_id == id);
+        if (singleCat.length) {
+          setpackageDetail(singleCat[0]);
+        } else {
+          setpackageDetail({});
+        }
+
+        // setpackageDetail(singleCat[0]);
+      }
+      // if()
+    });
+  };
 
   return (
     <>
@@ -921,6 +951,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
           //   height={300}
           onDateSelected={function (val) {
             console.log('\n\n Selected val :::: ', val);
+
             setBusinessTypeCategory(val);
             setToBusinessCategoryId(val);
             // setBusinessCategorySeq()
@@ -1343,11 +1374,23 @@ export default function UpdateUserScreenIn({navigation, route}) {
                     }}
                 /> */}
 
-        <View style={{padding: 20}}>
-          <TouchableHighlight style={styles.btn} onPress={handleSubmit}>
-            <Text style={styles.btnText}>SUBMIT</Text>
-          </TouchableHighlight>
-        </View>
+        {isFreeAccess ? (
+          <View style={{padding: 20}}>
+            <TouchableHighlight style={styles.btn} onPress={handleSubmit}>
+              <Text style={styles.btnText}>SUBMIT</Text>
+            </TouchableHighlight>
+          </View>
+        ) : (
+          <>
+            <View style={{padding: 20}}>
+              <TouchableHighlight style={styles.btn} onPress={handleSubmit}>
+                <Text style={styles.btnText}>
+                  Pay ({packageDetail?.price}) and submit
+                </Text>
+              </TouchableHighlight>
+            </View>
+          </>
+        )}
       </ScrollView>
 
       <CustomLoader loading={loading} />

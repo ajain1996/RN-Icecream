@@ -664,6 +664,54 @@ export const EditProduct = async (payloadData, callBack) => {
   }
 };
 
+export const PostEnquiry = (payload, callBack) => {
+  var formdata = new FormData();
+  formdata.append('to_user', payload.to_user);
+  formdata.append('from_user', payload.from_uer);
+  formdata.append('contact', payload.contact);
+  formdata.append('discussion', payload.discussion);
+  formdata.append('description', payload.description);
+  console.log(payload, '<<this is payload');
+  var requestOptions = {
+    method: 'POST',
+    body: formdata,
+    redirect: 'follow',
+  };
+
+  fetch(BASE_URL + 'api/addenquiry', requestOptions)
+    .then(response => response.text())
+    .then(result => {
+      callBack(result);
+    })
+    .catch(error => console.log('error', error));
+};
+
+export const getReceivedEnquiry = (id, callBack) => {
+  var requestOptions = {
+    method: 'GET',
+    redirect: 'follow',
+  };
+
+  fetch(BASE_URL + 'api/getrecievedenquiry?id=' + id, requestOptions)
+    .then(response => response.text())
+    .then(result => {
+      callBack(JSON.parse(result));
+    })
+    .catch(error => console.log('error', error));
+};
+
+export const getCategoryPaymentData = (id, callBack) => {
+  var requestOptions = {
+    method: 'GET',
+    redirect: 'follow',
+  };
+
+  fetch(BASE_URL + 'api/getPackage', requestOptions)
+    .then(response => response.text())
+    .then(result => callBack(JSON.parse(result)))
+    .catch(error => console.log('error', error));
+};
+
 // -----------
 
 //  This is for business category id

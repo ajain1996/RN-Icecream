@@ -5,6 +5,7 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import React from 'react';
 import CustomHeader from '../../component/Header/CustomHeader';
@@ -46,7 +47,7 @@ export const menuItems = [
 export default function UserProductScreen({navigation, route}) {
   const [ProductsData, setProductsData] = useState([]);
   //   console.log(route.params.product, '<<<thisis category');
-  const {userData} = useSelector(state => state.User);
+  const {userData, isFreeAccess} = useSelector(state => state.User);
   //   const selectedC = route.params.product;
   React.useEffect(() => {
     // setModalVisible(true);
@@ -73,7 +74,29 @@ export default function UserProductScreen({navigation, route}) {
         }}>
         <Text
           onPress={() => {
-            navigation.navigate('CreateProductScreen');
+            if (isFreeAccess) {
+              // setModalVisible(true);
+              navigation.navigate('CreateProductScreen');
+            } else {
+              Alert.alert(
+                'Free Plan Expired',
+                'Your free (7) days plan has expired. Please buy membership',
+                [
+                  {
+                    text: 'Cancel',
+                    // onPress: async () => {
+                    //   navigation.navigate('UpdateUserScreenIn');
+                    // }
+                  },
+                  {
+                    text: 'Go to buy',
+                    onPress: async () => {
+                      navigation.navigate('UpdateUserScreenIn');
+                    },
+                  },
+                ],
+              );
+            }
           }}
           style={{
             color: '#000',
