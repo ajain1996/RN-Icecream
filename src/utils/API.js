@@ -1,3 +1,5 @@
+import {Platform} from 'react-native';
+
 const BASE_URL = 'https://Icecream.drazs.com/api/public/';
 
 export const getAllUsersAPI = async successCallBack => {
@@ -665,13 +667,13 @@ export const EditProduct = async (payloadData, callBack) => {
 };
 
 export const PostEnquiry = (payload, callBack) => {
+  console.log(payload, '<<this is payload');
   var formdata = new FormData();
   formdata.append('to_user', payload.to_user);
   formdata.append('from_user', payload.from_uer);
   formdata.append('contact', payload.contact);
   formdata.append('discussion', payload.discussion);
   formdata.append('description', payload.description);
-  console.log(payload, '<<this is payload');
   var requestOptions = {
     method: 'POST',
     body: formdata,
@@ -681,9 +683,13 @@ export const PostEnquiry = (payload, callBack) => {
   fetch(BASE_URL + 'api/addenquiry', requestOptions)
     .then(response => response.text())
     .then(result => {
-      callBack(result);
+      console.log('postenquiry', result);
+      callBack(JSON.parse(result));
     })
-    .catch(error => console.log('error', error));
+    .catch(error => {
+      console.log('error', error);
+      console.log('postenquiry', error);
+    });
 };
 
 export const getReceivedEnquiry = (id, callBack) => {
@@ -712,6 +718,46 @@ export const getCategoryPaymentData = (id, callBack) => {
     .catch(error => console.log('error', error));
 };
 
+export const getMessage = (payload, callBack) => {
+  console.log('sending message', payload);
+  var requestOptions = {
+    method: 'GET',
+    redirect: 'follow',
+  };
+
+  fetch(
+    BASE_URL +
+      `api/getConversion?user1=${payload.user1}&user2=${payload.user2}`,
+    requestOptions,
+  )
+    .then(response => response.text())
+    .then(result => {
+      callBack(JSON.parse(result));
+    })
+    .catch(error => console.log('error', error));
+};
+
+export const SendMessage = (payload, callBack) => {
+  console.log(payload, '<<<thisispayload');
+  var formdata = new FormData();
+  formdata.append('sender', 2);
+  formdata.append('receiver', 3);
+  formdata.append('message', payload.message);
+
+  var requestOptions = {
+    method: 'POST',
+    body: formdata,
+    redirect: 'follow',
+  };
+
+  fetch('https://Icecream.drazs.com/api/public/api/addChat', requestOptions)
+    .then(response => response.text())
+    .then(result => {
+      console.log(result, '<<<result');
+      callBack(JSON.parse(result));
+    })
+    .catch(error => console.log('error', error));
+};
 // -----------
 
 //  This is for business category id

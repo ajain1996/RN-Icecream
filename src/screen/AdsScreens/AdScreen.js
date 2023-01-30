@@ -7,7 +7,7 @@ import {COLORS} from '../../component/Constant/Color';
 import {Image} from 'react-native';
 import {ScrollView} from 'react-native';
 import {TouchableOpacity} from 'react-native';
-import {getAllUsersAPI, getReceivedEnquiry} from '../../utils/API';
+import {getAllUsersAPI} from '../../utils/API';
 import {useEffect} from 'react';
 import {TextInput, TouchableHighlight} from 'react-native-gesture-handler';
 import {Settings} from 'react-native';
@@ -19,27 +19,43 @@ import {useState} from 'react';
 import {useRef} from 'react';
 import {ActivityIndicator} from 'react-native-paper';
 import {useSelector} from 'react-redux';
-import user from '../../redux/reducer/user';
-
-export default function ViewEnquiry({navigation, setshowEnquiry}) {
+import {launchImageLibrary} from 'react-native-image-picker';
+const initialValue = {
+  image: '',
+  userId: null,
+  text: '',
+};
+export default function AdsScreen({navigation}) {
+  const {userData, isFreeAccess} = useSelector(state => state.User);
   const [members, setMembers] = React.useState([]);
   const [tempMember, setTempMember] = React.useState([]);
   const [searchInput, setSearchInput] = React.useState('');
+
   const [isSearching, setIsSearching] = useState(false);
+  const [formData, setFormData] = useState({
+    ...initialValue,
+    userId: userData.id,
+  });
+
   const [modalVisible, setModalVisible] = React.useState(false);
   const [count, setCount] = useState(0);
-  const {userData, isFreeAccess} = useSelector(state => state.User);
+  const [errorMsg, setErrorMsg] = useState('');
+
+  let options = {
+    storageOptions: {
+      skipBackup: true,
+      path: 'images',
+    },
+  };
 
   const scrollRef = useRef();
-  console.log(userData, '<<<userData');
   React.useEffect(() => {
-    getReceivedEnquiry(userData.id, response => {
+    getAllUsersAPI(response => {
       if (response !== null) {
-        console.log(response, '<<<allenquiries');
-        // console.log('get response');
-        if (response?.Status == true) {
+        console.log('get response');
+        if (response?.status?.toLocaleLowerCase() === 'sucess') {
+          console.log('\n\n getAllUsersAPI response: ', response?.data);
           setMembers(response?.data);
-          //   console.log('\n\n getAllUsersAPI response: ', response?.data);
           setTempMember(response.data.slice(0, 30));
         }
       }
@@ -54,32 +70,6 @@ export default function ViewEnquiry({navigation, setshowEnquiry}) {
   //   }
   // }, [searchInput]);
 
-  const filterIt = text => {
-    console.log(text, '<<<this is text');
-    // return null;
-    if (text == '') {
-      setTempMember(members);
-      // return null;
-    }
-    setIsSearching(true);
-    // const matchIt = members.filter(item => {
-
-    const tempArr = members.slice(0, 200);
-    const matchIt = tempArr.filter(item => {
-      if (item.discussion != null) {
-        const name = item.discussion.toLocaleLowerCase();
-        const field = text.toLocaleLowerCase();
-        if (name.match(field)) return true;
-      }
-      if (item.contact != null) {
-        const name = item.contact;
-        const field = text.toLocaleLowerCase();
-        if (name.match(field)) return true;
-      }
-    });
-    setTempMember(matchIt);
-    setIsSearching(false);
-  };
   const PressNext = () => {
     console.log(count, '<<<this is count');
     if (count != members.length % 30) {
@@ -106,7 +96,29 @@ export default function ViewEnquiry({navigation, setshowEnquiry}) {
       });
     }
   };
+  const getImage = () => {
+    launchImageLibrary(options, response => {
+      if (response?.didCancel) {
+      } else if (response?.error) {
+      } else if (response?.customButton) {
+      } else {
+        console.log(response.assets[0].uri, '<<<<this is selected image');
+        setFormData({...formData, image: response.assets[0].uri});
+      }
+    });
+  };
 
+  const onSubmit = () => {
+    // if(formData.)
+  };
+
+  const handleChange = (name, value) => {
+    if (errorMsg != '') {
+      setErrorMsg('');
+    }
+    setFormData({...formData, [name]: value});
+  };
+  console.log(formData, '<<<formdata');
   return (
     <View style={{width: '100%', height: '100%', backgroundColor: '#fff'}}>
       {/* {membersHeader(navigation, setSearchInput, searchInput)} */}
@@ -122,16 +134,16 @@ export default function ViewEnquiry({navigation, setshowEnquiry}) {
           />
         </TouchableHighlight>
 
-        <TextInput
-          placeholder="Search Enquiry"
-          placeholderTextColor="#999"
-          onChangeText={text => {
-            console.log(text);
-            // setSearchInput(text);
-            filterIt(text);
-          }}
-          style={styles.searchInput}
-        />
+        <View>
+          <Text
+            style={{
+              marginLeft: 20,
+              color: 'black',
+              fontWeight: 'bold',
+            }}>
+            All Ads
+          </Text>
+        </View>
       </View>
       <View
         style={{
@@ -140,11 +152,35 @@ export default function ViewEnquiry({navigation, setshowEnquiry}) {
         }}>
         <Text
           onPress={() => {
-            navigation.navigate('CreateProductEnquiryScreen');
+            // navigation.navigate('CreateProductScreen');
+            setModalVisible(true);
+            return null;
+            if (isFreeAccess) {
+              // setModalVisible(true);
+            } else {
+              Alert.alert(
+                'Free Plan Expired',
+                'Your free (7) days plan has expired. Please buy membership',
+                [
+                  {
+                    text: 'Cancel',
+                    // onPress: async () => {
+                    //   navigation.navigate('UpdateUserScreenIn');
+                    // }
+                  },
+                  {
+                    text: 'Go to buy',
+                    onPress: async () => {
+                      navigation.navigate('UpdateUserScreenIn');
+                    },
+                  },
+                ],
+              );
+            }
           }}
           style={{
             color: '#000',
-            width: 200,
+            width: 120,
             textAlign: 'center',
             fontWeight: 'bold',
             marginVertical: 5,
@@ -152,7 +188,7 @@ export default function ViewEnquiry({navigation, setshowEnquiry}) {
             backgroundColor: '#BDBDBD',
             borderRadius: 10,
           }}>
-          Create Enquiry
+          Create Ad
         </Text>
       </View>
       <ScrollView ref={scrollRef}>
@@ -164,34 +200,37 @@ export default function ViewEnquiry({navigation, setshowEnquiry}) {
 
         {!isSearching &&
           tempMember?.map((item, index) => {
-            const da = new Date(item.created_at);
             return (
               <TouchableOpacity
                 style={styles.itemWrapper}
                 key={index}
-                activeOpacity={0.9}>
+                activeOpacity={0.9}
+                onPress={() => {
+                  navigation.navigate('MemberDetailScreen', {
+                    item: item,
+                  });
+                }}>
                 <View
                   style={{
                     width: '100%',
-                    padding: 7,
+                    padding: 2,
                     flexDirection: 'row',
                     alignItems: 'center',
-                    justifyContent: 'space-between',
                   }}>
                   <Text style={styles.memberName}>
-                    {item?.discussion == 'null' ? 'Topic' : item?.discussion}
-                  </Text>
-                  <Text style={{...styles.memberName, fontSize: 12}}>
-                    {da.getDate() +
-                      '/' +
-                      da.getMonth() +
-                      1 +
-                      '/' +
-                      da.getUTCFullYear()}{' '}
-                    - {da.getHours() + ':' + da.getMinutes()}
+                    {item?.name == 'null' ? 'Member name' : item?.name}
                   </Text>
                 </View>
                 <View style={styles.itemContent}>
+                  <Image
+                    source={{
+                      uri:
+                        item.user_profile != null
+                          ? imageBase + item.user_profile
+                          : 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1331&q=80',
+                    }}
+                    style={styles.itemImg}
+                  />
                   {/* {item?.user_profile?.includes('http') ? (
                     <Image
                       source={{
@@ -212,35 +251,42 @@ export default function ViewEnquiry({navigation, setshowEnquiry}) {
                       style={styles.itemImg}
                     />
                   )} */}
-                  <View style={styles.memberNameBlock}>
-                    <Text style={{...styles.memberAddress, fontSize: 12}}>
-                      Contact : {item.contact}{' '}
+                  {/* <View style={styles.memberNameBlock}>
+                    <Text style={[styles.memberName, {color: COLORS.theme}]}>
+                      {item?.short_name == 'null' ? '' : item?.short_name}
                     </Text>
-                    <Text style={styles.memberAddress}>Description: </Text>
-                    <Text style={styles.companywebsite}>
-                      {item?.description == 'null'
+                    <Text style={styles.conpanyName}>
+                      (
+                      {item?.organization_name == 'null'
                         ? 'Organization Name'
-                        : item?.description}
+                        : item?.organization_name}
+                      )
                     </Text>
-                  </View>
+                    <Text style={{...commonStyles.fs10_400, color: '#000'}}>
+                      ({item?.email == 'null' ? 'not provided' : item?.email})
+                    </Text>
+
+                    <Text style={styles.memberAddress}>
+                      Address:{' '}
+                      {item?.address_1 == 'null' ? '' : item?.address_1}
+                    </Text>
+                    <Text style={styles.companywebsite}>
+                      Website: (
+                      {item.address_3 == 'null' ||
+                      item.address_3 == '' ||
+                      item.address_3 == null
+                        ? '(Not provided)'
+                        : item.address_3}
+                      )
+                    </Text>
+                  </View> */}
                 </View>
               </TouchableOpacity>
             );
           })}
-        {tempMember.length == 0 && (
-          <View>
-            <Text
-              style={{
-                textAlign: 'center',
-                fontWeight: 'bold',
-              }}>
-              No Enquiry Found
-            </Text>
-          </View>
-        )}
 
         <View style={{height: 20}} />
-        {/* <TouchableOpacity
+        <TouchableOpacity
           style={{
             // position: 'absolute',
             // backgroundColor: '#000',
@@ -289,9 +335,63 @@ export default function ViewEnquiry({navigation, setshowEnquiry}) {
             onPress={PressNext}>
             Next
           </Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </ScrollView>
+
       <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          // setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text
+              style={{
+                fontWeight: '700',
+                fontSize: 19,
+
+                // marginTop: 20,
+                marginBottom: 10,
+              }}>
+              Create Ad
+            </Text>
+            <TouchableOpacity onPress={getImage}>
+              <Text>Add Image</Text>
+            </TouchableOpacity>
+            <View style={{height: 10}} />
+
+            <Image
+              source={{uri: formData?.image}}
+              style={{minWidth: 200, height: 150}}
+            />
+            <View style={{height: 10}} />
+
+            <TouchableOpacity style={styles.btnModal}>
+              <Text style={{...styles.btnText}} onPress={onSubmit}>
+                Submit
+              </Text>
+            </TouchableOpacity>
+            {errorMsg != '' && (
+              <Text style={{color: '#FF0000'}}>{errorMsg}</Text>
+            )}
+            <TouchableOpacity
+              style={{
+                position: 'absolute',
+                right: 0,
+                padding: 15,
+                borderRadius: 30,
+              }}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={{fontWeight: '800', fontSize: 18}}>x</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
@@ -317,7 +417,7 @@ export default function ViewEnquiry({navigation, setshowEnquiry}) {
             </TouchableOpacity>
           </View>
         </View>
-      </Modal>
+      </Modal> */}
     </View>
   );
 }
@@ -338,10 +438,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   itemImg: {
-    width: 60,
-    height: 60,
-    borderRadius: 100,
+    width: '100%',
+    height: 150,
+    objectfit: 'cover',
+    borderRadius: 10,
     marginTop: 20,
+    marginBottom: 10,
   },
   memberNameBlock: {
     width: '100%',
@@ -366,7 +468,6 @@ const styles = StyleSheet.create({
     ...commonStyles.fs12_400,
     color: COLORS.theme,
     marginTop: 5,
-    // height: '100%',
   },
   headerContainer: {
     ...commonStyles.rowStart,
@@ -375,15 +476,17 @@ const styles = StyleSheet.create({
     ...commonStyles.elevation9,
     paddingHorizontal: 20,
   },
+  // searchInput: {
   searchInput: {
     borderWidth: 1,
     borderColor: '#999',
-    width: '88%',
-    marginLeft: 20,
+    width: width / 1.5,
+    // marginLeft: 20,
     height: 45,
     borderRadius: 6,
     paddingHorizontal: 14,
   },
+  // },
   centeredView: {
     flex: 1,
     justifyContent: 'center',
@@ -404,6 +507,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+  },
+  btnText: {
+    ...commonStyles.fs16_500,
+    // color: '#fff',
+    borderWidth: 1,
+    padding: 5,
+    paddingHorizontal: 15,
+    borderRadius: 10,
   },
   button: {
     borderRadius: 20,

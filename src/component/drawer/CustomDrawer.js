@@ -121,7 +121,7 @@ export const CustomDrawer = ({modalVisible, callback, navigation}) => {
                   title="Enquiries"
                   image={require('../../assets/enquiry.png')}
                   onPress={() => {
-                    navigation.navigate('CreateProductEnquiryScreen');
+                    navigation.navigate('ViewProductEnquiry');
                   }}
                 />
               ) : (
@@ -135,6 +135,18 @@ export const CustomDrawer = ({modalVisible, callback, navigation}) => {
                   onPress={() => {
                     // navigation.navigate('CreateProductScreen');
                     navigation.navigate('UserProductScreen');
+                  }}
+                />
+              ) : (
+                <></>
+              )}
+              {login ? (
+                <DrawerButton
+                  title="Ads"
+                  image={require('../../assets/products.png')}
+                  onPress={() => {
+                    // navigation.navigate('CreateProductScreen');
+                    navigation.navigate('AdScreen');
                   }}
                 />
               ) : (

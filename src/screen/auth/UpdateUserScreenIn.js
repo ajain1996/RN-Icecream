@@ -710,7 +710,7 @@ export default function UpdateUserScreenIn({navigation, route}) {
       }
     });
   };
-  console.log(businessCategoryIndex, '<<<this is item');
+
   const getPackageByBusinessCategoryId = id => {
     console.log(id, '<<<<businesscategoryedit');
     getCategoryPaymentData(id, res => {

@@ -23,6 +23,7 @@ import UserProductScreen from '../screen/products/UserProductsScreen';
 import EditProductScreen from '../screen/products/EditProduct';
 import NewsDetailScreen from '../screen/news/NewsDetailScreen';
 import ViewEnquiry from '../screen/enquiry/ViewEnquiry';
+import AdsScreen from '../screen/AdsScreens/AdScreen';
 
 const Stack = createStackNavigator();
 export default function NavigationStack() {
@@ -42,6 +43,7 @@ export default function NavigationStack() {
       <Stack.Screen name="BlogsScreen" component={BlogsScreen} />
       <Stack.Screen name="BlogsDetailScreen" component={BlogsDetailScreen} />
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name="AdScreen" component={AdsScreen} />
       <Stack.Screen name="ViewEnquiry" component={ViewEnquiry} />
       <Stack.Screen name="SingleChat" component={SingleChat} />
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
@@ -57,6 +59,7 @@ export default function NavigationStack() {
         name="CreateProductEnquiryScreen"
         component={CreateProductEnquiryScreen}
       />
+      <Stack.Screen name="ViewProductEnquiry" component={ViewEnquiry} />
       <Stack.Screen
         name="ProductSubCategoryScreen"
         component={ProductSubCategoryScreen}

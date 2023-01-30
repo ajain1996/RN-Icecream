@@ -74,9 +74,10 @@ export default function UserProductScreen({navigation, route}) {
         }}>
         <Text
           onPress={() => {
+            // return null;
             if (isFreeAccess) {
-              // setModalVisible(true);
               navigation.navigate('CreateProductScreen');
+              // setModalVisible(true);
             } else {
               Alert.alert(
                 'Free Plan Expired',

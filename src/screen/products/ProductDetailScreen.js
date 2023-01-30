@@ -7,7 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import CustomHeader from '../../component/Header/CustomHeader';
 import {commonStyles} from '../../utils/Styles';
 import {COLORS, SIZES} from '../../component/Constant/Color';
@@ -15,12 +15,59 @@ import {menuItems} from './ProductSubCategoryScreen';
 import {ScrollView} from 'react-native';
 import {imageBase} from '../auth/UpdateUserScreenIn';
 import {width} from '../../utils/utils';
-
+import {PostEnquiry} from '../../utils/API';
+import {useSelector} from 'react-redux';
+import {Alert} from 'react-native';
+const initialState = {
+  to_user: null,
+  from_user: null,
+  discussion: null,
+  description: null,
+  contact: null,
+};
 export default function ProductDetailScreen({navigation, route}) {
   console.log(route.params.product);
   const {product, ProductsData} = route?.params;
   const [modalVisible, setModalVisible] = React.useState(false);
+  const [formData, setformData] = useState(initialState);
+  const {userData, isFreeAccess} = useSelector(state => state.User);
+  const [errorMessage, setErrorMsg] = useState('');
+  console.log(product, '<<<< this is userdata');
 
+  const onSubmit = () => {
+    // if(formData.)
+    const {description} = formData;
+
+    // if (description == null || description == '')
+    //   return setErrorMsg('Description is required');
+
+    PostEnquiry(
+      {
+        ...formData,
+        to_user: product?.user_id,
+        from_user: userData.id,
+        contact: userData.mobile,
+        discussion: product.name,
+        description: formData.description,
+      },
+      res => {
+        console.log(res);
+        if (res.Status) {
+          setModalVisible(false);
+          setformData({...formData, description: ''});
+          Alert.alert(res.message);
+        }
+        // const {message} = JSON.parse(res);
+      },
+    );
+  };
+
+  const handleChange = (name, value) => {
+    if (errorMessage != '') {
+      setErrorMsg('');
+    }
+    setformData({...formData, [name]: value});
+  };
   return (
     <View style={{width: '100%', height: '100%', backgroundColor: '#fff'}}>
       <CustomHeader title="Product Detail" />
@@ -63,12 +110,14 @@ export default function ProductDetailScreen({navigation, route}) {
             <TextInput
               placeholder="Describe your requirement"
               placeholderTextColor="#999"
+              multiline
               onChangeText={text => {
                 console.log(text);
+                handleChange('description', text);
               }}
               style={styles.searchInput}
             />
-            <TouchableOpacity style={styles.btnModal}>
+            <TouchableOpacity style={styles.btnModal} onPress={onSubmit}>
               <Text style={styles.btnText}>Submit</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -232,6 +281,8 @@ const styles = StyleSheet.create({
     width: width / 1.5,
     // marginLeft: 20,
     height: 45,
+    height: 150,
+    // minHeight: 100,
     borderRadius: 6,
     paddingHorizontal: 14,
   },
