@@ -203,8 +203,9 @@ export default function MemberDetailScreen({navigation, route}) {
             <TouchableOpacity
               style={styles.btnOutline}
               onPress={() => {
+                setModalVisible(true);
+                return null;
                 if (isFreeAccess) {
-                  setModalVisible(true);
                 } else {
                   Alert.alert(
                     'Free Plan Expired',

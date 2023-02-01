@@ -104,15 +104,16 @@ const SingleChatScreen = props => {
             return (
               <View
                 style={{
-                  backgroundColor: item.sender == 2 ? '#000' : '#Ff0000',
+                  backgroundColor: item.sender == 2 ? 'white' : 'green',
                   alignSelf: item.sender == 2 ? 'flex-end' : 'flex-start',
                   //   width: 200,
                   padding: 5,
                   borderRadius: 12,
+                  paddingHorizontal: 12,
                   marginTop: 10,
-                  color: '#fff',
+                  color: '#000',
                 }}>
-                <Text style={{color: '#fff'}}>{item?.messages}</Text>
+                <Text style={{color: '#000'}}>{item?.messages}</Text>
               </View>
             );
 

@@ -131,7 +131,7 @@ export default function CreateProductEnquiryScreen({navigation}) {
           }}
         />
         <PersonalLeaveDatePicker
-          heading="Posting date"
+          heading="Valid till"
           placeholderText="Posting Date"
           minimumDate="24-Dec-1900"
           maximumDate="24-Dec-2200"
